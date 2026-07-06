@@ -2846,7 +2846,7 @@ export const EVENTS = [
                 log: "Le cauchemar s'achève enfin après des décennies de conflit."
             },
             {
-                label: "Méditer sur la mort des grands rois (-20 Espoir)"",
+                label: "Méditer sur la mort des grands rois (-20 Espoir)",
                 canAfford: (gameState) => gameState.resources.espoir >= 20,
                 effect: (gameState) => {
         gameState.resources.espoir -= 20;
