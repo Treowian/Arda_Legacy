@@ -1,8 +1,6 @@
 // js/ui/actions.js
 import { gameState } from '../core/state.js';
-import { updateUI } from './dom.js'; 
-// Assure-toi d'importer ta fonction qui ajoute du texte dans le journal (ex: addLog ou addChronicle)
-import { addLog } from './dom.js'; 
+import { updateUI, addChronicle } from './dom.js'; 
 
 let ferveurClicks = 0;
 const CLICKS_TO_GOLDEN_AGE = 50;
@@ -26,7 +24,6 @@ export function initActions() {
 
 function handleInspireClick() {
     // 1. Gain immédiat (Exemple : si le focus est sur la richesse ou la sécurité)
-    // À adapter selon la manière dont tu gères les "décrets" dans ton state
     if (gameState.state.active_focus === 'agricole') {
         gameState.resources.richesse += 1;
     } else {
@@ -48,9 +45,9 @@ function handleInspireClick() {
     }
     
     // 3. Narration aléatoire (15% de chance de déclencher un texte)
-    if (Math.random() < 0.15 && typeof addLog === 'function') {
+    if (Math.random() < 0.15 && typeof addChronicle === 'function') {
         const phrase = CITATIONS_GARDIEN[Math.floor(Math.random() * CITATIONS_GARDIEN.length)];
-        addLog(phrase);
+        addChronicle(phrase);
     }
     
     // 4. On met à jour l'interface pour voir les ressources monter instantanément
@@ -64,12 +61,14 @@ function triggerAgeDor() {
     const fill = document.getElementById('ui-ferveur-fill');
     const status = document.getElementById('ui-ferveur-status');
     
-    fill.style.width = `100%`;
-    fill.style.backgroundColor = "white"; // Changement de couleur pour marquer l'effet
-    status.textContent = `✨ ÂGE D'OR ACTIF ! ✨`;
+    if(fill && status) {
+        fill.style.width = `100%`;
+        fill.style.backgroundColor = "white"; // Changement de couleur pour marquer l'effet
+        status.textContent = `✨ ÂGE D'OR ACTIF ! ✨`;
+    }
     
-    if (typeof addLog === 'function') {
-        addLog("✨ Votre présence constante inspire grandement votre peuple. Un âge d'or temporaire commence !");
+    if (typeof addChronicle === 'function') {
+        addChronicle("✨ Votre présence constante inspire grandement votre peuple. Un âge d'or temporaire commence !");
     }
     
     // Bonus passif stocké dans le state (ton moteur de temps devra lire cette valeur)
@@ -80,12 +79,14 @@ function triggerAgeDor() {
         ageDorActif = false;
         gameState.state.bonus_multiplicateur = 1.0;
         
-        fill.style.width = `0%`;
-        fill.style.backgroundColor = "#d4af37";
-        status.textContent = `Jauge de Ferveur : 0%`;
+        if(fill && status) {
+            fill.style.width = `0%`;
+            fill.style.backgroundColor = "#d4af37";
+            status.textContent = `Jauge de Ferveur : 0%`;
+        }
         
-        if (typeof addLog === 'function') {
-            addLog("L'élan de ferveur retombe doucement. Le quotidien reprend ses droits.");
+        if (typeof addChronicle === 'function') {
+            addChronicle("L'élan de ferveur retombe doucement. Le quotidien reprend ses droits.");
         }
         updateUI();
     }, 30000); // 30 000 millisecondes = 30 secondes
