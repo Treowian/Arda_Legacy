@@ -36,3 +36,24 @@ export function updateUI() {
     ui.hommes.textContent = gameState.population.hommes;
     ui.elfes.textContent = gameState.population.elfes;
 }
+
+// Fonction pour ajouter une ligne de texte dans le journal / l'historique
+export function addChronicle(text) {
+    // On cherche l'endroit où afficher le texte dans le HTML (la boîte de logs)
+    // (Remplace 'log-container' par l'ID exact de ta div dans index.html si besoin)
+    const logContainer = document.getElementById('log-container') || document.getElementById('chronicles');
+    
+    if (logContainer) {
+        // On crée un nouveau paragraphe protégé contre les failles (XSS)
+        const entry = document.createElement('p');
+        entry.style.marginBottom = "10px";
+        entry.style.fontStyle = "italic";
+        entry.textContent = "- " + text;
+        
+        // On l'ajoute tout en haut de la liste
+        logContainer.prepend(entry);
+    } else {
+        // Si la boîte n'existe pas encore dans le HTML, on l'affiche au moins dans la console
+        console.log("📖 Chronique : " + text);
+    }
+}
