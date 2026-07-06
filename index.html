@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Chroniques du Gardien</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="age-info">
+            <h1>Âge I : L'Aube</h1>
+            <span id="ui-year">An 1</span>
+        </div>
+        <div class="shadow-meter">
+            <span>Ombre :</span>
+            <div class="progress-bar">
+                <div id="ui-shadow-fill" class="progress-fill shadow"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="game-container">
+        <section class="panel state-panel">
+            <h2>L'État</h2>
+            <div class="resource-group">
+                <p>Savoir : <span id="ui-res-savoir">0</span></p>
+                <p>Richesse : <span id="ui-res-richesse">0</span></p>
+                <p>Renom : <span id="ui-res-renom">0</span></p>
+                <p>Espoir : <span id="ui-res-espoir">0</span></p>
+            </div>
+            <div class="population-group">
+                <h3>Population</h3>
+                <p>Hommes : <span id="ui-pop-hommes">0</span></p>
+                <p>Elfes : <span id="ui-pop-elfes">0</span></p>
+            </div>
+        </section>
+
+        <section class="panel narrative-panel">
+            <h2>Les Chroniques</h2>
+            <div id="ui-chronicles" class="chronicles-log">
+                </div>
+        </section>
+
+        <section class="panel action-panel">
+            <h2>Les Actions</h2>
+            
+            <div class="focus-group">
+                <h3>Décrets (Attention)</h3>
+                <label>
+                    <input type="radio" name="focus" value="agricole" checked> Focus Agricole
+                </label>
+                <label>
+                    <input type="radio" name="focus" value="frontalier"> Focus Frontalier
+                </label>
+            </div>
+
+            <div class="main-click-group" style="margin-bottom: 20px; text-align: center; border: 1px solid var(--border-ink, #333); padding: 15px; border-radius: 5px; background: rgba(0,0,0,0.2);">
+    <button id="btn-inspire" class="btn-action" style="width: 100%; padding: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; background: #2c3e50; color: white; border: 1px solid #d4af37;">
+        ✨ INSPIRER LE PEUPLE
+        <br>
+        <small id="ui-ferveur-status" style="font-weight: normal; font-size: 0.8em;">Jauge de Ferveur : 0%</small>
+    </button>
+    <div class="progress-bar" style="width: 100%; height: 10px; background: #111; margin-top: 10px; border-radius: 3px; overflow: hidden;">
+        <div id="ui-ferveur-fill" style="width: 0%; height: 100%; background: #d4af37; transition: width 0.1s ease;"></div>
+    </div>
+</div>
+            <div class="projects-group">
+                <h3>Grands Projets</h3>
+                <button id="btn-project-1" class="btn-action">
+                    Bâtir la Tour de Guet <br>
+                    <small>Coût: 50 Richesse</small>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="event-modal" class="parchment-modal">
+        <h3 id="modal-title" class="event-title">Titre</h3>
+        <p id="modal-text" class="event-text">Texte descriptif</p>
+        <div id="modal-choices" class="event-choices">
+            </div>
+    </dialog>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
