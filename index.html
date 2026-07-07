@@ -94,10 +94,10 @@
         <aside class="panel">
             <h2>L'État</h2>
             <div id="ui-resources" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-                <div>Savoir : <span id="ui-res-savoir" style="font-weight: bold;">0</span></div>
-                <div>Richesse : <span id="ui-res-richesse" style="font-weight: bold;">50</span></div>
-                <div>Renom : <span id="ui-res-renom" style="font-weight: bold;">10</span></div>
-                <div>Espoir : <span id="ui-res-espoir" style="font-weight: bold;">100</span></div>
+                <div>Savoir : <span id="ui-res-savoir" style="font-weight: bold;">0</span> <span id="ui-rate-savoir"></span></div>
+                <div>Richesse : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
+                <div>Renom : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
+                <div>Espoir : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
                 
                 <p id="ui-prestige-display" style="display:none; color: #f1c40f; font-weight: bold; margin-top: 10px; font-size: 0.9em; background: rgba(241, 196, 15, 0.1); padding: 5px; border-radius: 4px;">
                     ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus prod)
@@ -108,15 +108,14 @@
 
             <h3>Population</h3>
             <div id="ui-population" style="display: flex; flex-direction: column; gap: 8px;">
-                <div>Hommes : <span id="ui-pop-hommes" style="font-weight: bold;">20</span></div>
-                <div>Elfes : <span id="ui-pop-elfes" style="font-weight: bold;">0</span></div>
+                <div>Hommes : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
+                <div>Elfes : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
             </div>
         </aside>
 
         <main class="panel">
             <h2>Les Chroniques</h2>
-            <div id="log-container">
-                </div>
+            <div id="log-container"></div>
         </main>
 
         <aside class="panel">
@@ -145,14 +144,12 @@
 
             <div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
                 <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
-                <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
-                    </div>
+                <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
             </div>
 
             <div class="projects-panel" style="margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
                 <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #b89742;">📜 GRAND PROJET DE L'ÈRE</h3>
-                <div id="ui-project-container">
-                    </div>
+                <div id="ui-project-container"></div>
             </div>
         </aside>
 
@@ -161,8 +158,7 @@
     <dialog id="event-modal" style="width: 500px; padding: 20px; border-radius: 6px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.2); font-family: var(--font-body);">
         <h3 id="modal-title" style="color: #c0392b; margin-top: 0;">Événement Majeur</h3>
         <p id="modal-text" style="line-height: 1.4; font-size: 0.95em; color: #34495e;"></p>
-        <div id="modal-choices" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-            </div>
+        <div id="modal-choices" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
     </dialog>
 
     <div id="victory-modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;">
