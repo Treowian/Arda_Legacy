@@ -1,6 +1,6 @@
 // js/ui/dom.js
 import { gameState } from '../core/state.js';
-import { BUILDINGS } from '../data/buildings.js'; // Nécessaire pour simuler les calculs
+import { BUILDINGS } from '../data/buildings.js'; 
 import { renderCurrentProject } from './projects.js';
 import { renderBuildings } from './buildings.js';
 
@@ -10,7 +10,6 @@ export function initUI() {
     ui.year = document.getElementById('ui-year');
     ui.shadowFill = document.getElementById('ui-shadow-fill');
     
-    // Valeurs
     ui.savoir = document.getElementById('ui-res-savoir');
     ui.richesse = document.getElementById('ui-res-richesse');
     ui.renom = document.getElementById('ui-res-renom');
@@ -18,7 +17,6 @@ export function initUI() {
     ui.hommes = document.getElementById('ui-pop-hommes');
     ui.elfes = document.getElementById('ui-pop-elfes');
 
-    // 🆕 Spans de Prévision de Production (+X/an)
     ui.rateSavoir = document.getElementById('ui-rate-savoir');
     ui.rateRichesse = document.getElementById('ui-rate-richesse');
     ui.rateRenom = document.getElementById('ui-rate-renom');
@@ -26,6 +24,7 @@ export function initUI() {
     ui.rateHommes = document.getElementById('ui-rate-hommes');
     ui.rateElfes = document.getElementById('ui-rate-elfes');
     
+    // Branchement du bouton NG+
     const btnPrestige = document.getElementById('btn-prestige');
     if (btnPrestige) {
         btnPrestige.onclick = () => {
@@ -36,14 +35,24 @@ export function initUI() {
         };
     }
     
+    // Branchement du bouton de la boîte de réception
+    const inboxBtn = document.getElementById('btn-inbox');
+    if (inboxBtn) {
+        inboxBtn.onclick = () => {
+            import('./modal.js').then(module => {
+                module.openPendingEvents();
+            });
+        };
+    }
+    
     updateUI();
 }
 
-// Fonction utilitaire pour formater le "+/- X/an" avec la bonne couleur
+// Fonction de formatage pour l'affichage visuel des taux (+/-)
 function formatRate(value) {
     if (value === 0) return "";
     const sign = value > 0 ? "+" : "";
-    const color = value > 0 ? "#27ae60" : "#c0392b"; // Vert si positif, Rouge si négatif
+    const color = value > 0 ? "#27ae60" : "#c0392b"; 
     return `<span style="font-size: 0.85em; color: ${color}; margin-left: 8px; font-weight: normal;">${sign}${value.toFixed(1)}/an</span>`;
 }
 
@@ -60,7 +69,7 @@ export function updateUI() {
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
-    // --- CALCUL DES PRÉVISIONS DE PRODUCTION ---
+    // --- CALCUL DES TAUX EN TEMPS RÉEL ---
     let rates = { richesse: 0, savoir: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
     
     const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
@@ -72,7 +81,7 @@ export function updateUI() {
         rates.espoir -= 5;
         rates.hommes -= 1;
     } else {
-        // Croissance naturelle et bonus
+        // Démographie
         if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
         if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
         
@@ -82,7 +91,7 @@ export function updateUI() {
         rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
         rates.espoir -= 0.5;
 
-        // Prévision issue des Bâtiments
+        // Prévision issue des Infrastructures
         BUILDINGS.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
             if (owned > 0 && b.production) {
@@ -95,13 +104,11 @@ export function updateUI() {
         });
     }
 
-    // Le Paradoxe de la Défiance
     if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
         rates.renom += 5 * multiplier;
     }
 
-    // --- APPLICATION VISUELLE ---
-    // Valeurs nettes
+    // --- APPLICATION A L'INTERFACE ---
     ui.savoir.textContent = Math.floor(gameState.resources.savoir);
     ui.richesse.textContent = Math.floor(gameState.resources.richesse);
     ui.renom.textContent = Math.floor(gameState.resources.renom);
@@ -109,7 +116,6 @@ export function updateUI() {
     ui.hommes.textContent = Math.floor(gameState.population.hommes);
     ui.elfes.textContent = Math.floor(gameState.population.elfes);
 
-    // Taux de production formattés (+X/an)
     if (ui.rateSavoir) ui.rateSavoir.innerHTML = formatRate(rates.savoir);
     if (ui.rateRichesse) ui.rateRichesse.innerHTML = formatRate(rates.richesse);
     if (ui.rateRenom) ui.rateRenom.innerHTML = formatRate(rates.renom);
@@ -117,7 +123,6 @@ export function updateUI() {
     if (ui.rateHommes) ui.rateHommes.innerHTML = formatRate(rates.hommes);
     if (ui.rateElfes) ui.rateElfes.innerHTML = formatRate(rates.elfes);
 
-    // Affichage du Prestige
     const prestigeDisp = document.getElementById('ui-prestige-display');
     if (prestigeDisp) {
         if (gameState.meta.prestige_eclats > 0) {
@@ -126,6 +131,20 @@ export function updateUI() {
             document.getElementById('ui-eclats-bonus').textContent = (gameState.meta.prestige_eclats * 5);
         } else {
             prestigeDisp.style.display = 'none';
+        }
+    }
+
+    // GESTION DU BOUTON DE BOÎTE DE RÉCEPTION
+    const inboxBtn = document.getElementById('btn-inbox');
+    if (inboxBtn) {
+        const pendingCount = (gameState.state.pending_events || []).length;
+        if (pendingCount > 0) {
+            inboxBtn.style.display = 'block';
+            inboxBtn.textContent = `📬 ${pendingCount} Événement(s) en attente !`;
+            inboxBtn.classList.add('pulse-anim');
+        } else {
+            inboxBtn.style.display = 'none';
+            inboxBtn.classList.remove('pulse-anim');
         }
     }
 
