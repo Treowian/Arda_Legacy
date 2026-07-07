@@ -5,7 +5,8 @@ export const gameState = {
         current_age: 1,
         legacies: [],
         prestige_eclats: 0,
-        redemption_achieved: false
+        redemption_achieved: false,
+        last_save_time: 0 // 🆕 Pour calculer le temps hors-ligne
     },
     state: {
         current_year: 1,
@@ -15,7 +16,8 @@ export const gameState = {
         is_victory: false,
         is_twilight: false,
         bonus_multiplicateur: 1.0,
-        resolved_events: []
+        resolved_events: [],
+        pending_events: [] // 🆕 La boîte de réception du Roi !
     },
     resources: {
         savoir: 0,
@@ -30,7 +32,7 @@ export const gameState = {
     buildings: {
         ferme: 0,
         village: 0,
-        refuge_elfique: 0, // 🆕 C'est lui qui manquait !
+        refuge_elfique: 0,
         forge: 0,
         scriptorium: 0,
         caserne: 0,
