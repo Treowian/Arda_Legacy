@@ -1,66 +1,70 @@
 // js/ui/modal.js
 import { gameState } from '../core/state.js';
 import { updateUI, addChronicle } from './dom.js'; 
+import { EVENTS } from '../data/events.js';
 
-// Mise en cache des éléments du DOM
 const modal = document.getElementById('event-modal');
 const titleEl = document.getElementById('modal-title');
 const textEl = document.getElementById('modal-text');
 const choicesEl = document.getElementById('modal-choices');
 
-export function triggerEvent(eventData) {
-    // 1. Figer le temps pendant la lecture
-    gameState.state.is_paused = true;
+// 🆕 La fonction qui ouvre le premier événement de la pile
+export function openPendingEvents() {
+    if (!gameState.state.pending_events || gameState.state.pending_events.length === 0) return;
 
-    // 2. Remplir le contenu textuel
+    // Prendre le premier de la liste
+    const eventId = gameState.state.pending_events[0];
+    const eventData = EVENTS.find(e => e.id === eventId);
+    
+    if (!eventData) {
+        // Sécurité si l'événement n'existe plus
+        gameState.state.pending_events.shift();
+        return openPendingEvents(); 
+    }
+
+    // PLUS AUCUNE PAUSE ICI : Le jeu continue !
+    
     titleEl.textContent = eventData.title;
     textEl.textContent = eventData.description;
-    
-    // 3. Nettoyer les boutons précédents
     choicesEl.innerHTML = '';
 
-    // 4. Générer les choix dynamiquement
     eventData.choices.forEach(choice => {
         const btn = document.createElement('button');
         btn.className = 'btn-action';
         btn.textContent = choice.label;
         
-        // Vérifier si le joueur a les moyens de payer le choix
         if (typeof choice.canAfford === 'function' && !choice.canAfford(gameState)) {
             btn.disabled = true;
         }
 
-        // On envoie tout l'objet eventData pour avoir accès au titre et à l'ID
         btn.onclick = () => resolveChoice(eventData, choice);
         choicesEl.appendChild(btn);
     });
 
-    // 5. Afficher la modale
-    if (modal) {
-        modal.showModal();
-    }
+    if (modal) modal.showModal();
 }
 
 function resolveChoice(eventData, choice) {
-    // 1. Appliquer les conséquences mathématiques du choix
     if (typeof choice.effect === 'function') {
         choice.effect(gameState);
     }
     
-    // 2. Inscrire l'événement dans la mémoire pour ne plus le tirer
     gameState.state.resolved_events.push(eventData.id);
-    
-    // 3. Ajouter la ligne d'histoire dans l'interface avec le contexte en gras
     if (choice.log) {
         addChronicle(`<strong>[${eventData.title}]</strong> ${choice.log}`);
     }
     
-    // 4. Relancer la machine et fermer la fenêtre
-    if (modal) {
-        modal.close();
-    }
-    gameState.state.is_paused = false;
+    // 🆕 On retire l'événement traité de la file d'attente
+    gameState.state.pending_events.shift();
     
-    // 5. Rafraîchir les visuels
+    // Y en a-t-il d'autres en attente ?
+    if (gameState.state.pending_events.length > 0) {
+        // Oui ? On affiche le suivant !
+        openPendingEvents();
+    } else {
+        // Non ? On ferme la modale.
+        if (modal) modal.close();
+    }
+    
     updateUI();
 }
