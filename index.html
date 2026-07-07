@@ -2,103 +2,182 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Chroniques du Gardien</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arda Legacy - Chroniques du Mythe</title>
+    <style>
+        :root {
+            --font-title: 'Georgia', serif;
+            --font-body: 'Arial', sans-serif;
+        }
+        body {
+            font-family: var(--font-body);
+            background-color: #f5f2eb;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .panel {
+            background: #fff;
+            border: 1px solid #dcd6cd;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        h2, h3, h4 {
+            font-family: var(--font-title);
+            margin-top: 0;
+        }
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #34495e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+        .btn-action:hover {
+            background-color: #2c3e50;
+        }
+        .btn-action:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #ui-shadow-bar {
+            width: 100%;
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        #ui-shadow-fill {
+            height: 100%;
+            width: 0%;
+            background: #c0392b;
+            transition: width 0.5s ease;
+        }
+        #log-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            background: #fafafa;
+        }
+        .focus-container label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <header class="topbar">
-        <div class="age-info">
-            <h1 id="ui-age-title">Âge I : L'Aube</h1>
-            <span id="ui-year">An 1</span>
-        </div>
-        <div class="shadow-meter">
-            <span>Ombre :</span>
-            <div class="progress-bar">
-                <div id="ui-shadow-fill" class="progress-fill shadow"></div>
-            </div>
-        </div>
+
+    <header style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #dcd6cd; padding-bottom: 10px;">
+        <h1 id="ui-age-title" style="font-family: var(--font-title); margin-bottom: 5px;">Âge I : L'Aube</h1>
+        <div id="ui-year" style="font-size: 1.2em; font-weight: bold; color: #7f8c8d;">An 1</div>
     </header>
 
-    <main class="game-container">
-        <section class="panel state-panel">
+    <div class="game-container">
+        
+        <aside class="panel">
             <h2>L'État</h2>
-            <div class="resource-group">
-                <p>Savoir : <span id="ui-res-savoir">0</span></p>
-                <p>Richesse : <span id="ui-res-richesse">0</span></p>
-                <p>Renom : <span id="ui-res-renom">0</span></p>
-                <p>Espoir : <span id="ui-res-espoir">0</span></p>
+            <div id="ui-resources" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                <div>Savoir : <span id="ui-res-savoir" style="font-weight: bold;">0</span></div>
+                <div>Richesse : <span id="ui-res-richesse" style="font-weight: bold;">50</span></div>
+                <div>Renom : <span id="ui-res-renom" style="font-weight: bold;">10</span></div>
+                <div>Espoir : <span id="ui-res-espoir" style="font-weight: bold;">100</span></div>
+                
+                <p id="ui-prestige-display" style="display:none; color: #f1c40f; font-weight: bold; margin-top: 10px; font-size: 0.9em; background: rgba(241, 196, 15, 0.1); padding: 5px; border-radius: 4px;">
+                    ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus prod)
+                </p>
             </div>
-            <div class="population-group">
-                <h3>Population</h3>
-                <p>Hommes : <span id="ui-pop-hommes">0</span></p>
-                <p>Elfes : <span id="ui-pop-elfes">0</span></p>
-            </div>
-        </section>
 
-        <section class="panel narrative-panel">
+            <hr style="border: 0; border-top: 1px dashed #dcd6cd; margin: 15px 0;">
+
+            <h3>Population</h3>
+            <div id="ui-population" style="display: flex; flex-direction: column; gap: 8px;">
+                <div>Hommes : <span id="ui-pop-hommes" style="font-weight: bold;">20</span></div>
+                <div>Elfes : <span id="ui-pop-elfes" style="font-weight: bold;">0</span></div>
+            </div>
+        </aside>
+
+        <main class="panel">
             <h2>Les Chroniques</h2>
-            <div id="chronicles"></div>
+            <div id="log-container">
                 </div>
-        </section>
+        </main>
 
-        <section class="panel action-panel">
+        <aside class="panel">
             <h2>Les Actions</h2>
             
-            <div class="focus-group">
-                <h3>Décrets (Attention)</h3>
-                <label>
-                    <input type="radio" name="focus" value="agricole" checked> Focus Agricole
-                </label>
-                <label>
-                    <input type="radio" name="focus" value="frontalier"> Focus Frontalier
-                </label>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 5px;">Menace de l'Ombre :</label>
+                <div id="ui-shadow-bar">
+                    <div id="ui-shadow-fill"></div>
+                </div>
             </div>
 
-            <div class="main-click-group" style="margin-bottom: 20px; text-align: center; border: 1px solid var(--border-ink, #333); padding: 15px; border-radius: 5px; background: rgba(0,0,0,0.2);">
-    <button id="btn-inspire" class="btn-action" style="width: 100%; padding: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; background: #2c3e50; color: white; border: 1px solid #d4af37;">
-        ✨ INSPIRER LE PEUPLE
-        <br>
-        <small id="ui-ferveur-status" style="font-weight: normal; font-size: 0.8em;">Jauge de Ferveur : 0%</small>
-    </button>
-    <div class="progress-bar" style="width: 100%; height: 10px; background: #111; margin-top: 10px; border-radius: 3px; overflow: hidden;">
-        <div id="ui-ferveur-fill" style="width: 0%; height: 100%; background: #d4af37; transition: width 0.1s ease;"></div>
-    </div>
-</div>
+            <div class="focus-container" style="background: rgba(0,0,0,0.02); padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #eee;">
+                <h3 style="font-size: 1em; margin-bottom: 10px;">Décrets de Focus</h3>
+                <label><input type="radio" name="focus" value="agricole" checked> Focus Agricole (+Richesse au clic/passif)</label>
+                <label><input type="radio" name="focus" value="frontalier"> Focus Frontalier (+Espoir au clic, réduit l'ombre)</label>
+            </div>
 
-    <div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed var(--border-ink, #333); padding-top: 15px;">
-    <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
-    <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
-        </div>
-</div>
+            <button id="btn-inspire" class="btn-action" style="height: 60px; font-size: 1.1em; background-color: #2c3e50;">
+                INSPIRER LE PEUPLE
+            </button>
+            <div id="ui-ferveur-status" style="font-size: 0.8em; text-align: center; margin-top: -5px; color: #7f8c8d; margin-bottom: 15px;">Jauge de Ferveur : 0%</div>
+            <div style="width: 100%; height: 4px; background: #eee; margin-bottom: 20px; border-radius: 2px; overflow: hidden;">
+                <div id="ui-ferveur-fill" style="width: 0%; height: 100%; background: #d4af37; transition: width 0.1s ease;"></div>
+            </div>
 
-<div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
-    <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
-    <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
-        </div>
-</div>
-            
-<div class="projects-panel" style="margin-top: 20px; border-top: 1px dashed var(--border-ink, #333); padding-top: 15px;">
-    <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #d4af37;">📜 GRAND PROJET DE L'ÈRE</h3>
-    <div id="ui-project-container">
-        <p style="font-style: italic; font-size: 0.9em;">Aucun projet disponible.</p>
+            <div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
+                <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
+                    </div>
+            </div>
+
+            <div class="projects-panel" style="margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #b89742;">📜 GRAND PROJET DE L'ÈRE</h3>
+                <div id="ui-project-container">
+                    </div>
+            </div>
+        </aside>
+
     </div>
-</div>
-  
-    <dialog id="event-modal" class="parchment-modal">
-        <h3 id="modal-title" class="event-title">Titre</h3>
-        <p id="modal-text" class="event-text">Texte descriptif</p>
-        <div id="modal-choices" class="event-choices">
+
+    <dialog id="event-modal" style="width: 500px; padding: 20px; border-radius: 6px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.2); font-family: var(--font-body);">
+        <h3 id="modal-title" style="color: #c0392b; margin-top: 0;">Événement Majeur</h3>
+        <p id="modal-text" style="line-height: 1.4; font-size: 0.95em; color: #34495e;"></p>
+        <div id="modal-choices" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
             </div>
     </dialog>
 
-    <script type="module" src="js/main.js"></script>
+    <div id="victory-modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;">
+        <h1 id="victory-title" style="color: #f1c40f; font-family: var(--font-title); font-size: 3.5em; margin-bottom: 20px; letter-spacing: 2px;">LE QUATRIÈME ÂGE COMMENCE</h1>
+        <p id="victory-desc" style="font-size: 1.3em; max-width: 700px; margin-bottom: 40px; line-height: 1.6; font-style: italic; opacity: 0.9;"></p>
+        <button id="btn-prestige" style="padding: 18px 36px; font-size: 1.2em; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); transition: transform 0.2s;">
+            Accepter l'Héritage (Lancer le New Game +)
+        </button>
+    </div>
 
-<details style="position: fixed; bottom: 15px; left: 15px; background: #111; color: #00ff00; border: 1px solid #333; padding: 12px; border-radius: 6px; z-index: 99999; font-family: 'Courier New', monospace; font-size: 0.8em; width: 250px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+    <details style="position: fixed; bottom: 15px; left: 15px; background: #111; color: #00ff00; border: 1px solid #333; padding: 12px; border-radius: 6px; z-index: 99999; font-family: 'Courier New', monospace; font-size: 0.8em; width: 250px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
         <summary style="cursor: pointer; font-weight: bold; color: #ff5555; outline: none; user-select: none;">🛠️ CONSOLE DE DEBUG</summary>
         <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
-            <button id="db-add-resources" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; font-radius:4px;">+10k Toutes Ressources</button>
-            <button id="db-add-pop" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; font-radius:4px;">+50 Hommes & Elfes</button>
+            <button id="db-add-resources" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; border-radius:4px;">+10k Toutes Ressources</button>
+            <button id="db-add-pop" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; border-radius:4px;">+50 Hommes & Elfes</button>
             <div style="display: flex; gap: 4px;">
                 <button id="db-shadow-0" style="flex: 1; background: #1a251a; color: #55ff55; border: 1px solid #2d4a2d; padding: 5px; cursor: pointer; border-radius:4px;">Ombre 0%</button>
                 <button id="db-shadow-100" style="flex: 1; background: #2b1a1a; color: #ff5555; border: 1px solid #4a2d2d; padding: 5px; cursor: pointer; border-radius:4px;">Ombre 100%</button>
@@ -106,6 +185,8 @@
             <button id="db-trigger-event" style="background: #1b2a47; color: #38ef7d; border: 1px solid #2c3e50; padding: 6px; cursor: pointer; font-weight:bold; border-radius:4px;">⚡ Forcer Événement</button>
             <button id="db-hard-reset" style="background: #7a0000; color: #fff; border: none; padding: 8px; cursor: pointer; font-weight: bold; margin-top: 4px; border-radius:4px;">⚠️ HARD RESET SAVE</button>
         </div>
-    </details>            
+    </details>
+
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
