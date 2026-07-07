@@ -3,7 +3,7 @@
 export const gameState = {
     meta: {
         current_age: 1,
-        legacies: [] // Pour stocker "L'Épée Brisée", "La Pousse de l'Arbre", etc.
+        legacies: []
     },
     state: {
         current_year: 1,
@@ -11,7 +11,7 @@ export const gameState = {
         active_focus: 'espoir',
         is_paused: false,
         is_victory: false,
-        is_twilight: false, // Le mode Crépuscule
+        is_twilight: false,
         bonus_multiplicateur: 1.0,
         resolved_events: []
     },
@@ -24,5 +24,12 @@ export const gameState = {
     population: {
         hommes: 20,
         elfes: 0
+    },
+    buildings: {
+        ferme: 0,
+        forge: 0,
+        scriptorium: 0,
+        caserne: 0,
+        sanctuaire: 0
     }
 };
