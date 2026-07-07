@@ -16,16 +16,28 @@ const CITATIONS_GARDIEN = [
 export function initActions() {
     const btnInspire = document.getElementById('btn-inspire');
     if (btnInspire) btnInspire.addEventListener('click', handleInspireClick);
+    
+    // Écoute des boutons de Focus (Décrets)
+    const radios = document.querySelectorAll('input[name="focus"]');
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            gameState.state.active_focus = e.target.value;
+            addChronicle(`<em>Vous avez promulgué un nouveau Décret : ${e.target.value}.</em>`);
+        });
+    });
 }
 
 function handleInspireClick() {
-    // GESTION DU CRÉPUSCULE : L'espoir est décuplé dans les ténèbres
     if (gameState.state.is_twilight) {
         gameState.resources.espoir += 3;
         gameState.resources.renom += 1;
     } else {
-        if (gameState.state.active_focus === 'agricole') gameState.resources.richesse += 1;
-        else gameState.resources.espoir += 1;
+        // Le boost de début de jeu selon le décret !
+        if (gameState.state.active_focus === 'agricole') {
+            gameState.resources.richesse += 2; // +2 Richesse par clic (nerf de la guerre)
+        } else {
+            gameState.resources.espoir += 2;   // +2 Espoir par clic
+        }
     }
     
     if (!ageDorActif) {
@@ -40,7 +52,7 @@ function handleInspireClick() {
             if(status) status.textContent = `Jauge de Ferveur : ${Math.floor(progressPercent)}%`;
         }
 
-        if (!aParleCeCycle && Math.random() < 0.30 && typeof addChronicle === 'function') {
+        if (!aParleCeCycle && Math.random() < 0.30) {
             const phrase = CITATIONS_GARDIEN[Math.floor(Math.random() * CITATIONS_GARDIEN.length)];
             addChronicle(phrase);
             aParleCeCycle = true;
@@ -56,7 +68,7 @@ function triggerAgeDor() {
     const fill = document.getElementById('ui-ferveur-fill');
     const status = document.getElementById('ui-ferveur-status');
     if(fill && status) { fill.style.width = `100%`; fill.style.backgroundColor = "white"; status.textContent = `✨ ÂGE D'OR ACTIF ! ✨`; }
-    if (typeof addChronicle === 'function') addChronicle("<strong>[Âge d'Or]</strong> Votre présence constante inspire grandement votre peuple.");
+    addChronicle("<strong>[Âge d'Or]</strong> Votre présence constante inspire grandement votre peuple.");
     
     gameState.state.bonus_multiplicateur = 1.5;
     setTimeout(() => {
@@ -64,7 +76,7 @@ function triggerAgeDor() {
         aParleCeCycle = false;
         gameState.state.bonus_multiplicateur = 1.0;
         if(fill && status) { fill.style.width = `0%`; fill.style.backgroundColor = "#d4af37"; status.textContent = `Jauge de Ferveur : 0%`; }
-        if (typeof addChronicle === 'function') addChronicle("<em>L'élan de ferveur retombe.</em>");
+        addChronicle("<em>L'élan de ferveur retombe.</em>");
         updateUI();
     }, 30000);
 }
