@@ -71,6 +71,12 @@
     <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
         </div>
 </div>
+
+<div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+    <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
+    <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;">
+        </div>
+</div>
             
 <div class="projects-panel" style="margin-top: 20px; border-top: 1px dashed var(--border-ink, #333); padding-top: 15px;">
     <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #d4af37;">📜 GRAND PROJET DE L'ÈRE</h3>
@@ -87,5 +93,19 @@
     </dialog>
 
     <script type="module" src="js/main.js"></script>
+
+<details style="position: fixed; bottom: 15px; left: 15px; background: #111; color: #00ff00; border: 1px solid #333; padding: 12px; border-radius: 6px; z-index: 99999; font-family: 'Courier New', monospace; font-size: 0.8em; width: 250px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        <summary style="cursor: pointer; font-weight: bold; color: #ff5555; outline: none; user-select: none;">🛠️ CONSOLE DE DEBUG</summary>
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+            <button id="db-add-resources" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; font-radius:4px;">+10k Toutes Ressources</button>
+            <button id="db-add-pop" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px; cursor: pointer; font-radius:4px;">+50 Hommes & Elfes</button>
+            <div style="display: flex; gap: 4px;">
+                <button id="db-shadow-0" style="flex: 1; background: #1a251a; color: #55ff55; border: 1px solid #2d4a2d; padding: 5px; cursor: pointer; border-radius:4px;">Ombre 0%</button>
+                <button id="db-shadow-100" style="flex: 1; background: #2b1a1a; color: #ff5555; border: 1px solid #4a2d2d; padding: 5px; cursor: pointer; border-radius:4px;">Ombre 100%</button>
+            </div>
+            <button id="db-trigger-event" style="background: #1b2a47; color: #38ef7d; border: 1px solid #2c3e50; padding: 6px; cursor: pointer; font-weight:bold; border-radius:4px;">⚡ Forcer Événement</button>
+            <button id="db-hard-reset" style="background: #7a0000; color: #fff; border: none; padding: 8px; cursor: pointer; font-weight: bold; margin-top: 4px; border-radius:4px;">⚠️ HARD RESET SAVE</button>
+        </div>
+    </details>            
 </body>
 </html>
