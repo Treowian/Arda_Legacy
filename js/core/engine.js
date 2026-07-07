@@ -37,7 +37,7 @@ function gameTick() {
 
     // 4. LE SPAWNER D'ÉVÉNEMENTS
     // À chaque tick (chaque année), il y a 35% de chance qu'un événement se produise.
-    if (Math.random() < 0.35) {
+    if (Math.random() < 0.15) {
         spawnEvent();
     }
 
