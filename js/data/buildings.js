@@ -14,6 +14,16 @@ export const BUILDINGS = [
     },
     // --- TIER 2 : Développement urbain ---
     {
+        id: "refuge_elfique", 
+        name: "Refuge Elfique", 
+        description: "Attire +0.1 Elfe par an.",
+        baseCost: { espoir: 200, savoir: 50 }, 
+        production: { elfes: 0.1 }, 
+        multiplier: 1.15,
+        isVisible: (st) => st.resources.savoir >= 50 || st.buildings.refuge_elfique > 0
+    },
+    
+    {
         id: "forge", name: "Forge Naine", description: "Génère +4 Richesse par an.",
         baseCost: { richesse: 150 }, production: { richesse: 4 }, multiplier: 1.15,
         isVisible: (st) => st.buildings.ferme >= 10
