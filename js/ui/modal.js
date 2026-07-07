@@ -31,7 +31,7 @@ export function triggerEvent(eventData) {
         }
 
         // Écouteur d'événement pour résoudre le choix
-        btn.onclick = () => resolveChoice(eventData.id, choice);
+        btn.onclick = () => resolveChoice(eventData, choice);
         choicesEl.appendChild(btn);
     });
 
@@ -39,16 +39,16 @@ export function triggerEvent(eventData) {
     modal.showModal();
 }
 
-function resolveChoice(eventId, choice) {
+function resolveChoice(eventData, choice) {
     // 1. Appliquer les conséquences mathématiques du choix
     choice.effect(gameState);
     
     // 2. Inscrire l'événement dans la mémoire pour ne plus le tirer
-    gameState.state.resolved_events.push(eventId);
+    gameState.state.resolved_events.push(eventData.id);
     
-    // 3. Ajouter la ligne d'histoire dans l'interface
+    // 3. Ajouter la ligne d'histoire avec le TITRE de l'événement pour le contexte
     if (choice.log) {
-        addChronicle(choice.log);
+        addChronicle(`<strong>[${eventData.title}]</strong> ${choice.log}`);
     }
     
     // 4. Relancer la machine
