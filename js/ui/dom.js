@@ -58,7 +58,7 @@ export function addChronicle(text) {
         const entry = document.createElement('p');
         entry.style.marginBottom = "10px";
         entry.style.fontStyle = "italic";
-        entry.textContent = "- " + text;
+        entry.innerHTML = "- " + text;
         
         // On l'ajoute tout en haut de la liste
         logContainer.prepend(entry);
