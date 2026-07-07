@@ -1,91 +1,73 @@
 // js/core/engine.js
-import { gameState, CONFIG } from './state.js';
-import { saveGame } from './save.js';
+import { gameState } from './state.js';
 import { updateUI } from '../ui/dom.js';
-import { EVENTS } from '../data/events.js';
 import { triggerEvent } from '../ui/modal.js';
+import { EVENTS } from '../data/events.js'; // Importation de tes 165 événements !
 
-let engineInterval;
+let gameLoop;
+// 1 tick = 1 année dans le jeu. Ici réglé sur 5 secondes réelles (5000 ms).
+const TICK_RATE = 5000; 
 
 export function initEngine() {
-    console.log("Moteur démarré. Ère Tolkiénienne enclenchée.");
-    
-    // Rattrapage temporel si le joueur était hors-ligne
-    calculateOfflineProgress();
-    
-    // Lancement de la boucle temporelle (tourne chaque seconde)
-    engineInterval = setInterval(gameLoop, 1000);
+    console.log("⚙️ Moteur temporel démarré...");
+    // On lance la boucle infinie du jeu
+    gameLoop = setInterval(gameTick, TICK_RATE);
 }
 
-function gameLoop() {
-    // 🔴 Bloquant : Si un événement narratif attend une réponse, le temps s'arrête.
+function gameTick() {
+    // 1. ARRÊT SUR IMAGE : Si une modale est ouverte, on fige le temps.
     if (gameState.state.is_paused) return;
 
-    const now = Date.now();
-    const deltaMs = now - gameState.meta.last_saved_at;
+    // 2. LE TEMPS PASSE
+    gameState.state.current_year += 1;
 
-    // Le moteur n'agit que si un "Tick" complet est passé
-    if (deltaMs >= CONFIG.TICK_RATE_MS) {
-        const ticksElapsed = Math.floor(deltaMs / CONFIG.TICK_RATE_MS);
-        
-        processTicks(ticksElapsed);
-        
-        // On conserve le reliquat de millisecondes pour ne pas perdre de temps
-        gameState.meta.last_saved_at = now - (deltaMs % CONFIG.TICK_RATE_MS);
-        
-        // Vérification des événements à intervalles réguliers (ex: 1 tick sur 10)
-        // L'utilisation du modulo permet de cadencer l'apparition des pop-ups
-        if (Math.floor(now / CONFIG.TICK_RATE_MS) % 10 === 0) { 
-            checkForEvents();
+    // 3. PRODUCTION PASSIVE
+    // On récupère le multiplicateur (qui passe à 1.5 si le bouton "Inspirer" a déclenché l'Âge d'Or)
+    const multiplier = gameState.state.bonus_multiplicateur || 1.0;
+    
+    // Les Hommes produisent un peu de richesse, les Elfes un peu de Savoir.
+    gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier;
+    gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
+    
+    // L'Ombre ronge doucement l'Espoir à chaque tour (-0.5 par année)
+    gameState.resources.espoir -= 0.5; 
+    
+    // Sécurité défensive : L'espoir et les ressources ne tombent jamais sous zéro
+    gameState.resources.espoir = Math.max(0, gameState.resources.espoir);
+
+    // 4. LE SPAWNER D'ÉVÉNEMENTS
+    // À chaque tick (chaque année), il y a 35% de chance qu'un événement se produise.
+    if (Math.random() < 0.35) {
+        spawnEvent();
+    }
+
+    // 5. MISE À JOUR VISUELLE
+    updateUI();
+}
+
+function spawnEvent() {
+    // A. On filtre la base de données pour ne garder que les événements "jouables" maintenant
+    const validEvents = EVENTS.filter(event => {
+        // Règle 1 : Si l'événement est unique (non-répétable) et déjà joué, on l'élimine.
+        if (!event.repeatable && gameState.state.resolved_events.includes(event.id)) {
+            return false;
         }
+        
+        // Règle 2 : Le joueur remplit-il les conditions d'âge, de richesse, d'ombre ?
+        try {
+            return event.condition(gameState);
+        } catch (error) {
+            console.error(`Erreur sur l'évaluation de l'événement ${event.id}:`, error);
+            return false;
+        }
+    });
 
-        // Sauvegarde et mise à jour de l'UI uniquement lors d'un tick effectif
-        saveGame();
-        updateUI();
-    }
-}
-
-function calculateOfflineProgress() {
-    const now = Date.now();
-    const deltaMs = now - gameState.meta.last_saved_at;
-    const ticksElapsed = Math.floor(deltaMs / CONFIG.TICK_RATE_MS);
-    
-    if (ticksElapsed > 0) {
-        processTicks(ticksElapsed);
-        console.log(`${ticksElapsed} mois simulés en hors-ligne.`);
-    }
-}
-
-function processTicks(ticks) {
-    // Formules mathématiques de production passive
-    // TODO: Extraire ces taux fixes vers un fichier js/data/rates.js pour équilibrage futur
-    const baseRichesse = gameState.population.hommes * 0.1;
-    let focusModifier = gameState.state.active_focus === 'agricole' ? 1.5 : 1.0;
-
-    gameState.resources.richesse += (baseRichesse * focusModifier) * ticks;
-    
-    // Avancée du temps (ex: 10 ticks = 1 an in-game)
-    gameState.state.current_year += (ticks / 10);
-    
-    // L'Ombre progresse inexorablement (Soft Enrage)
-    gameState.state.shadow_level += 0.05 * ticks;
-
-    // Hard cap pour éviter de casser l'UI ou les mathématiques
-    if (gameState.state.shadow_level > 100) {
-        gameState.state.shadow_level = 100;
-    }
-}
-
-function checkForEvents() {
-    // Ne rien faire si le jeu est déjà en pause (sécurité anti-empilement de modales)
-    if (gameState.state.is_paused) return;
-
-    // Filtrer le dictionnaire pour trouver les événements éligibles
-    const availableEvents = EVENTS.filter(ev => ev.condition(gameState));
-    
-    if (availableEvents.length > 0) {
-        // RNG (Random Number Generator) de base pour piocher un événement
-        const randomIndex = Math.floor(Math.random() * availableEvents.length);
-        triggerEvent(availableEvents[randomIndex]);
+    // B. S'il reste des événements valides dans le tamis, on en tire un au hasard !
+    if (validEvents.length > 0) {
+        const randomIndex = Math.floor(Math.random() * validEvents.length);
+        const chosenEvent = validEvents[randomIndex];
+        
+        // C. On envoie l'événement choisi à l'interface (la modale)
+        triggerEvent(chosenEvent);
     }
 }
