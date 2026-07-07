@@ -10,7 +10,7 @@ const ui = {};
 export function initUI() {
     ui.year = document.getElementById('ui-year');
     ui.shadowFill = document.getElementById('ui-shadow-fill');
-    
+
     ui.savoir = document.getElementById('ui-res-savoir');
     ui.richesse = document.getElementById('ui-res-richesse');
     ui.renom = document.getElementById('ui-res-renom');
