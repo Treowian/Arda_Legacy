@@ -8,21 +8,31 @@ const titleEl = document.getElementById('modal-title');
 const textEl = document.getElementById('modal-text');
 const choicesEl = document.getElementById('modal-choices');
 
-// 🆕 La fonction qui ouvre le premier événement de la pile
+// 🆕 Initialisation propre de l'écouteur de clic
+export function initModal() {
+    const inboxBtn = document.getElementById('btn-inbox');
+    if (inboxBtn) {
+        inboxBtn.addEventListener('click', () => {
+            openPendingEvents();
+        });
+    }
+}
+
+// Fonction qui dépile la file d'attente
 export function openPendingEvents() {
     if (!gameState.state.pending_events || gameState.state.pending_events.length === 0) return;
 
-    // Prendre le premier de la liste
+    // Prendre le premier événement de la liste
     const eventId = gameState.state.pending_events[0];
     const eventData = EVENTS.find(e => e.id === eventId);
     
     if (!eventData) {
-        // Sécurité si l'événement n'existe plus
+        // Sécurité si l'événement n'existe plus dans la base de données
         gameState.state.pending_events.shift();
         return openPendingEvents(); 
     }
 
-    // PLUS AUCUNE PAUSE ICI : Le jeu continue !
+    // Le jeu N'EST PAS mis en pause.
     
     titleEl.textContent = eventData.title;
     textEl.textContent = eventData.description;
@@ -54,15 +64,13 @@ function resolveChoice(eventData, choice) {
         addChronicle(`<strong>[${eventData.title}]</strong> ${choice.log}`);
     }
     
-    // 🆕 On retire l'événement traité de la file d'attente
+    // On retire l'événement traité de la file d'attente
     gameState.state.pending_events.shift();
     
-    // Y en a-t-il d'autres en attente ?
+    // S'il y a d'autres événements en attente, on enchaîne immédiatement
     if (gameState.state.pending_events.length > 0) {
-        // Oui ? On affiche le suivant !
         openPendingEvents();
     } else {
-        // Non ? On ferme la modale.
         if (modal) modal.close();
     }
     
