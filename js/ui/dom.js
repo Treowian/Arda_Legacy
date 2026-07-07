@@ -1,5 +1,6 @@
 // js/ui/dom.js
 import { gameState } from '../core/state.js';
+import { renderCurrentProject } from './projects.js'; // 🆕 LA DERNIÈRE RETOUCHE : On importe la logique du projet
 
 // Cache de l'interface (évite les requêtes DOM inutiles)
 const ui = {};
@@ -35,12 +36,15 @@ export function updateUI() {
     
     ui.hommes.textContent = gameState.population.hommes;
     ui.elfes.textContent = gameState.population.elfes;
+
+    // 🆕 LA DERNIÈRE RETOUCHE : À chaque fois que l'interface se met à jour (toutes les 5 secondes),
+    // on demande au bouton du projet de vérifier si le joueur est devenu assez riche pour l'acheter.
+    renderCurrentProject();
 }
 
 // Fonction pour ajouter une ligne de texte dans le journal / l'historique
 export function addChronicle(text) {
     // On cherche l'endroit où afficher le texte dans le HTML (la boîte de logs)
-    // (Remplace 'log-container' par l'ID exact de ta div dans index.html si besoin)
     const logContainer = document.getElementById('log-container') || document.getElementById('chronicles');
     
     if (logContainer) {
