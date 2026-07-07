@@ -1,5 +1,5 @@
 // js/main.js
-import { gameState } from './state.js';
+import { gameState } from './core/state.js';
 import { loadGame } from './core/save.js';
 import { initUI } from './ui/dom.js';
 import { initEngine } from './core/engine.js';
