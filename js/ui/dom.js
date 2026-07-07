@@ -37,6 +37,12 @@ export function updateUI() {
     ui.hommes.textContent = gameState.population.hommes;
     ui.elfes.textContent = gameState.population.elfes;
 
+    const titleEl = document.getElementById('ui-age-title');
+if (titleEl) {
+    if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
+    else if (gameState.meta.current_age === 2) titleEl.textContent = "Âge II : L'Essor";
+    else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
+}
     // 🆕 LA DERNIÈRE RETOUCHE : À chaque fois que l'interface se met à jour (toutes les 5 secondes),
     // on demande au bouton du projet de vérifier si le joueur est devenu assez riche pour l'acheter.
     renderCurrentProject();
