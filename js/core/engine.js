@@ -10,11 +10,10 @@ const TICK_RATE = 10000;
 
 export function initEngine() {
     console.log("⚙️ Moteur temporel démarré...");
-    simulateOfflineProgress(); // 🆕 On rattrape le temps perdu au lancement !
+    simulateOfflineProgress(); 
     gameLoop = setInterval(gameTick, TICK_RATE);
 }
 
-// 🆕 NOUVEAU : Calcul de l'absence
 function simulateOfflineProgress() {
     if (!gameState.meta.last_save_time) return;
     
@@ -23,17 +22,14 @@ function simulateOfflineProgress() {
     const missedTicks = Math.floor(diff / TICK_RATE);
     
     if (missedTicks > 0) {
-        // Limitation à 1 semaine (60480 ticks) pour éviter un crash du navigateur
         const safeTicks = Math.min(missedTicks, 60480);
-        
-        // On prend une photo des ressources avant
         const richesBefore = gameState.resources.richesse;
         const savoirBefore = gameState.resources.savoir;
         
-        // On fait tourner la boucle économique très vite (sans l'interface et les événements)
         for(let i = 0; i < safeTicks; i++) {
             if (!gameState.state.is_victory) {
                 gameState.state.current_year += 1;
+                processCouncilLogic(); // 🆕 Les intendants bossent aussi hors-ligne !
                 processEconomy();
             }
         }
@@ -41,7 +37,6 @@ function simulateOfflineProgress() {
         const richesGained = Math.floor(gameState.resources.richesse - richesBefore);
         const savoirGained = Math.floor(gameState.resources.savoir - savoirBefore);
         
-        // On avertit le joueur
         alert(`Vous êtes de retour !\nPendant votre absence (${safeTicks} années se sont écoulées), votre royaume a généré :\n+ ${richesGained} Richesse\n+ ${savoirGained} Savoir`);
         addChronicle(`<em>Votre règne reprend. ${safeTicks} années se sont écoulées en votre absence.</em>`);
         
@@ -54,16 +49,72 @@ function gameTick() {
     if (gameState.state.is_paused || gameState.state.is_victory) return;
 
     gameState.state.current_year += 1;
+    
+    processCouncilLogic(); // 🆕 Traitement des automatisations du Conseil
     processEconomy();
 
-    // 🆕 Les événements vont désormais dans la boîte de réception
     if (Math.random() < 0.15) spawnEvent();
 
     updateUI();
     saveGame();
 }
 
-// J'ai séparé l'économie dans une fonction dédiée pour le Hors-Ligne
+// 🆕 LOGIQUE D'AUTOMATISATION DES INTENDANTS
+function processCouncilLogic() {
+    // 1. LE SÉNÉCHAL (Gestion des Décrets)
+    if (gameState.council.senechal) {
+        if (gameState.state.shadow_level >= 70 && gameState.state.active_focus !== 'frontalier') {
+            gameState.state.active_focus = 'frontalier';
+            addChronicle("Entity : 📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace de l'Ombre.</em>");
+        } else if (gameState.state.shadow_level <= 30 && gameState.state.active_focus !== 'agricole') {
+            gameState.state.active_focus = 'agricole';
+            addChronicle("Entity : 📜 <em>Le Sénéchal ré-alloue les bras de votre peuple vers le Focus Agricole.</em>");
+        }
+    }
+
+    // 2. LE HÉRAUT (Inspiration Passive)
+    if (gameState.council.heraut) {
+        // Simule 10 clics d'inspiration sur l'année qui vient de passer
+        for(let i = 0; i < 10; i++) {
+            if (gameState.state.is_twilight) {
+                gameState.resources.espoir += 3;
+                gameState.resources.renom += 1;
+            } else {
+                if (gameState.state.active_focus === 'agricole') {
+                    gameState.resources.richesse += 2;
+                } else {
+                    gameState.resources.espoir += 2;
+                }
+            }
+        }
+    }
+
+    // 3. LE MAÎTRE BÂTISSEUR (Achat Auto Sécurisé)
+    if (gameState.council.batisseur && !gameState.state.is_twilight) {
+        BUILDINGS.forEach(b => {
+            const owned = gameState.buildings[b.id] || 0;
+            let canAffordSafe = true;
+
+            // Calculer les coûts actuels avec la formule exponentielle
+            for (const [res, baseValue] of Object.entries(b.baseCost)) {
+                const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
+                // RÈGLE D'OR : N'achète que si le joueur possède au moins 3 FOIS le coût requis
+                if (gameState.resources[res] < (cost * 3)) canAffordSafe = false;
+            }
+
+            if (canAffordSafe && b.isVisible(gameState)) {
+                // Déduction des ressources
+                for (const [res, baseValue] of Object.entries(b.baseCost)) {
+                    const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
+                    gameState.resources[res] -= cost;
+                }
+                gameState.buildings[b.id]++;
+                console.log(`🔨 Le Conseil (Bâtisseur) a étendu votre infrastructure : ${b.name}`);
+            }
+        });
+    }
+}
+
 function processEconomy() {
     const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
     const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
@@ -129,7 +180,6 @@ export function spawnEvent() {
         const randomIndex = Math.floor(Math.random() * validEvents.length);
         const eventId = validEvents[randomIndex].id;
         
-        // 🆕 Au lieu d'ouvrir, on archive l'ID !
         gameState.state.pending_events.push(eventId);
         addChronicle(`📜 <em>Un messager arrive. Une décision requiert votre attention !</em>`);
     }
