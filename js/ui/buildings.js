@@ -8,7 +8,7 @@ export function renderBuildings() {
     const container = document.getElementById('ui-buildings-container');
     if (!panel || !container) return;
 
-    // Vérifier si au moins un bâtiment est visible pour afficher le panneau
+    // Masquer tout le panneau si on est au fond du gouffre du Crépuscule
     const visibleBuildings = BUILDINGS.filter(b => b.isVisible(gameState));
     
     if (visibleBuildings.length > 0 && !gameState.state.is_twilight) {
@@ -21,13 +21,12 @@ export function renderBuildings() {
     container.innerHTML = '';
 
     visibleBuildings.forEach(building => {
-        const owned = gameState.buildings[building.id];
-        
-        // Calcul exponentiel du coût
+        const owned = gameState.buildings[building.id] || 0;
         let currentCost = {};
         let canAfford = true;
         let costStrings = [];
 
+        // Application mathématique de la formule exponentielle des Idle Games
         for (const [res, baseValue] of Object.entries(building.baseCost)) {
             const calculatedCost = Math.floor(baseValue * Math.pow(building.multiplier, owned));
             currentCost[res] = calculatedCost;
@@ -36,21 +35,22 @@ export function renderBuildings() {
         }
 
         const div = document.createElement('div');
-        div.style.background = 'rgba(255,255,255,0.03)';
+        div.style.background = 'rgba(255,255,255,0.02)';
         div.style.padding = '8px';
         div.style.border = '1px solid rgba(0,0,0,0.1)';
         div.style.display = 'flex';
         div.style.justifyContent = 'space-between';
         div.style.alignItems = 'center';
         div.style.marginBottom = '5px';
+        div.style.borderRadius = '4px';
 
         div.innerHTML = `
             <div>
-                <strong style="font-size: 0.95em;">${building.name} (${owned})</strong>
-                <div style="font-size: 0.75em; opacity: 0.8;">${building.description}</div>
+                <strong style="font-size: 0.9em; color:#4a3b32;">${building.name} (${owned})</strong>
+                <div style="font-size: 0.75em; opacity: 0.75; font-style:italic;">${building.description}</div>
             </div>
-            <button class="btn-action" style="font-size: 0.8em; padding: 4px 8px; background: ${canAfford ? '#3498db' : '#ccc'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; border: none; border-radius: 4px; color: white;" ${!canAfford ? 'disabled' : ''}>
-                Acheter<br><span style="font-size: 0.8em;">${costStrings.join(', ')}</span>
+            <button class="btn-action" style="font-size: 0.75em; padding: 5px 8px; background: ${canAfford ? '#8a6d55' : '#bbb'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; border: none; border-radius: 4px; color: white; text-align:center; min-width:85px;" ${!canAfford ? 'disabled' : ''}>
+                Bâtir<br><span>${costStrings.join(', ')}</span>
             </button>
         `;
 
