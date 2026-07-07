@@ -11,7 +11,7 @@ export const gameState = {
         active_focus: 'espoir',
         is_paused: false,
         is_victory: false,
-        is_twilight: false, // 🆕 Le mode Crépuscule !
+        is_twilight: false, // Le mode Crépuscule
         bonus_multiplicateur: 1.0,
         resolved_events: []
     },
