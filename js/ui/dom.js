@@ -1,28 +1,34 @@
 // js/ui/dom.js
 import { gameState } from '../core/state.js';
+import { BUILDINGS } from '../data/buildings.js'; // Nécessaire pour simuler les calculs
 import { renderCurrentProject } from './projects.js';
 import { renderBuildings } from './buildings.js';
 
-// Cache interne des éléments du DOM
 const ui = {};
 
 export function initUI() {
     ui.year = document.getElementById('ui-year');
     ui.shadowFill = document.getElementById('ui-shadow-fill');
     
+    // Valeurs
     ui.savoir = document.getElementById('ui-res-savoir');
     ui.richesse = document.getElementById('ui-res-richesse');
     ui.renom = document.getElementById('ui-res-renom');
     ui.espoir = document.getElementById('ui-res-espoir');
-    
     ui.hommes = document.getElementById('ui-pop-hommes');
     ui.elfes = document.getElementById('ui-pop-elfes');
+
+    // 🆕 Spans de Prévision de Production (+X/an)
+    ui.rateSavoir = document.getElementById('ui-rate-savoir');
+    ui.rateRichesse = document.getElementById('ui-rate-richesse');
+    ui.rateRenom = document.getElementById('ui-rate-renom');
+    ui.rateEspoir = document.getElementById('ui-rate-espoir');
+    ui.rateHommes = document.getElementById('ui-rate-hommes');
+    ui.rateElfes = document.getElementById('ui-rate-elfes');
     
-    // Branchement de l'écouteur du bouton de prestige de l'écran de fin
     const btnPrestige = document.getElementById('btn-prestige');
     if (btnPrestige) {
         btnPrestige.onclick = () => {
-            // Import à la demande pour éviter les dépendances circulaires
             import('../core/save.js').then(module => {
                 const scoreTotal = gameState.resources.richesse + gameState.resources.savoir + gameState.resources.renom;
                 module.triggerPrestige(scoreTotal);
@@ -33,10 +39,17 @@ export function initUI() {
     updateUI();
 }
 
-export function updateUI() {
-    if (!ui.year) return; // Sécurité si l'UI n'est pas encore initialisée
+// Fonction utilitaire pour formater le "+/- X/an" avec la bonne couleur
+function formatRate(value) {
+    if (value === 0) return "";
+    const sign = value > 0 ? "+" : "";
+    const color = value > 0 ? "#27ae60" : "#c0392b"; // Vert si positif, Rouge si négatif
+    return `<span style="font-size: 0.85em; color: ${color}; margin-left: 8px; font-weight: normal;">${sign}${value.toFixed(1)}/an</span>`;
+}
 
-    // 1. Rendu dynamique du libellé de l'Âge
+export function updateUI() {
+    if (!ui.year) return; 
+
     const titleEl = document.getElementById('ui-age-title');
     if (titleEl) {
         if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
@@ -44,21 +57,67 @@ export function updateUI() {
         else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
     }
 
-    // 2. Mise à jour de la chronologie et de la jauge d'Ombre
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
-    // 3. Rendu des compteurs de ressources de base (tronqués à l'entier inférieur)
+    // --- CALCUL DES PRÉVISIONS DE PRODUCTION ---
+    let rates = { richesse: 0, savoir: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
+    
+    const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
+    const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
+    const multiplier = (gameState.state.bonus_multiplicateur || 1.0) * prestigeBonus * redemptionBonus;
+
+    if (gameState.state.is_twilight) {
+        rates.richesse -= 50;
+        rates.espoir -= 5;
+        rates.hommes -= 1;
+    } else {
+        // Croissance naturelle et bonus
+        if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
+        if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
+        
+        let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
+        
+        rates.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole;
+        rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
+        rates.espoir -= 0.5;
+
+        // Prévision issue des Bâtiments
+        BUILDINGS.forEach(b => {
+            const owned = gameState.buildings[b.id] || 0;
+            if (owned > 0 && b.production) {
+                for (const [res, amount] of Object.entries(b.production)) {
+                    if (rates[res] !== undefined) {
+                        rates[res] += (amount * owned) * multiplier;
+                    }
+                }
+            }
+        });
+    }
+
+    // Le Paradoxe de la Défiance
+    if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
+        rates.renom += 5 * multiplier;
+    }
+
+    // --- APPLICATION VISUELLE ---
+    // Valeurs nettes
     ui.savoir.textContent = Math.floor(gameState.resources.savoir);
     ui.richesse.textContent = Math.floor(gameState.resources.richesse);
     ui.renom.textContent = Math.floor(gameState.resources.renom);
     ui.espoir.textContent = Math.floor(gameState.resources.espoir);
-    
-    // 4. Rendu de la démographie
     ui.hommes.textContent = Math.floor(gameState.population.hommes);
     ui.elfes.textContent = Math.floor(gameState.population.elfes);
 
-    // 5. Rendu du bandeau de Prestige si le joueur possède des Éclats de Silmaril
+    // Taux de production formattés (+X/an)
+    if (ui.rateSavoir) ui.rateSavoir.innerHTML = formatRate(rates.savoir);
+    if (ui.rateRichesse) ui.rateRichesse.innerHTML = formatRate(rates.richesse);
+    if (ui.rateRenom) ui.rateRenom.innerHTML = formatRate(rates.renom);
+    if (ui.rateEspoir) ui.rateEspoir.innerHTML = formatRate(rates.espoir);
+    if (ui.rateHommes) ui.rateHommes.innerHTML = formatRate(rates.hommes);
+    if (ui.rateElfes) ui.rateElfes.innerHTML = formatRate(rates.elfes);
+
+    // Affichage du Prestige
     const prestigeDisp = document.getElementById('ui-prestige-display');
     if (prestigeDisp) {
         if (gameState.meta.prestige_eclats > 0) {
@@ -70,7 +129,6 @@ export function updateUI() {
         }
     }
 
-    // 6. Actualisation des panneaux d'achats à droite
     renderCurrentProject();
     renderBuildings();
 }
@@ -84,9 +142,8 @@ export function addChronicle(text) {
         entry.style.fontStyle = "italic";
         entry.style.fontSize = "0.9em";
         entry.style.lineHeight = "1.4";
-        entry.innerHTML = "- " + text; // Permet de conserver les balises <strong> et <em>
-        
-        logContainer.prepend(entry); // Ajoute au début pour voir les nouveaux faits en haut
+        entry.innerHTML = "- " + text;
+        logContainer.prepend(entry);
     } else {
         console.log("📖 Chronique : " + text);
     }
