@@ -4,8 +4,8 @@ export const gameState = {
     meta: {
         current_age: 1,
         legacies: [],
-        prestige_eclats: 0, // Notre monnaie de New Game +
-        redemption_achieved: false // Devient vrai si tu purges le Crépuscule
+        prestige_eclats: 0,
+        redemption_achieved: false
     },
     state: {
         current_year: 1,
@@ -13,7 +13,7 @@ export const gameState = {
         active_focus: 'espoir',
         is_paused: false,
         is_victory: false,
-        is_twilight: false, // Mode Crépuscule activé si Ombre = 100
+        is_twilight: false,
         bonus_multiplicateur: 1.0,
         resolved_events: []
     },
@@ -29,7 +29,8 @@ export const gameState = {
     },
     buildings: {
         ferme: 0,
-        village: 0, // Génère des hommes passivement
+        village: 0,
+        refuge_elfique: 0, // 🆕 C'est lui qui manquait !
         forge: 0,
         scriptorium: 0,
         caserne: 0,
