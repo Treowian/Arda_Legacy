@@ -7,16 +7,18 @@ import { initActions } from './ui/actions.js';
 import { initProjects } from './ui/projects.js';
 import { renderBuildings } from './ui/buildings.js';
 import { initDebug } from './ui/debug.js';
+import { initModal } from './ui/modal.js'; // 🆕 Importation de l'init de la modale
 
 // Rendre accessible globalement pour les manipulations directes via F12
 window.gameState = gameState;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadGame();       // 1. Charger les cookies/Localstorage
-    initUI();         // 2. Mettre en cache l'interface
-    initActions();    // 3. Écouter le bouton Inspirer
-    initProjects();   // 4. Initialiser la logique des grands projets
-    renderBuildings(); // 5. Lancer l'évaluation des infrastructures
-    initDebug();      // 6. Activer le menu de triche
-    initEngine();     // 7. Lancer le temps (10s / an)
+    loadGame();       
+    initUI();         
+    initActions();    
+    initProjects();   
+    renderBuildings(); 
+    initModal();      // 🆕 Raccorde le clic sur le bouton Messager
+    initDebug();      
+    initEngine();     
 });
