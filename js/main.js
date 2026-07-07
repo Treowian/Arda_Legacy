@@ -2,16 +2,13 @@
 import { loadGame } from './core/save.js';
 import { initUI } from './ui/dom.js';
 import { initEngine } from './core/engine.js';
-
-// Importe la nouvelle fonction
-import { initActions } from './ui/actions.js'; 
+import { initActions } from './ui/actions.js';
+import { initProjects } from './ui/projects.js'; // 🆕 Import des projets
 
 document.addEventListener('DOMContentLoaded', () => {
     loadGame();
     initUI();
-    
-    // Initialise le bouton d'action
-    initActions(); 
-    
+    initActions();
+    initProjects(); // 🆕 Initialisation du panneau de grands projets
     initEngine();
 });
