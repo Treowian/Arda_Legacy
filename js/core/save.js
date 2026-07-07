@@ -19,28 +19,34 @@ export function loadGame() {
             Object.assign(gameState.population, parsed.population);
             Object.assign(gameState.buildings, parsed.buildings);
             
-            gameState.state.is_paused = false; // Sécurité anti-softlock
+            // Sécurité anti-softlock au démarrage
+            gameState.state.is_paused = false;
         } catch (e) {
-            console.error("Erreur de chargement", e);
+            console.error("Erreur de chargement de la sauvegarde", e);
         }
     }
 }
 
-// 🆕 LA MÉCANIQUE DE PRESTIGE (New Game +)
+// Mécanique de réinitialisation cosmologique (Prestige)
 export function triggerPrestige(score) {
-    // 1. On calcule et on garde les Éclats de Silmaril
+    // Calcul des Éclats de Silmaril gagnés (1 par tranche de 1000 points de score)
     const eclatsGagnes = Math.floor(score / 1000);
     const totalEclats = (gameState.meta.prestige_eclats || 0) + eclatsGagnes;
     
-    // 2. On efface la sauvegarde physique
+    // On rase l'ancienne sauvegarde
     localStorage.removeItem(SAVE_KEY);
     
-    // 3. On crée une sauvegarde "fantôme" qui ne contient QUE le prestige
+    // On injecte les données permanentes du NG+
     const newGamePlusData = {
-        meta: { current_age: 1, legacies: [], prestige_eclats: totalEclats, redemption_achieved: false }
+        meta: { 
+            current_age: 1, 
+            legacies: [], 
+            prestige_eclats: totalEclats, 
+            redemption_achieved: false 
+        }
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(newGamePlusData));
     
-    // 4. On recharge le jeu
+    // On recharge l'onglet pour appliquer le boost
     location.reload();
 }
