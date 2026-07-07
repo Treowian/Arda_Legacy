@@ -5,6 +5,7 @@ import { updateUI, addChronicle } from './dom.js';
 let ferveurClicks = 0;
 const CLICKS_TO_GOLDEN_AGE = 50;
 let ageDorActif = false;
+let aParleCeCycle = false; // 🔒 LE VERROU ANTI-SPAM
 
 const CITATIONS_GARDIEN = [
     "Vous marchez le long des remparts, observant l'horizon.",
@@ -16,22 +17,20 @@ const CITATIONS_GARDIEN = [
 
 export function initActions() {
     const btnInspire = document.getElementById('btn-inspire');
-    
     if (btnInspire) {
         btnInspire.addEventListener('click', handleInspireClick);
     }
 }
 
 function handleInspireClick() {
-    // 1. Gain immédiat (Exemple : si le focus est sur la richesse ou la sécurité)
+    // 1. Gain immédiat
     if (gameState.state.active_focus === 'agricole') {
         gameState.resources.richesse += 1;
     } else {
-        // Gain par défaut
         gameState.resources.espoir += 1;
     }
     
-    // 2. Gestion de la Ferveur (uniquement si l'Âge d'Or n'est pas déjà actif)
+    // 2. Gestion de la Ferveur
     if (!ageDorActif) {
         ferveurClicks++;
         let progressPercent = (ferveurClicks / CLICKS_TO_GOLDEN_AGE) * 100;
@@ -39,18 +38,21 @@ function handleInspireClick() {
         if (ferveurClicks >= CLICKS_TO_GOLDEN_AGE) {
             triggerAgeDor();
         } else {
-            document.getElementById('ui-ferveur-fill').style.width = `${progressPercent}%`;
-            document.getElementById('ui-ferveur-status').textContent = `Jauge de Ferveur : ${Math.floor(progressPercent)}%`;
+            const fill = document.getElementById('ui-ferveur-fill');
+            const status = document.getElementById('ui-ferveur-status');
+            if(fill) fill.style.width = `${progressPercent}%`;
+            if(status) status.textContent = `Jauge de Ferveur : ${Math.floor(progressPercent)}%`;
+        }
+
+        // 3. Narration (1 seule fois par cycle !)
+        // On a monté la chance à 30% pour qu'elle s'affiche assez vite pendant tes clics
+        if (!aParleCeCycle && Math.random() < 0.30 && typeof addChronicle === 'function') {
+            const phrase = CITATIONS_GARDIEN[Math.floor(Math.random() * CITATIONS_GARDIEN.length)];
+            addChronicle(phrase);
+            aParleCeCycle = true; // On ferme le verrou 🔒
         }
     }
     
-    // 3. Narration aléatoire (15% de chance de déclencher un texte)
-    if (Math.random() < 0.15 && typeof addChronicle === 'function') {
-        const phrase = CITATIONS_GARDIEN[Math.floor(Math.random() * CITATIONS_GARDIEN.length)];
-        addChronicle(phrase);
-    }
-    
-    // 4. On met à jour l'interface pour voir les ressources monter instantanément
     updateUI();
 }
 
@@ -63,20 +65,20 @@ function triggerAgeDor() {
     
     if(fill && status) {
         fill.style.width = `100%`;
-        fill.style.backgroundColor = "white"; // Changement de couleur pour marquer l'effet
+        fill.style.backgroundColor = "white"; 
         status.textContent = `✨ ÂGE D'OR ACTIF ! ✨`;
     }
     
     if (typeof addChronicle === 'function') {
-        addChronicle("✨ Votre présence constante inspire grandement votre peuple. Un âge d'or temporaire commence !");
+        addChronicle("<strong>[Âge d'Or]</strong> Votre présence constante inspire grandement votre peuple.");
     }
     
-    // Bonus passif stocké dans le state (ton moteur de temps devra lire cette valeur)
     gameState.state.bonus_multiplicateur = 1.5;
     
     // Fin de l'âge d'or après 30 secondes
     setTimeout(() => {
         ageDorActif = false;
+        aParleCeCycle = false; // On rouvre le verrou pour le prochain cycle ! 🔓
         gameState.state.bonus_multiplicateur = 1.0;
         
         if(fill && status) {
@@ -86,8 +88,8 @@ function triggerAgeDor() {
         }
         
         if (typeof addChronicle === 'function') {
-            addChronicle("L'élan de ferveur retombe doucement. Le quotidien reprend ses droits.");
+            addChronicle("<em>L'élan de ferveur retombe doucement. Le quotidien reprend ses droits.</em>");
         }
         updateUI();
-    }, 30000); // 30 000 millisecondes = 30 secondes
+    }, 30000);
 }
