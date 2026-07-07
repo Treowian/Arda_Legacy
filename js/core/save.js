@@ -1,34 +1,36 @@
 // js/core/save.js
-import { gameState, setGameState, CONFIG } from './state.js';
+import { gameState } from './state.js';
+
+// Clé secrète sous laquelle le jeu sera rangé dans le navigateur
+const SAVE_KEY = 'arda_legacy_save';
 
 export function saveGame() {
-    gameState.meta.last_saved_at = Date.now();
-    try {
-        localStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify(gameState));
-    } catch (e) {
-        console.error("🔴 Erreur critique lors de la sauvegarde locale :", e);
-    }
+    // On transforme tout ton univers en une chaîne de texte compacte
+    const dataToSave = JSON.stringify(gameState);
+    localStorage.setItem(SAVE_KEY, dataToSave);
 }
 
 export function loadGame() {
-    try {
-        const savedData = localStorage.getItem(CONFIG.SAVE_KEY);
-        if (savedData) {
+    const savedData = localStorage.getItem(SAVE_KEY);
+    if (savedData) {
+        try {
             const parsed = JSON.parse(savedData);
-            
-            // Fusion défensive (Deep Merge manuel sécurisé)
-            setGameState({
-                meta: { ...gameState.meta, ...(parsed.meta || {}) },
-                state: { ...gameState.state, ...(parsed.state || {}) },
-                resources: { ...gameState.resources, ...(parsed.resources || {}) },
-                population: { ...gameState.population, ...(parsed.population || {}) }
-            });
-            
-            console.log("🟢 Sauvegarde chargée avec succès.");
-        } else {
-            console.log("🔵 Nouvelle partie initialisée.");
+            // On fusionne doucement les données sauvegardées avec l'état de base
+            Object.assign(gameState.meta, parsed.meta);
+            Object.assign(gameState.state, parsed.state);
+            Object.assign(gameState.resources, parsed.resources);
+            Object.assign(gameState.population, parsed.population);
+            console.log("📂 Partie chargée avec succès !");
+        } catch (e) {
+            console.error("Erreur lors du chargement de la sauvegarde", e);
         }
-    } catch (e) {
-        console.warn("🟡 Sauvegarde corrompue ou introuvable. Écrasement par défaut.", e);
+    } else {
+        console.log("🌱 Nouvelle partie commencée.");
     }
+}
+
+// Fonction bonus si tu veux créer un bouton "Recommencer" plus tard
+export function resetGame() {
+    localStorage.removeItem(SAVE_KEY);
+    location.reload(); // Recharge la page
 }
