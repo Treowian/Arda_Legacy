@@ -3,6 +3,7 @@ import { gameState } from '../core/state.js';
 import { BUILDINGS } from '../data/buildings.js'; 
 import { renderCurrentProject } from './projects.js';
 import { renderBuildings } from './buildings.js';
+import { renderCouncil } from './council.js'; // 🆕 IMPORT DU MODULE CONSEIL
 
 const ui = {};
 
@@ -24,7 +25,6 @@ export function initUI() {
     ui.rateHommes = document.getElementById('ui-rate-hommes');
     ui.rateElfes = document.getElementById('ui-rate-elfes');
     
-    // Branchement du bouton NG+
     const btnPrestige = document.getElementById('btn-prestige');
     if (btnPrestige) {
         btnPrestige.onclick = () => {
@@ -35,7 +35,6 @@ export function initUI() {
         };
     }
     
-    // Branchement du bouton de la boîte de réception
     const inboxBtn = document.getElementById('btn-inbox');
     if (inboxBtn) {
         inboxBtn.onclick = () => {
@@ -48,7 +47,6 @@ export function initUI() {
     updateUI();
 }
 
-// Fonction de formatage pour l'affichage visuel des taux (+/-)
 function formatRate(value) {
     if (value === 0) return "";
     const sign = value > 0 ? "+" : "";
@@ -69,7 +67,7 @@ export function updateUI() {
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
-    // --- CALCUL DES TAUX EN TEMPS RÉEL ---
+    // --- EVALUATION DES REVENUS ANNUELS ---
     let rates = { richesse: 0, savoir: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
     
     const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
@@ -81,7 +79,6 @@ export function updateUI() {
         rates.espoir -= 5;
         rates.hommes -= 1;
     } else {
-        // Démographie
         if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
         if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
         
@@ -91,7 +88,6 @@ export function updateUI() {
         rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
         rates.espoir -= 0.5;
 
-        // Prévision issue des Infrastructures
         BUILDINGS.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
             if (owned > 0 && b.production) {
@@ -108,7 +104,7 @@ export function updateUI() {
         rates.renom += 5 * multiplier;
     }
 
-    // --- APPLICATION A L'INTERFACE ---
+    // Affichage des compteurs
     ui.savoir.textContent = Math.floor(gameState.resources.savoir);
     ui.richesse.textContent = Math.floor(gameState.resources.richesse);
     ui.renom.textContent = Math.floor(gameState.resources.renom);
@@ -134,7 +130,6 @@ export function updateUI() {
         }
     }
 
-    // GESTION DU BOUTON DE BOÎTE DE RÉCEPTION
     const inboxBtn = document.getElementById('btn-inbox');
     if (inboxBtn) {
         const pendingCount = (gameState.state.pending_events || []).length;
@@ -150,11 +145,11 @@ export function updateUI() {
 
     renderCurrentProject();
     renderBuildings();
+    renderCouncil(); // 🆕 REFLECTION DU PANNEAU DU CONSEIL
 }
 
 export function addChronicle(text) {
     const logContainer = document.getElementById('log-container') || document.getElementById('chronicles');
-    
     if (logContainer) {
         const entry = document.createElement('p');
         entry.style.marginBottom = "10px";
@@ -163,7 +158,5 @@ export function addChronicle(text) {
         entry.style.lineHeight = "1.4";
         entry.innerHTML = "- " + text;
         logContainer.prepend(entry);
-    } else {
-        console.log("📖 Chronique : " + text);
     }
 }
