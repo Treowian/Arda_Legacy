@@ -4,8 +4,8 @@ export const gameState = {
     meta: {
         current_age: 1,
         legacies: [],
-        prestige_eclats: 0, // Monnaie du New Game +
-        redemption_achieved: false // Bonus permanent si tu as vaincu le Crépuscule
+        prestige_eclats: 0, // Notre monnaie de New Game +
+        redemption_achieved: false // Devient vrai si tu purges le Crépuscule
     },
     state: {
         current_year: 1,
@@ -13,7 +13,7 @@ export const gameState = {
         active_focus: 'espoir',
         is_paused: false,
         is_victory: false,
-        is_twilight: false,
+        is_twilight: false, // Mode Crépuscule activé si Ombre = 100
         bonus_multiplicateur: 1.0,
         resolved_events: []
     },
@@ -29,13 +29,13 @@ export const gameState = {
     },
     buildings: {
         ferme: 0,
+        village: 0, // Génère des hommes passivement
         forge: 0,
         scriptorium: 0,
         caserne: 0,
         sanctuaire: 0,
-        village: 0, // Génère des Hommes
-        nains: 0,   // Erebor
-        hobbits: 0, // La Comté
-        ents: 0     // Fangorn
+        hobbits: 0,
+        nains: 0,
+        ents: 0
     }
 };
