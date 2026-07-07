@@ -3,6 +3,7 @@ import { gameState } from './state.js';
 import { updateUI, addChronicle } from '../ui/dom.js';
 import { triggerEvent } from '../ui/modal.js';
 import { EVENTS } from '../data/events.js';
+import { BUILDINGS } from '../data/buildings.js';
 import { saveGame } from './save.js';
 
 let gameLoop;
@@ -25,13 +26,23 @@ function gameTick() {
     }
 
     if (gameState.state.is_twilight) {
-        // En Crépuscule, la Richesse s'effondre, l'Espoir baisse plus vite
         gameState.resources.richesse -= 2 * multiplier;
         gameState.resources.espoir -= 1.5;
     } else {
-        // Production normale
+        // Production de base
         gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier;
         gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
+        
+        // Production des infrastructures
+        BUILDINGS.forEach(b => {
+            const owned = gameState.buildings[b.id];
+            if (owned > 0) {
+                for (const [res, amount] of Object.entries(b.production)) {
+                    gameState.resources[res] += (amount * owned) * multiplier;
+                }
+            }
+        });
+        
         gameState.resources.espoir -= 0.5; // Baisse naturelle
     }
     
@@ -39,13 +50,13 @@ function gameTick() {
     gameState.resources.richesse = Math.max(0, gameState.resources.richesse);
     gameState.resources.espoir = Math.max(0, gameState.resources.espoir);
 
-    // Spawner (15% de chances par an)
+    // Spawner d'événements
     if (Math.random() < 0.15) {
         spawnEvent();
     }
 
     updateUI();
-    saveGame(); // Sauvegarde automatique
+    saveGame();
 }
 
 function triggerTwilight() {
