@@ -1,4 +1,5 @@
 // js/core/engine.js
+import { saveGame } from './save.js';
 import { gameState } from './state.js';
 import { updateUI } from '../ui/dom.js';
 import { triggerEvent } from '../ui/modal.js';
@@ -43,6 +44,9 @@ function gameTick() {
 
     // 5. MISE À JOUR VISUELLE
     updateUI();
+
+    // Sauvegarde automatique à la fin de chaque tour
+saveGame();
 }
 
 function spawnEvent() {
