@@ -103,3 +103,25 @@ h1, h2, h3 { font-family: var(--font-story); margin-bottom: var(--spacing-sm); }
     max-width: 500px;
 }
 .parchment-modal::backdrop { background: rgba(0, 0, 0, 0.8); }
+
+/* Limiter la taille des chroniques et ajouter une barre de défilement (scroll) */
+#log-container, #chronicles {
+    max-height: 500px; /* Adapte cette taille selon ton écran */
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+/* Styliser la barre de défilement aux couleurs du jeu */
+#log-container::-webkit-scrollbar { width: 8px; }
+#log-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+#log-container::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+
+/* Rendre les boutons vivants au survol */
+.btn-action {
+    transition: all 0.2s ease-in-out;
+}
+.btn-action:hover:not([disabled]) {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
