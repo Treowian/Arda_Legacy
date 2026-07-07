@@ -23,7 +23,7 @@ export function initUI() {
 export function updateUI() {
     if (!ui.year) return; 
 
-    // Gestion du titre de l'âge
+    // Rendu dynamique du titre de l'Âge courant
     const titleEl = document.getElementById('ui-age-title');
     if (titleEl) {
         if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
@@ -31,6 +31,7 @@ export function updateUI() {
         else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
     }
 
+    // Affichage des compteurs principaux
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
@@ -39,10 +40,10 @@ export function updateUI() {
     ui.renom.textContent = Math.floor(gameState.resources.renom);
     ui.espoir.textContent = Math.floor(gameState.resources.espoir);
     
-    ui.hommes.textContent = gameState.population.hommes;
-    ui.elfes.textContent = gameState.population.elfes;
+    ui.hommes.textContent = Math.floor(gameState.population.hommes);
+    ui.elfes.textContent = Math.floor(gameState.population.elfes);
 
-    // Mise à jour des boutons d'achat
+    // Rafraîchissement en chaîne des deux autres panneaux de droite
     renderCurrentProject();
     renderBuildings();
 }
@@ -54,7 +55,7 @@ export function addChronicle(text) {
         const entry = document.createElement('p');
         entry.style.marginBottom = "10px";
         entry.style.fontStyle = "italic";
-        entry.innerHTML = "- " + text;
+        entry.innerHTML = "- " + text; // L'utilisation de innerHTML valide le gras <strong> des titres d'événements
         logContainer.prepend(entry);
     } else {
         console.log("📖 Chronique : " + text);
