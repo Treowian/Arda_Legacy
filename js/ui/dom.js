@@ -1,8 +1,8 @@
 // js/ui/dom.js
 import { gameState } from '../core/state.js';
-import { renderCurrentProject } from './projects.js'; // 🆕 LA DERNIÈRE RETOUCHE : On importe la logique du projet
+import { renderCurrentProject } from './projects.js';
+import { renderBuildings } from './buildings.js';
 
-// Cache de l'interface (évite les requêtes DOM inutiles)
 const ui = {};
 
 export function initUI() {
@@ -17,18 +17,23 @@ export function initUI() {
     ui.hommes = document.getElementById('ui-pop-hommes');
     ui.elfes = document.getElementById('ui-pop-elfes');
     
-    // Premier rendu immédiat
     updateUI();
 }
 
 export function updateUI() {
-    if (!ui.year) return; // Sécurité : ne pas crasher si le cache est vide
+    if (!ui.year) return; 
 
-    // textContent empêche les failles d'injection XSS
+    // Gestion du titre de l'âge
+    const titleEl = document.getElementById('ui-age-title');
+    if (titleEl) {
+        if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
+        else if (gameState.meta.current_age === 2) titleEl.textContent = "Âge II : L'Essor";
+        else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
+    }
+
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
-    // Math.floor masque les décimales générées par la production passive
     ui.savoir.textContent = Math.floor(gameState.resources.savoir);
     ui.richesse.textContent = Math.floor(gameState.resources.richesse);
     ui.renom.textContent = Math.floor(gameState.resources.renom);
@@ -37,33 +42,21 @@ export function updateUI() {
     ui.hommes.textContent = gameState.population.hommes;
     ui.elfes.textContent = gameState.population.elfes;
 
-    const titleEl = document.getElementById('ui-age-title');
-if (titleEl) {
-    if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
-    else if (gameState.meta.current_age === 2) titleEl.textContent = "Âge II : L'Essor";
-    else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
-}
-    // 🆕 LA DERNIÈRE RETOUCHE : À chaque fois que l'interface se met à jour (toutes les 5 secondes),
-    // on demande au bouton du projet de vérifier si le joueur est devenu assez riche pour l'acheter.
+    // Mise à jour des boutons d'achat
     renderCurrentProject();
+    renderBuildings();
 }
 
-// Fonction pour ajouter une ligne de texte dans le journal / l'historique
 export function addChronicle(text) {
-    // On cherche l'endroit où afficher le texte dans le HTML (la boîte de logs)
     const logContainer = document.getElementById('log-container') || document.getElementById('chronicles');
     
     if (logContainer) {
-        // On crée un nouveau paragraphe protégé contre les failles (XSS)
         const entry = document.createElement('p');
         entry.style.marginBottom = "10px";
         entry.style.fontStyle = "italic";
         entry.innerHTML = "- " + text;
-        
-        // On l'ajoute tout en haut de la liste
         logContainer.prepend(entry);
     } else {
-        // Si la boîte n'existe pas encore dans le HTML, on l'affiche au moins dans la console
         console.log("📖 Chronique : " + text);
     }
 }
