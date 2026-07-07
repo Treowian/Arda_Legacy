@@ -3,7 +3,9 @@
 export const gameState = {
     meta: {
         current_age: 1,
-        legacies: []
+        legacies: [],
+        prestige_eclats: 0, // Monnaie du New Game +
+        redemption_achieved: false // Bonus permanent si tu as vaincu le Crépuscule
     },
     state: {
         current_year: 1,
@@ -30,6 +32,10 @@ export const gameState = {
         forge: 0,
         scriptorium: 0,
         caserne: 0,
-        sanctuaire: 0
+        sanctuaire: 0,
+        village: 0, // Génère des Hommes
+        nains: 0,   // Erebor
+        hobbits: 0, // La Comté
+        ents: 0     // Fangorn
     }
 };
