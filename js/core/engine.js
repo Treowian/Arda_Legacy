@@ -22,7 +22,6 @@ function simulateOfflineProgress() {
     const missedTicks = Math.floor(diff / TICK_RATE);
     
     if (missedTicks > 0) {
-        // Cap de sécurité : 12 heures max (4320 tics)
         const safeTicks = Math.min(missedTicks, 4320);
         const isCapped = missedTicks > 4320;
         
@@ -32,6 +31,7 @@ function simulateOfflineProgress() {
         for(let i = 0; i < safeTicks; i++) {
             if (!gameState.state.is_victory) {
                 gameState.state.current_year += 1;
+                processModifiers(); // On gère le temps des malus même hors ligne
                 processCouncilLogic(); 
                 processEconomy();
             }
@@ -59,6 +59,7 @@ function gameTick() {
 
     gameState.state.current_year += 1;
     
+    processModifiers();
     processCouncilLogic(); 
     processEconomy();
 
@@ -66,6 +67,26 @@ function gameTick() {
 
     updateUI();
     saveGame();
+}
+
+// 🆕 FONCTION DE GESTION DU TEMPS DES MODIFICATEURS
+function processModifiers() {
+    if (!gameState.state.active_modifiers) gameState.state.active_modifiers = [];
+    
+    if (gameState.state.active_modifiers.length > 0) {
+        // Réduit la durée de 1 an
+        gameState.state.active_modifiers.forEach(mod => mod.duration -= 1);
+        
+        // Log la fin d'un malus pour informer le joueur
+        gameState.state.active_modifiers.forEach(mod => {
+            if (mod.duration === 0) {
+                addChronicle(`✨ <em>La malédiction "${mod.label}" s'est enfin dissipée.</em>`);
+            }
+        });
+
+        // Nettoie ceux qui sont arrivés à 0
+        gameState.state.active_modifiers = gameState.state.active_modifiers.filter(mod => mod.duration > 0);
+    }
 }
 
 function processCouncilLogic() {
@@ -127,6 +148,17 @@ function processEconomy() {
     const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
     const multiplier = (gameState.state.bonus_multiplicateur || 1.0) * prestigeBonus * redemptionBonus;
 
+    // 🆕 CALCUL DES MALUS DE PRODUCTION ACTIFS
+    let malusRichesse = 1.0;
+    let malusEspoir = 1.0;
+    
+    if (gameState.state.active_modifiers) {
+        gameState.state.active_modifiers.forEach(mod => {
+            if (mod.target === 'richesse') malusRichesse *= mod.power;
+            if (mod.target === 'espoir') malusEspoir *= mod.power;
+        });
+    }
+
     if (gameState.state.shadow_level >= 100 && !gameState.state.is_twilight) {
         gameState.state.is_twilight = true;
         addChronicle("<strong>[LE CRÉPUSCULE]</strong> L'Ombre a englouti vos terres.");
@@ -136,6 +168,8 @@ function processEconomy() {
         gameState.meta.redemption_achieved = true;
         addChronicle("<strong>[EUCATASTROPHE]</strong> Vous avez purgé l'Ombre ! Bénédiction active.");
     }
+    
+    // Le renom n'est pas soumis aux malus économiques
     if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
         gameState.resources.renom += 5 * multiplier;
     }
@@ -151,12 +185,11 @@ function processEconomy() {
         let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
         if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
 
-        // 🆕 L'AURA LOGARITHMIQUE D'ESPOIR (Purification passive)
-        // Math.max empêche le résultat de devenir négatif si l'espoir est sous 1000.
         const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
         gameState.state.shadow_level -= auraEspoir * multiplier;
 
-        gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole;
+        // 🆕 APPLICATION DES MALUS SUR LA POPULATION
+        gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole * malusRichesse;
         gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
         
         BUILDINGS.forEach(b => {
@@ -166,8 +199,14 @@ function processEconomy() {
                 if (b.id === 'ents') gameState.state.shadow_level -= (1.0 * owned);
                 if (b.production) {
                     for (const [res, amount] of Object.entries(b.production)) {
-                        if (gameState.resources[res] !== undefined) gameState.resources[res] += (amount * owned) * multiplier;
-                        if (gameState.population[res] !== undefined) gameState.population[res] += (amount * owned) * multiplier;
+                        let finalAmount = (amount * owned) * multiplier;
+                        
+                        // 🆕 APPLICATION DES MALUS SUR LES BÂTIMENTS
+                        if (res === 'richesse') finalAmount *= malusRichesse;
+                        if (res === 'espoir') finalAmount *= malusEspoir;
+                        
+                        if (gameState.resources[res] !== undefined) gameState.resources[res] += finalAmount;
+                        if (gameState.population[res] !== undefined) gameState.population[res] += finalAmount;
                     }
                 }
             }
