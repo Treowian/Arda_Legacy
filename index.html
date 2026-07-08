@@ -88,6 +88,29 @@
         .pulse-anim {
             animation: pulse-gold 2s infinite;
         }
+        /* Moteur d'infobulles (CSS Pur) */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #7f8c8d; /* Indique visuellement qu'on peut survoler */
+        }
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a252f;
+            color: #ecf0f1;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: normal;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
@@ -102,10 +125,10 @@
         <aside class="panel">
             <h2>L'État</h2>
             <div id="ui-resources" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-                <div>Savoir : <span id="ui-res-savoir" style="font-weight: bold;">0</span> <span id="ui-rate-savoir"></span></div>
-                <div>Richesse : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
-                <div>Renom : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
-                <div>Espoir : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
+                <div><span class="tooltip" data-tip="Requis pour les alliances elfiques et la magie.">Savoir</span> : <span id="ui-res-savoir" style="font-weight: bold;">0</span> <span id="ui-rate-savoir"></span></div>
+                <div><span class="tooltip" data-tip="Le nerf de la guerre. Permet de bâtir vos infrastructures.">Richesse</span> : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
+                <div><span class="tooltip" data-tip="Votre prestige mondial. Attire l'attention des Peuples Libres.">Renom</span> : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
+                <div><span class="tooltip" data-tip="Repousse l'Ombre et dicte votre croissance démographique.">Espoir</span> : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
                 
                 <p id="ui-prestige-display" style="display:none; color: #f1c40f; font-weight: bold; margin-top: 10px; font-size: 0.9em; background: rgba(241, 196, 15, 0.1); padding: 5px; border-radius: 4px;">
                     ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus prod)
@@ -116,8 +139,8 @@
 
             <h3>Population</h3>
             <div id="ui-population" style="display: flex; flex-direction: column; gap: 8px;">
-                <div>Hommes : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
-                <div>Elfes : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
+                <div><span class="tooltip" data-tip="Peuple mortel. Génère passivement de la Richesse.">Hommes</span> : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
+                <div><span class="tooltip" data-tip="Immortels. Génèrent passivement du Savoir.">Elfes</span> : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
             </div>
         </aside>
 
