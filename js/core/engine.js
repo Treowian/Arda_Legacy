@@ -71,22 +71,25 @@ function gameTick() {
     saveGame();
 }
 
-// 🆕 LOGIQUE D'AUTOMATISATION DES INTENDANTS
 function processCouncilLogic() {
-    // 1. LE SÉNÉCHAL (Gestion des Décrets)
-    if (gameState.council.senechal) {
+    // Sécurité de migration
+    if (!gameState.state.council_active) {
+        gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
+    }
+
+    // 1. LE SÉNÉCHAL (Vérifie s'il est acheté ET actif)
+    if (gameState.council.senechal && gameState.state.council_active.senechal) {
         if (gameState.state.shadow_level >= 70 && gameState.state.active_focus !== 'frontalier') {
             gameState.state.active_focus = 'frontalier';
-            addChronicle("Entity : 📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace de l'Ombre.</em>");
+            addChronicle("📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace de l'Ombre.</em>");
         } else if (gameState.state.shadow_level <= 30 && gameState.state.active_focus !== 'agricole') {
             gameState.state.active_focus = 'agricole';
-            addChronicle("Entity : 📜 <em>Le Sénéchal ré-alloue les bras de votre peuple vers le Focus Agricole.</em>");
+            addChronicle("📜 <em>Le Sénéchal ré-alloue les bras de votre peuple vers le Focus Agricole.</em>");
         }
     }
 
-    // 2. LE HÉRAUT (Inspiration Passive)
-    if (gameState.council.heraut) {
-        // Simule 10 clics d'inspiration sur l'année qui vient de passer
+    // 2. LE HÉRAUT
+    if (gameState.council.heraut && gameState.state.council_active.heraut) {
         for(let i = 0; i < 10; i++) {
             if (gameState.state.is_twilight) {
                 gameState.resources.espoir += 3;
@@ -101,27 +104,28 @@ function processCouncilLogic() {
         }
     }
 
-    // 3. LE MAÎTRE BÂTISSEUR (Achat Auto Sécurisé)
-    if (gameState.council.batisseur && !gameState.state.is_twilight) {
-        BUILDINGS.forEach(b => {
+    // 3. LE MAÎTRE BÂTISSEUR (SMART BUILDER)
+    if (gameState.council.batisseur && gameState.state.council_active.batisseur && !gameState.state.is_twilight) {
+        
+        // 🆕 L'astuce algorithmique : On inverse le tableau pour évaluer les Tiers 3 d'abord
+        const prioritizedBuildings = [...BUILDINGS].reverse();
+        
+        prioritizedBuildings.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
             let canAffordSafe = true;
 
-            // Calculer les coûts actuels avec la formule exponentielle
             for (const [res, baseValue] of Object.entries(b.baseCost)) {
                 const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                // RÈGLE D'OR : N'achète que si le joueur possède au moins 3 FOIS le coût requis
                 if (gameState.resources[res] < (cost * 3)) canAffordSafe = false;
             }
 
             if (canAffordSafe && b.isVisible(gameState)) {
-                // Déduction des ressources
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
                     gameState.resources[res] -= cost;
                 }
                 gameState.buildings[b.id]++;
-                console.log(`🔨 Le Conseil (Bâtisseur) a étendu votre infrastructure : ${b.name}`);
+                console.log(`🔨 Le Bâtisseur a privilégié : ${b.name}`);
             }
         });
     }
