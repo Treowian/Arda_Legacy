@@ -4,7 +4,7 @@ import { BUILDINGS } from '../data/buildings.js';
 import { renderCurrentProject } from './projects.js';
 import { renderBuildings } from './buildings.js';
 import { renderCouncil } from './council.js'; // 🆕 IMPORT DU MODULE CONSEIL
-
+ 
 const ui = {};
 
 export function initUI() {
