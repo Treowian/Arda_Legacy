@@ -3,14 +3,14 @@ import { gameState } from '../core/state.js';
 import { BUILDINGS } from '../data/buildings.js'; 
 import { renderCurrentProject } from './projects.js';
 import { renderBuildings } from './buildings.js';
-import { renderCouncil } from './council.js'; // 🆕 IMPORT DU MODULE CONSEIL
- 
+import { renderCouncil } from './council.js'; 
+
 const ui = {};
 
 export function initUI() {
     ui.year = document.getElementById('ui-year');
     ui.shadowFill = document.getElementById('ui-shadow-fill');
-
+    
     ui.savoir = document.getElementById('ui-res-savoir');
     ui.richesse = document.getElementById('ui-res-richesse');
     ui.renom = document.getElementById('ui-res-renom');
@@ -67,6 +67,14 @@ export function updateUI() {
     ui.year.textContent = `An ${gameState.state.current_year}`;
     ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
     
+    // 🆕 SYNCHRONISATION VISUELLE DU SÉNÉCHAL
+    const radioAgricole = document.querySelector('input[value="agricole"]');
+    const radioFrontalier = document.querySelector('input[value="frontalier"]');
+    if (radioAgricole && radioFrontalier) {
+        radioAgricole.checked = (gameState.state.active_focus === 'agricole');
+        radioFrontalier.checked = (gameState.state.active_focus === 'frontalier');
+    }
+    
     // --- EVALUATION DES REVENUS ANNUELS ---
     let rates = { richesse: 0, savoir: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
     
@@ -104,7 +112,7 @@ export function updateUI() {
         rates.renom += 5 * multiplier;
     }
 
-    // Affichage des compteurs
+    // Affichage des compteurs mis à jour
     ui.savoir.textContent = Math.floor(gameState.resources.savoir);
     ui.richesse.textContent = Math.floor(gameState.resources.richesse);
     ui.renom.textContent = Math.floor(gameState.resources.renom);
@@ -130,6 +138,7 @@ export function updateUI() {
         }
     }
 
+    // Affichage de la boîte de réception
     const inboxBtn = document.getElementById('btn-inbox');
     if (inboxBtn) {
         const pendingCount = (gameState.state.pending_events || []).length;
@@ -145,7 +154,7 @@ export function updateUI() {
 
     renderCurrentProject();
     renderBuildings();
-    renderCouncil(); // 🆕 REFLECTION DU PANNEAU DU CONSEIL
+    renderCouncil(); 
 }
 
 export function addChronicle(text) {
