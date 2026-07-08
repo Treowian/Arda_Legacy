@@ -14,8 +14,6 @@ export function initEngine() {
     gameLoop = setInterval(gameTick, TICK_RATE);
 }
 
-// js/core/engine.js (Extrait à remplacer)
-
 function simulateOfflineProgress() {
     if (!gameState.meta.last_save_time) return;
     
@@ -24,7 +22,7 @@ function simulateOfflineProgress() {
     const missedTicks = Math.floor(diff / TICK_RATE);
     
     if (missedTicks > 0) {
-        // ⚠️ CAP D'ÉQUILIBRAGE : 12 Heures maximum (4320 tics)
+        // Cap de sécurité : 12 heures max (4320 tics)
         const safeTicks = Math.min(missedTicks, 4320);
         const isCapped = missedTicks > 4320;
         
@@ -42,7 +40,6 @@ function simulateOfflineProgress() {
         const richesGained = Math.floor(gameState.resources.richesse - richesBefore);
         const savoirGained = Math.floor(gameState.resources.savoir - savoirBefore);
         
-        // Construction dynamique du message de retour
         let msg = `Vous êtes de retour !\n\n`;
         if (isCapped) {
             msg += `⏳ Vos entrepôts ont débordé (Limite de 12h d'absence atteinte).\n`;
@@ -62,7 +59,7 @@ function gameTick() {
 
     gameState.state.current_year += 1;
     
-    processCouncilLogic(); // 🆕 Traitement des automatisations du Conseil
+    processCouncilLogic(); 
     processEconomy();
 
     if (Math.random() < 0.15) spawnEvent();
@@ -72,12 +69,10 @@ function gameTick() {
 }
 
 function processCouncilLogic() {
-    // Sécurité de migration
     if (!gameState.state.council_active) {
         gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
     }
 
-    // 1. LE SÉNÉCHAL (Vérifie s'il est acheté ET actif)
     if (gameState.council.senechal && gameState.state.council_active.senechal) {
         if (gameState.state.shadow_level >= 70 && gameState.state.active_focus !== 'frontalier') {
             gameState.state.active_focus = 'frontalier';
@@ -88,7 +83,6 @@ function processCouncilLogic() {
         }
     }
 
-    // 2. LE HÉRAUT
     if (gameState.council.heraut && gameState.state.council_active.heraut) {
         for(let i = 0; i < 10; i++) {
             if (gameState.state.is_twilight) {
@@ -104,10 +98,7 @@ function processCouncilLogic() {
         }
     }
 
-    // 3. LE MAÎTRE BÂTISSEUR (SMART BUILDER)
     if (gameState.council.batisseur && gameState.state.council_active.batisseur && !gameState.state.is_twilight) {
-        
-        // 🆕 L'astuce algorithmique : On inverse le tableau pour évaluer les Tiers 3 d'abord
         const prioritizedBuildings = [...BUILDINGS].reverse();
         
         prioritizedBuildings.forEach(b => {
@@ -159,6 +150,11 @@ function processEconomy() {
         
         let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
         if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
+
+        // 🆕 L'AURA LOGARITHMIQUE D'ESPOIR (Purification passive)
+        // Math.max empêche le résultat de devenir négatif si l'espoir est sous 1000.
+        const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
+        gameState.state.shadow_level -= auraEspoir * multiplier;
 
         gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole;
         gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
