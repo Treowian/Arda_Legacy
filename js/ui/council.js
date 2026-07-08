@@ -17,7 +17,7 @@ export function renderCouncil() {
         { id: 'heraut', name: 'Le Héraut', desc: 'Inspiration passive (Simule 10 clics par an)' }
     ];
 
-    // Sécurité de migration pour les anciennes sauvegardes
+    // Sécurité de migration
     if (!gameState.state.council_active) {
         gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
     }
@@ -37,7 +37,6 @@ export function renderCouncil() {
         div.style.alignItems = 'center';
         div.style.marginBottom = '8px';
         
-        // Code couleur : Vert si actif, Gris si en repos, Blanc si pas acheté
         if (isHired && isActive) {
             div.style.background = 'rgba(39, 174, 96, 0.08)';
             div.style.borderLeft = '4px solid #27ae60';
@@ -48,19 +47,25 @@ export function renderCouncil() {
         }
 
         div.innerHTML = `
-            <div style="flex-grow: 1; padding-right: 10px;">
-                <strong style="font-size: 0.9em; color: #2c3e50;">${m.name} ${isHired ? '💼' : ''}</strong>
-                <div style="font-size: 0.75em; opacity: 0.8; font-style: italic; line-height:1.3;">${m.desc}</div>
+            <div style="flex: 1; padding-right: 15px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold; font-size: 0.95em; color: #2c3e50; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                    ${m.name} ${isHired ? '<span style="font-size: 1.1em;">💼</span>' : ''}
+                </div>
+                <div style="font-size: 0.75em; opacity: 0.8; font-style: italic; line-height: 1.3;">${m.desc}</div>
             </div>
+            
+            <!-- Conteneur fixe pour forcer une taille de bouton uniforme -->
+            <div style="flex-shrink: 0; width: 110px;">
             ${!isHired ? `
-                <button class="btn-action" style="font-size: 0.75em; padding: 6px 10px; margin: 0; background: ${canAfford ? '#2980b9' : '#bbb'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; min-width: 95px;" ${!canAfford ? 'disabled' : ''}>
-                    Recruter<br><span style="font-weight:bold;">${basePrice} OR</span>
+                <button class="btn-action" style="font-size: 0.8em; padding: 8px 5px; margin: 0; background: ${canAfford ? '#2980b9' : '#bbb'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; width: 100%; height: 100%; border-radius: 4px;" ${!canAfford ? 'disabled' : ''}>
+                    Recruter<br><span style="font-weight:bold; font-size: 0.9em;">${basePrice} RICHESSE</span>
                 </button>
             ` : `
-                <button class="btn-action" style="font-size: 0.75em; padding: 6px 10px; margin: 0; background: ${isActive ? '#e74c3c' : '#27ae60'}; cursor: pointer; min-width: 95px;">
-                    ${isActive ? 'Mettre au repos' : 'Rappeler'}
+                <button class="btn-action" style="font-size: 0.85em; padding: 8px 5px; margin: 0; background: ${isActive ? '#e74c3c' : '#27ae60'}; cursor: pointer; width: 100%; height: 100%; border-radius: 4px;">
+                    ${isActive ? 'Repos' : 'Rappeler'}
                 </button>
             `}
+            </div>
         `;
 
         const btn = div.querySelector('button');
@@ -74,7 +79,6 @@ export function renderCouncil() {
             };
         } else if (isHired) {
             btn.onclick = () => {
-                // Bascule l'état actif/inactif
                 gameState.state.council_active[m.id] = !gameState.state.council_active[m.id];
                 updateUI();
             };
