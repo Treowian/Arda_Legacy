@@ -1141,12 +1141,12 @@ export const EVENTS = [
 
 // ==========================================
     // 4. ÉVÉNEMENTS NARRATIFS UNIQUES (Âges 1, 2, 3)
-    // Conservés selon ta narration originale[cite: 1]
+    // Conservés selon ta narration originale
     // ==========================================
     {
         id: "age1_01_reveil",
         title: "Les Cris de l'Éveil",
-        description: "Votre peuple s'éveille dans un monde brut et sans soleil, sous un dôme d'étoiles glacées. La peur de l'inconnu paralyse les premiers clans.", //[cite: 1]
+        description: "Votre peuple s'éveille dans un monde brut et sans soleil, sous un dôme d'étoiles glacées. La peur de l'inconnu paralyse les premiers clans.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 1),
         choices: [
@@ -1157,7 +1157,7 @@ export const EVENTS = [
                     gameState.resources.espoir += 30;
                     gameState.resources.richesse -= 10;
                 },
-                log: "La lueur des brasiers a réchauffé les cœurs et uni les premiers Hommes." //[cite: 1]
+                log: "La lueur des brasiers a réchauffé les cœurs et uni les premiers Hommes."
             },
             {
                 label: "S'enfoncer dans les grottes obscures (+20 Richesse, +10 Ombre, -15 Espoir)",
@@ -1167,14 +1167,14 @@ export const EVENTS = [
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                     gameState.resources.espoir -= 15;
                 },
-                log: "La sécurité de la pierre vous a protégés, mais la peur s'est installée." //[cite: 1]
+                log: "La sécurité de la pierre vous a protégés, mais la peur s'est installée."
             }
         ]
     },
     {
         id: "age1_02_chasseurs",
         title: "Les Flèches de l'Ombre",
-        description: "Vos premiers éclaireurs découvrent des carcasses d'animaux mutilés dans les bois. Une présence malveillante rôde à vos lisières.", //[cite: 1]
+        description: "Vos premiers éclaireurs découvrent des carcasses d'animaux mutilés dans les bois. Une présence malveillante rôde à vos lisières.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 3),
         choices: [
@@ -1185,7 +1185,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 20;
                     gameState.resources.renom += 15;
                 },
-                log: "Les hommes ont désormais de quoi se défendre face aux dangers du monde." //[cite: 1]
+                log: "Les hommes ont désormais de quoi se défendre face aux dangers du monde."
             },
             {
                 label: "Se replier derrière des palissades (-15 Espoir)",
@@ -1193,14 +1193,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 15;
                 },
-                log: "Vous avez cédé du terrain. Les murmures de la forêt se rapprochent." //[cite: 1]
+                log: "Vous avez cédé du terrain. Les murmures de la forêt se rapprochent."
             }
         ]
     },
     {
         id: "age1_03_orques_premiers",
         title: "La Vermine de fer",
-        description: "Une patrouille de créatures hideuses aux yeux rouges, courbées sous le poids d'armures sombres, attaque un campement de pêcheurs. Ce sont des Orques.", //[cite: 1]
+        description: "Une patrouille de créatures hideuses aux yeux rouges, courbées sous le poids d'armures sombres, attaque un campement de pêcheurs. Ce sont des Orques.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 5 && gameState.population.hommes > 20),
         choices: [
@@ -1212,7 +1212,7 @@ export const EVENTS = [
                     gameState.resources.renom += 30;
                     gameState.resources.espoir += 10;
                 },
-                log: "Le monstre a saigné. Votre peuple sait désormais que l'ennemi peut mourir." //[cite: 1]
+                log: "Le monstre a saigné. Votre peuple sait désormais que l'ennemi peut mourir."
             },
             {
                 label: "Abandonner les rives du fleuve (-30 Richesse, -20 Espoir, +5 Ombre)",
@@ -1222,14 +1222,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 5);
                 },
-                log: "La terre recule devant la cruauté de la vermine." //[cite: 1]
+                log: "La terre recule devant la cruauté de la vermine."
             }
         ]
     },
     {
         id: "age1_04_orome_passage",
         title: "Le Galop du Chasseur",
-        description: "Un grondement de tonnerre secoue le ciel sans nuages. Un cavalier gigantesque sur un cheval blanc aux sabots de feu traverse vos plaines à la poursuite du mal.", //[cite: 1]
+        description: "Un grondement de tonnerre secoue le ciel sans nuages. Un cavalier gigantesque sur un cheval blanc aux sabots de feu traverse vos plaines à la poursuite du mal.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 8),
         choices: [
@@ -1240,20 +1240,20 @@ export const EVENTS = [
                     gameState.resources.espoir += 40;
                     gameState.resources.renom += 10;
                 },
-                log: "Le passage du Vala a balayé l'angoisse des nuits sombres." //[cite: 1]
+                log: "Le passage du Vala a balayé l'angoisse des nuits sombres."
             },
             {
                 label: "Rester terré en silence (Aucun effet)",
                 canAfford: () => true,
                 effect: () => {},
-                log: "Vous avez laissé la divinité passer sans oser lever les yeux." //[cite: 1]
+                log: "Vous avez laissé la divinité passer sans oser lever les yeux."
             }
         ]
     },
     {
         id: "age1_05_langue_elfique",
         title: "Les Mots d'Argent",
-        description: "Un émissaire des Elfes Gris (Sindar) s'arrête dans votre village et propose d'enseigner leur langue mélodieuse à vos enfants.", //[cite: 1]
+        description: "Un émissaire des Elfes Gris (Sindar) s'arrête dans votre village et propose d'enseigner leur langue mélodieuse à vos enfants.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 12 && gameState.resources.savoir > 20),
         choices: [
@@ -1264,7 +1264,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 60;
                     gameState.resources.renom += 10;
                 },
-                log: "Vos enfants parlent désormais la langue des étoiles. Les ponts sont jetés." //[cite: 1]
+                log: "Vos enfants parlent désormais la langue des étoiles. Les ponts sont jetés."
             },
             {
                 label: "Garder les parlers des Hommes (+20 Espoir, -10 Renom)",
@@ -1273,14 +1273,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 20;
                     gameState.resources.renom -= 10;
                 },
-                log: "Vous préservez vos coutumes, au prix d'un isolement culturel grandissant." //[cite: 1]
+                log: "Vous préservez vos coutumes, au prix d'un isolement culturel grandissant."
             }
         ]
     },
     {
         id: "age1_06_loup_angband",
         title: "La Gueule du Nord",
-        description: "Un loup d'une taille monstrueuse, échappé des fosses d'Angband, s'installe sur la colline sacrée et hurle chaque nuit sous les étoiles.", //[cite: 1]
+        description: "Un loup d'une taille monstrueuse, échappé des fosses d'Angband, s'installe sur la colline sacrée et hurle chaque nuit sous les étoiles.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 15 && gameState.resources.renom > 10),
         choices: [
@@ -1291,7 +1291,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 10);
                     gameState.resources.renom += 50;
                 },
-                log: "La bête a été percée de dix lances. Sa tête orne désormais vos remparts." //[cite: 1]
+                log: "La bête a été percée de dix lances. Sa tête orne désormais vos remparts."
             },
             {
                 label: "Lui offrir du bétail en sacrifice (-40 Richesse, +15 Ombre)",
@@ -1300,14 +1300,14 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "Vous achetez une paix honteuse. L'Ombre s'engraisse de votre lâcheté." //[cite: 1]
+                log: "Vous achetez une paix honteuse. L'Ombre s'engraisse de votre lâcheté."
             }
         ]
     },
     {
         id: "age1_07_noldor_exil",
         title: "Les Princes Couronnés",
-        description: "Des seigneurs Elfes fiers et magnifiques, portant des joyaux d'une lumière insoutenable, arrivent du Nord. Ce sont les Noldor en exil.", //[cite: 1]
+        description: "Des seigneurs Elfes fiers et magnifiques, portant des joyaux d'une lumière insoutenable, arrivent du Nord. Ce sont les Noldor en exil.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 20),
         choices: [
@@ -1319,7 +1319,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 40;
                     gameState.resources.richesse -= 30;
                 },
-                log: "Vous marchez dans l'ombre de géants. Leur gloire vous éclaire et vous condamne." //[cite: 1]
+                log: "Vous marchez dans l'ombre de géants. Leur gloire vous éclaire et vous condamne."
             },
             {
                 label: "Refuser de vous mêler de leurs guerres (+30 Espoir, -40 Renom)",
@@ -1328,14 +1328,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 30;
                     gameState.resources.renom -= 40;
                 },
-                log: "Les rois elfes vous ignorent désormais, vous laissant à votre condition de mortels." //[cite: 1]
+                log: "Les rois elfes vous ignorent désormais, vous laissant à votre condition de mortels."
             }
         ]
     },
     {
         id: "age1_08_forges_lecon",
         title: "Le Secret de l'Acier",
-        description: "Des forgerons Noldor acceptent de dévoiler les secrets de la trempe de l'acier en échange d'une livraison massive de charbon de bois.", //[cite: 1]
+        description: "Des forgerons Noldor acceptent de dévoiler les secrets de la trempe de l'acier en échange d'une livraison massive de charbon de bois.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 24 && gameState.resources.richesse > 50),
         choices: [
@@ -1346,7 +1346,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.savoir += 120;
                 },
-                log: "Vos forges crachent un feu blanc. Vos armes coupent désormais le fer ennemi." //[cite: 1]
+                log: "Vos forges crachent un feu blanc. Vos armes coupent désormais le fer ennemi."
             },
             {
                 label: "Préserver vos forêts sacrées (+20 Espoir, -20 Savoir)",
@@ -1355,14 +1355,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 20;
                     gameState.resources.savoir -= 20;
                 },
-                log: "Les arbres respirent, mais vos guerriers combattent toujours avec du bronze." //[cite: 1]
+                log: "Les arbres respirent, mais vos guerriers combattent toujours avec du bronze."
             }
         ]
     },
     {
         id: "age1_09_espions_morgoth",
         title: "Le Poison des Rumeurs",
-        description: "Des mendiants au regard fuyant colportent l'idée que les Elfes se servent des Hommes comme de la chair à flèche face au Seigneur du Nord.", //[cite: 1]
+        description: "Des mendiants au regard fuyant colportent l'idée que les Elfes se servent des Hommes comme de la chair à flèche face au Seigneur du Nord.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 28 && gameState.state.shadow_level > 20),
         choices: [
@@ -1373,7 +1373,7 @@ export const EVENTS = [
                     gameState.resources.renom += 15;
                     gameState.resources.espoir -= 20;
                 },
-                log: "La sédition est étouffée dans le sang, mais la méfiance demeure." //[cite: 1]
+                log: "La sédition est étouffée dans le sang, mais la méfiance demeure."
             },
             {
                 label: "Laisser le peuple débattre (-30 Espoir, +15 Ombre)",
@@ -1382,14 +1382,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "Le doute ronge l'alliance. Les cœurs se détachent des Elfes." //[cite: 1]
+                log: "Le doute ronge l'alliance. Les cœurs se détachent des Elfes."
             }
         ]
     },
     {
         id: "age1_10_migration_edain",
         title: "Les Fils de Bëor",
-        description: "Une immense tribu d'Hommes brisés par le voyage traverse les cols de la montagne. Ils cherchent un seigneur pour les guider.", //[cite: 1]
+        description: "Une immense tribu d'Hommes brisés par le voyage traverse les cols de la montagne. Ils cherchent un seigneur pour les guider.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 32),
         choices: [
@@ -1401,7 +1401,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.espoir += 20;
                 },
-                log: "Votre colonie devient une cité. Les bras ne manqueront pas pour les récoltes." //[cite: 1]
+                log: "Votre colonie devient une cité. Les bras ne manqueront pas pour les récoltes."
             },
             {
                 label: "Les repousser vers l'Ouest (-30 Renom)",
@@ -1409,14 +1409,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom -= 30;
                 },
-                log: "Ils poursuivent leur douloureuse marche, maudissant votre avarice." //[cite: 1]
+                log: "Ils poursuivent leur douloureuse marche, maudissant votre avarice."
             }
         ]
     },
     {
         id: "age1_11_gemme_brute",
         title: "La Lueur sous la Roche",
-        description: "Vos mineurs extraient un cristal d'une pureté extraordinaire, qui semble capturer et retenir la lumière des étoiles.", //[cite: 1]
+        description: "Vos mineurs extraient un cristal d'une pureté extraordinaire, qui semble capturer et retenir la lumière des étoiles.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 36 && gameState.resources.savoir > 40),
         choices: [
@@ -1427,7 +1427,7 @@ export const EVENTS = [
                     gameState.resources.renom += 80;
                     gameState.resources.savoir += 40;
                 },
-                log: "Le Roi a pleuré en voyant la gemme et vous a comblé de bénédictions." //[cite: 1]
+                log: "Le Roi a pleuré en voyant la gemme et vous a comblé de bénédictions."
             },
             {
                 label: "La garder dans vos coffres (+60 Richesse, +10 Ombre)",
@@ -1436,14 +1436,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 60;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "La pierre brille dans le noir, excitant la cupidité de vos proches." //[cite: 1]
+                log: "La pierre brille dans le noir, excitant la cupidité de vos proches."
             }
         ]
     },
     {
         id: "age1_12_orages_fer",
         title: "L'Assaut des Nuées",
-        description: "Des milliers d'orques déferlent des montagnes pour piller vos silos d'avant-garde. La garnison est encerclée.", //[cite: 1]
+        description: "Des milliers d'orques déferlent des montagnes pour piller vos silos d'avant-garde. La garnison est encerclée.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 40 && gameState.population.hommes > 40),
         choices: [
@@ -1454,7 +1454,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 25);
                     gameState.resources.renom += 60;
                 },
-                log: "La position est tenue au prix d'un sacrifice héroïque. L'ennemi recule." //[cite: 1]
+                log: "La position est tenue au prix d'un sacrifice héroïque. L'ennemi recule."
             },
             {
                 label: "Abandonner l'avant-poste (-50 Richesse, -30 Espoir, +10 Ombre)",
@@ -1464,14 +1464,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Les silos brûlent. Le Nord s'assombrit." //[cite: 1]
+                log: "Les silos brûlent. Le Nord s'assombrit."
             }
         ]
     },
     {
         id: "age1_13_feanor_serment",
         title: "L'Étoile Maudite",
-        description: "Des messagers féroces portant l'emblème de la Maison de Fëanor exigent que vous rompiez tout commerce avec leurs rivaux.", //[cite: 1]
+        description: "Des messagers féroces portant l'emblème de la Maison de Fëanor exigent que vous rompiez tout commerce avec leurs rivaux.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 45),
         choices: [
@@ -1483,7 +1483,7 @@ export const EVENTS = [
                     gameState.resources.renom += 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Vous évitez leur colère, mais vous vous liez à une maison maudite." //[cite: 1]
+                log: "Vous évitez leur colère, mais vous vous liez à une maison maudite."
             },
             {
                 label: "Garder votre indépendance (-30 Renom, +20 Espoir)",
@@ -1492,14 +1492,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 30;
                     gameState.resources.espoir += 20;
                 },
-                log: "Ils sont repartis en crachant des menaces, mais votre honneur est sauf." //[cite: 1]
+                log: "Ils sont repartis en crachant des menaces, mais votre honneur est sauf."
             }
         ]
     },
     {
         id: "age1_14_fuite_glamour",
         title: "Les Exilés de Gondolin",
-        description: "Des rescapés d'une cité elfe cachée traversent vos terres en secret. Ils transportent des reliques d'une valeur inestimable.", //[cite: 1]
+        description: "Des rescapés d'une cité elfe cachée traversent vos terres en secret. Ils transportent des reliques d'une valeur inestimable.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 50 && gameState.resources.savoir > 60),
         choices: [
@@ -1511,7 +1511,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 80;
                     gameState.resources.espoir += 30;
                 },
-                log: "En remerciement, ils vous confient des parchemins d'une sagesse immense." //[cite: 1]
+                log: "En remerciement, ils vous confient des parchemins d'une sagesse immense."
             },
             {
                 label: "Piller leurs chariots (+150 Richesse, -60 Renom, +30 Ombre)",
@@ -1521,14 +1521,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 60;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 30);
                 },
-                log: "Vous êtes riches, mais le sang elfe crie vengeance auprès des Valar." //[cite: 1]
+                log: "Vous êtes riches, mais le sang elfe crie vengeance auprès des Valar."
             }
         ]
     },
     {
         id: "age1_15_fleche_noire",
         title: "L'Ombre sur les Moissons",
-        description: "Une bise empoisonnée venue du Nord flétrit les cultures en une seule nuit. La famine menace le domaine.", //[cite: 1]
+        description: "Une bise empoisonnée venue du Nord flétrit les cultures en une seule nuit. La famine menace le domaine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 54 && gameState.resources.richesse > 40),
         choices: [
@@ -1539,7 +1539,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.espoir += 10;
                 },
-                log: "L'or des coffres a sauvé le peuple de la faim noire." //[cite: 1]
+                log: "L'or des coffres a sauvé le peuple de la faim noire."
             },
             {
                 label: "Rationner et accepter les pertes (-20 Hommes, -20 Espoir)",
@@ -1548,14 +1548,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 20);
                     gameState.resources.espoir -= 20;
                 },
-                log: "Les ventres creux enterrent les enfants. Le désespoir grandit." //[cite: 1]
+                log: "Les ventres creux enterrent les enfants. Le désespoir grandit."
             }
         ]
     },
     {
         id: "age1_16_dragon_premier",
         title: "Le Souffle du Ver",
-        description: "Les rumeurs parlent d'un gigantesque serpent de feu sans ailes qui calcine les bastions du Nord. Les fumées sont visibles à l'horizon.", //[cite: 1]
+        description: "Les rumeurs parlent d'un gigantesque serpent de feu sans ailes qui calcine les bastions du Nord. Les fumées sont visibles à l'horizon.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 58),
         choices: [
@@ -1566,7 +1566,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 60;
                     gameState.resources.espoir += 30;
                 },
-                log: "Le domaine creuse la terre pour échapper à la fournaise future." //[cite: 1]
+                log: "Le domaine creuse la terre pour échapper à la fournaise future."
             },
             {
                 label: "Ignorer les contes lointains (-20 Espoir, +10 Ombre)",
@@ -1575,14 +1575,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "La terre tremble et la peur paralyse les sentinelles." //[cite: 1]
+                log: "La terre tremble et la peur paralyse les sentinelles."
             }
         ]
     },
     {
         id: "age1_17_trahison_ulfang",
         title: "Les Cœurs Changeants",
-        description: "Des Hommes venus de l'Est lointain proposent leurs services comme mercenaires, mais les Elfes se méfient de leur loyauté.", //[cite: 1]
+        description: "Des Hommes venus de l'Est lointain proposent leurs services comme mercenaires, mais les Elfes se méfient de leur loyauté.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 62),
         choices: [
@@ -1594,7 +1594,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "Leurs lames sont acérées, mais leurs murmures nocturnes sont inquiétants." //[cite: 1]
+                log: "Leurs lames sont acérées, mais leurs murmures nocturnes sont inquiétants."
             },
             {
                 label: "Refuser leur aide (-15 Renom, +10 Espoir)",
@@ -1603,14 +1603,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 15;
                     gameState.resources.espoir += 10;
                 },
-                log: "Ils sont partis rejoindre les rangs de l'ennemi au Nord." //[cite: 1]
+                log: "Ils sont partis rejoindre les rangs de l'ennemi au Nord."
             }
         ]
     },
     {
         id: "age1_18_menegroth_splendeur",
         title: "L'Invitation des Mille Cavernes",
-        description: "Le Roi Thingol d'Doriath vous invite à envoyer vos érudits admirer les Mille Cavernes, si vous offrez un tribut en ivoire.", //[cite: 1]
+        description: "Le Roi Thingol d'Doriath vous invite à envoyer vos érudits admirer les Mille Cavernes, si vous offrez un tribut en ivoire.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 66 && gameState.resources.richesse > 50),
         choices: [
@@ -1622,7 +1622,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 150;
                     gameState.resources.renom += 30;
                 },
-                log: "Vos sages reviennent éblouis, porteurs des secrets de la Haute Magie." //[cite: 1]
+                log: "Vos sages reviennent éblouis, porteurs des secrets de la Haute Magie."
             },
             {
                 label: "Décliner par fierté (-20 Savoir)",
@@ -1630,14 +1630,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.savoir -= 20;
                 },
-                log: "Vous restez dans l'ignorance de la plus grande cour de l'Âge." //[cite: 1]
+                log: "Vous restez dans l'ignorance de la plus grande cour de l'Âge."
             }
         ]
     },
     {
         id: "age1_19_balrog_ombre",
         title: "Le Fléau de Flamme",
-        description: "Une silhouette de feu et d'ombre a été aperçue sur les crêtes rocheuses. Sa seule présence fait fuir toute la faune.", //[cite: 1]
+        description: "Une silhouette de feu et d'ombre a été aperçue sur les crêtes rocheuses. Sa seule présence fait fuir toute la faune.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 70 && gameState.state.shadow_level > 40),
         choices: [
@@ -1648,7 +1648,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.espoir -= 10;
                 },
-                log: "La zone est perdue, mais vous évitez une destruction totale." //[cite: 1]
+                log: "La zone est perdue, mais vous évitez une destruction totale."
             },
             {
                 label: "Tenter de dresser des barrières sacrées (-40 Savoir, +10 Ombre)",
@@ -1657,14 +1657,14 @@ export const EVENTS = [
                     gameState.resources.savoir -= 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Les glyphes de protection ont éclaté sous la chaleur démoniaque." //[cite: 1]
+                log: "Les glyphes de protection ont éclaté sous la chaleur démoniaque."
             }
         ]
     },
     {
         id: "age1_20_naufrage_sirion",
         title: "Les Réfugiés des Bouches",
-        description: "Les bastions du Nord s'effondrent les uns après les autres. Des vagues de fuyards humains et elfes demandent l'asile.", //[cite: 1]
+        description: "Les bastions du Nord s'effondrent les uns après les autres. Des vagues de fuyards humains et elfes demandent l'asile.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 74),
         choices: [
@@ -1676,7 +1676,7 @@ export const EVENTS = [
                     gameState.population.hommes += 40;
                     gameState.population.elfes += 20;
                 },
-                log: "Le domaine étouffe sous le nombre, mais l'entraide ravive l'espoir." //[cite: 1]
+                log: "Le domaine étouffe sous le nombre, mais l'entraide ravive l'espoir."
             },
             {
                 label: "Fermer les frontières (+20 Richesse, -40 Renom, -20 Espoir)",
@@ -1686,14 +1686,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 40;
                     gameState.resources.espoir -= 20;
                 },
-                log: "Vous survivez dans l'égoïsme, hantés par les cris des mourants." //[cite: 1]
+                log: "Vous survivez dans l'égoïsme, hantés par les cris des mourants."
             }
         ]
     },
     {
         id: "age1_21_silmaril_rumeur",
         title: "La Splendeur du Joyau",
-        description: "La rumeur se répand qu'un mortel a réussi à arracher un joyau sacré de la couronne du Seigneur Sombre. L'espoir renaît partout.", //[cite: 1]
+        description: "La rumeur se répand qu'un mortel a réussi à arracher un joyau sacré de la couronne du Seigneur Sombre. L'espoir renaît partout.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 78),
         choices: [
@@ -1704,7 +1704,7 @@ export const EVENTS = [
                     gameState.resources.espoir += 50;
                     gameState.resources.renom += 25;
                 },
-                log: "La foi dans la victoire finale enflamme les cœurs les plus sombres." //[cite: 1]
+                log: "La foi dans la victoire finale enflamme les cœurs les plus sombres."
             },
             {
                 label: "Rester sceptique et prudent (-10 Espoir)",
@@ -1712,14 +1712,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 10;
                 },
-                log: "La lueur de l'espoir s'éteint rapidement derrière vos remparts." //[cite: 1]
+                log: "La lueur de l'espoir s'éteint rapidement derrière vos remparts."
             }
         ]
     },
     {
         id: "age1_22_nains_belegost",
         title: "Les Masques de Fer",
-        description: "Les Nains de Belegost proposent de forger des masques de guerre capables de résister aux flammes des dragons en échange d'or pur.", //[cite: 1]
+        description: "Les Nains de Belegost proposent de forger des masques de guerre capables de résister aux flammes des dragons en échange d'or pur.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 82 && gameState.resources.richesse > 80),
         choices: [
@@ -1731,7 +1731,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 100;
                     gameState.resources.renom += 30;
                 },
-                log: "Vos armées possèdent désormais une défense légendaire contre le feu." //[cite: 1]
+                log: "Vos armées possèdent désormais une défense légendaire contre le feu."
             },
             {
                 label: "Économiser votre or (-20 Savoir)",
@@ -1739,14 +1739,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.savoir -= 20;
                 },
-                log: "Vous gardez vos coffres pleins, mais vos boucliers restent en bois." //[cite: 1]
+                log: "Vous gardez vos coffres pleins, mais vos boucliers restent en bois."
             }
         ]
     },
     {
         id: "age1_23_larme_unom",
         title: "Les Larmes sans Nombre",
-        description: "Une immense armée alliée a été annihilée au Nord suite à une terrible trahison. Le deuil frappe toutes les familles du domaine.", //[cite: 1]
+        description: "Une immense armée alliée a été annihilée au Nord suite à une terrible trahison. Le deuil frappe toutes les familles du domaine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 85),
         choices: [
@@ -1757,7 +1757,7 @@ export const EVENTS = [
                     gameState.resources.espoir -= 40;
                     gameState.resources.renom += 20;
                 },
-                log: "La tristesse est immense, mais la dignité de votre peuple reste entière." //[cite: 1]
+                log: "La tristesse est immense, mais la dignité de votre peuple reste entière."
             },
             {
                 label: "Forcer à travailler pour oublier (-20 Hommes, -30 Espoir, +10 Ombre)",
@@ -1767,14 +1767,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Le désespoir pousse les ouvriers à la révolte." //[cite: 1]
+                log: "Le désespoir pousse les ouvriers à la révolte."
             }
         ]
     },
     {
         id: "age1_24_ruines_doriath",
         title: "La Chute de l'Anneau",
-        description: "Le royaume caché de Doriath est tombé, pillé par ses propres alliés. La panique s'empare des derniers bastions libres.", //[cite: 1]
+        description: "Le royaume caché de Doriath est tombé, pillé par ses propres alliés. La panique s'empare des derniers bastions libres.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 88),
         choices: [
@@ -1786,7 +1786,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.espoir -= 15;
                 },
-                log: "Le domaine recueille les morceaux brisés d'un monde qui se meurt." //[cite: 1]
+                log: "Le domaine recueille les morceaux brisés d'un monde qui se meurt."
             },
             {
                 label: "Se barricader totalement (+10 Richesse, +15 Ombre)",
@@ -1795,14 +1795,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 10;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "Vous vous murez dans l'attente de la fin." //[cite: 1]
+                log: "Vous vous murez dans l'attente de la fin."
             }
         ]
     },
     {
         id: "age1_25_earandil_vol",
         title: "Le Voyage de l'Étoile",
-        description: "Un grand navigateur a pris la mer pour supplier les Valar de sauver la Terre du Milieu. Une nouvelle étoile brille à l'Ouest.", //[cite: 1]
+        description: "Un grand navigateur a pris la mer pour supplier les Valar de sauver la Terre du Milieu. Une nouvelle étoile brille à l'Ouest.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 92),
         choices: [
@@ -1813,7 +1813,7 @@ export const EVENTS = [
                     gameState.resources.espoir += 60;
                     gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 10);
                 },
-                log: "Le peuple lève les yeux vers le ciel. La nuit semble moins noire." //[cite: 1]
+                log: "Le peuple lève les yeux vers le ciel. La nuit semble moins noire."
             },
             {
                 label: "Ignorer les signes célestes (-10 Espoir)",
@@ -1821,14 +1821,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 10;
                 },
-                log: "Le quotidien morne étouffe les derniers rêves." //[cite: 1]
+                log: "Le quotidien morne étouffe les derniers rêves."
             }
         ]
     },
     {
         id: "age1_26_valar_colere",
         title: "Le Tonnerre de l'Ouest",
-        description: "La terre tremble avec une violence inouïe. Les armées des Dieux débarquent au Nord. La guerre finale a commencé.", //[cite: 1]
+        description: "La terre tremble avec une violence inouïe. Les armées des Dieux débarquent au Nord. La guerre finale a commencé.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 95),
         choices: [
@@ -1839,7 +1839,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 20);
                     gameState.resources.renom += 80;
                 },
-                log: "Vos bannières flottent aux côtés des armées de la Lumière." //[cite: 1]
+                log: "Vos bannières flottent aux côtés des armées de la Lumière."
             },
             {
                 label: "Rester terrés dans les abris (+30 Espoir, -40 Renom)",
@@ -1848,14 +1848,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 30;
                     gameState.resources.renom -= 40;
                 },
-                log: "Vous survivez tapis dans l'ombre pendant que les montagnes s'effondrent." //[cite: 1]
+                log: "Vous survivez tapis dans l'ombre pendant que les montagnes s'effondrent."
             }
         ]
     },
     {
         id: "age1_27_beleriand_abyme",
         title: "L'Engloutissement",
-        description: "Le Nord se brise sous l'impact des chocs géologiques. La mer s'engouffre dans les plaines. Votre domaine doit fuir vers l'Est.", //[cite: 1]
+        description: "Le Nord se brise sous l'impact des chocs géologiques. La mer s'engouffre dans les plaines. Votre domaine doit fuir vers l'Est.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 97),
         choices: [
@@ -1867,7 +1867,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 30);
                     gameState.resources.espoir += 40;
                 },
-                log: "Vous abandonnez vos anciennes terres, guidant les vôtres vers un nouveau continent." //[cite: 1]
+                log: "Vous abandonnez vos anciennes terres, guidant les vôtres vers un nouveau continent."
             },
             {
                 label: "S'accrocher aux vieux remparts (-50 Hommes, +20 Ombre)",
@@ -1876,14 +1876,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 50);
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "Les flots ont emporté vos fortifications et vos souvenirs." //[cite: 1]
+                log: "Les flots ont emporté vos fortifications et vos souvenirs."
             }
         ]
     },
     {
         id: "age1_28_morgoth_bannissement",
         title: "Le Vide Éternel",
-        description: "Le Seigneur Sombre a été vaincu, enchaîné et jeté au-delà des Portes de la Nuit. Le Premier Âge s'achève dans un grand silence.", //[cite: 1]
+        description: "Le Seigneur Sombre a été vaincu, enchaîné et jeté au-delà des Portes de la Nuit. Le Premier Âge s'achève dans un grand silence.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 99),
         choices: [
@@ -1894,7 +1894,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 100;
                 },
-                log: "L'histoire de vos sacrifices est gravée dans la pierre sacrée." //[cite: 1]
+                log: "L'histoire de vos sacrifices est gravée dans la pierre sacrée."
             },
             {
                 label: "Savourer la paix retrouvée (+40 Espoir)",
@@ -1902,14 +1902,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir += 40;
                 },
-                log: "La tension retombe enfin après un siècle de terreur." //[cite: 1]
+                log: "La tension retombe enfin après un siècle de terreur."
             }
         ]
     },
     {
         id: "age1_29_heritage_choix",
         title: "L'Aube du Deuxième Âge",
-        description: "Le monde est remodelé. En tant que Gardien, vous devez choisir l'orientation économique de votre peuple pour la reconstruction.", //[cite: 1]
+        description: "Le monde est remodelé. En tant que Gardien, vous devez choisir l'orientation économique de votre peuple pour la reconstruction.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 100),
         choices: [
@@ -1920,7 +1920,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.savoir += 50;
                 },
-                log: "Vous jetez les bases d'un empire axé sur l'architecture et la science." //[cite: 1]
+                log: "Vous jetez les bases d'un empire axé sur l'architecture et la science."
             },
             {
                 label: "Établir un royaume de gardiens (+50 Renom, +20 Espoir)",
@@ -1929,14 +1929,14 @@ export const EVENTS = [
                     gameState.resources.renom += 50;
                     gameState.resources.espoir += 20;
                 },
-                log: "Vous choisissez la voie de la vigilance militaire et de la tradition." //[cite: 1]
+                log: "Vous choisissez la voie de la vigilance militaire et de la tradition."
             }
         ]
     },
     {
         id: "age1_30_fin_ere",
         title: "La Fin du Premier Âge",
-        description: "Les chroniques de cette époque de mythes sont closes. Votre peuple se tourne vers l'Est, prêt à rebâtir sur les terres du Lindon.", //[cite: 1]
+        description: "Les chroniques de cette époque de mythes sont closes. Votre peuple se tourne vers l'Est, prêt à rebâtir sur les terres du Lindon.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 100),
         choices: [
@@ -1944,7 +1944,7 @@ export const EVENTS = [
                 label: "Passer au Deuxième Âge (Aucun effet)",
                 canAfford: () => true,
                 effect: () => {},
-                log: "Le grand livre du Premier Âge se ferme dans la dignité." //[cite: 1]
+                log: "Le grand livre du Premier Âge se ferme dans la dignité."
             },
             {
                 label: "Méditer sur les pertes (-20 Espoir)",
@@ -1952,14 +1952,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 20;
                 },
-                log: "Les fantômes du Beleriand hantent encore vos mémoires." //[cite: 1]
+                log: "Les fantômes du Beleriand hantent encore vos mémoires."
             }
         ]
     },
     {
         id: "age2_01_fondation",
         title: "Les Nouvelles Assises",
-        description: "Le monde a changé. Votre peuple s'installe sur des terres vierges et fertiles. Il faut choisir comment structurer les fondations de ce nouvel Âge.", //[cite: 1]
+        description: "Le monde a changé. Votre peuple s'installe sur des terres vierges et fertiles. Il faut choisir comment structurer les fondations de ce nouvel Âge.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 1),
         choices: [
@@ -1970,7 +1970,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.renom += 40;
                 },
-                log: "Les fondations sont solides, tournées vers la grandeur architecturale." //[cite: 1]
+                log: "Les fondations sont solides, tournées vers la grandeur architecturale."
             },
             {
                 label: "Privilégier l'agriculture et les bois (+40 Richesse, +10 Espoir)",
@@ -1979,14 +1979,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 40;
                     gameState.resources.espoir += 10;
                 },
-                log: "La terre nourricière assure la paix et l'autosuffisance immédiate." //[cite: 1]
+                log: "La terre nourricière assure la paix et l'autosuffisance immédiate."
             }
         ]
     },
     {
         id: "age2_02_numenor_visite",
         title: "Les Rois de la Mer",
-        description: "De gigantesques navires aux voiles blanches et aux proues dorées accostent. Ce sont les Hommes de Númenor, grands, beaux et savants.", //[cite: 1]
+        description: "De gigantesques navires aux voiles blanches et aux proues dorées accostent. Ce sont les Hommes de Númenor, grands, beaux et savants.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 5),
         choices: [
@@ -1998,7 +1998,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 60;
                     gameState.resources.renom += 20;
                 },
-                log: "Leurs technologies et leurs cartes maritimes enrichissent vos érudits." //[cite: 1]
+                log: "Leurs technologies et leurs cartes maritimes enrichissent vos érudits."
             },
             {
                 label: "Se méfier de leur fierté écrasante (+15 Espoir, -20 Renom)",
@@ -2007,14 +2007,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 15;
                     gameState.resources.renom -= 20;
                 },
-                log: "Les Dunedain repartent vers l'océan, vous trouvant bien provinciaux." //[cite: 1]
+                log: "Les Dunedain repartent vers l'océan, vous trouvant bien provinciaux."
             }
         ]
     },
     {
         id: "age2_03_annatar_visite",
         title: "Le Dispensateur de Dons",
-        description: "Un seigneur à la beauté irréelle, nommé Annatar, se présente à vos portes. Il affirme vouloir guérir la Terre du Milieu et offre des secrets de forge oubliés.", //[cite: 1]
+        description: "Un seigneur à la beauté irréelle, nommé Annatar, se présente à vos portes. Il affirme vouloir guérir la Terre du Milieu et offre des secrets de forge oubliés.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 10 && gameState.resources.savoir > 50),
         choices: [
@@ -2026,7 +2026,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 50;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 25);
                 },
-                log: "Vos artisans réalisent des merveilles, mais un sentiment d'anxiété plane sur les forges." //[cite: 1]
+                log: "Vos artisans réalisent des merveilles, mais un sentiment d'anxiété plane sur les forges."
             },
             {
                 label: "Écouter les réticences des Elfes (-20 Renom, -10 Ombre)",
@@ -2035,14 +2035,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 20;
                     gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 10);
                 },
-                log: "Vous refusez ses présents. Il repart vers l'Est, le regard brièvement noir." //[cite: 1]
+                log: "Vous refusez ses présents. Il repart vers l'Est, le regard brièvement noir."
             }
         ]
     },
     {
         id: "age2_04_guildes_or",
         title: "L'Âge des Corporations",
-        description: "L'argent coule à flots grâce au commerce. Les grandes guildes d'artisans exigent le contrôle des taxes du domaine.", //[cite: 1]
+        description: "L'argent coule à flots grâce au commerce. Les grandes guildes d'artisans exigent le contrôle des taxes du domaine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 15 && gameState.resources.richesse > 100),
         choices: [
@@ -2053,7 +2053,7 @@ export const EVENTS = [
                     gameState.resources.renom -= 40;
                     gameState.resources.richesse += 80;
                 },
-                log: "L'économie explose, mais votre autorité politique s'effrite face aux marchands." //[cite: 1]
+                log: "L'économie explose, mais votre autorité politique s'effrite face aux marchands."
             },
             {
                 label: "Maintenir l'autorité de l'Intendant (-40 Richesse, +30 Renom)",
@@ -2062,14 +2062,14 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 30;
                 },
-                log: "L'ordre règne, mais les marchands grognent et ralentissent la production." //[cite: 1]
+                log: "L'ordre règne, mais les marchands grognent et ralentissent la production."
             }
         ]
     },
     {
         id: "age2_05_mirkwood_frontiere",
         title: "Les Frontières Vertes",
-        description: "Les Elfes Sylvains ferment leurs forêts sacrées aux Hommes, accusant vos bûcherons d'abattre des arbres séculaires sans respect.", //[cite: 1]
+        description: "Les Elfes Sylvains ferment leurs forêts sacrées aux Hommes, accusant vos bûcherons d'abattre des arbres séculaires sans respect.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 20),
         choices: [
@@ -2080,7 +2080,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 20;
                 },
-                log: "La paix est préservée avec le peuple des bois au détriment de vos chantiers." //[cite: 1]
+                log: "La paix est préservée avec le peuple des bois au détriment de vos chantiers."
             },
             {
                 label: "Forcer le passage avec des gardes (+30 Richesse, -30 Renom, +10 Ombre)",
@@ -2090,14 +2090,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Le bois alimente vos forges, mais les flèches elfiques tuent vos ouvriers." //[cite: 1]
+                log: "Le bois alimente vos forges, mais les flèches elfiques tuent vos ouvriers."
             }
         ]
     },
     {
         id: "age2_06_anneaux_rumeur",
         title: "Les Cercles de Pouvoir",
-        description: "Les espions rapportent que les forgerons d'Eregion, menés par Celebrimbor, créent des anneaux magiques capables de stopper le déclin du monde.", //[cite: 1]
+        description: "Les espions rapportent que les forgerons d'Eregion, menés par Celebrimbor, créent des anneaux magiques capables de stopper le déclin du monde.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 25 && gameState.resources.savoir > 100),
         choices: [
@@ -2108,7 +2108,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.savoir += 80;
                 },
-                log: "Vos sages reviennent avec des croquis fascinants sur la géométrie sacrée." //[cite: 1]
+                log: "Vos sages reviennent avec des croquis fascinants sur la géométrie sacrée."
             },
             {
                 label: "Ignorer ces artefacts dangereux (+20 Espoir)",
@@ -2116,14 +2116,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir += 20;
                 },
-                log: "Vous vous concentrez sur la vie simple de vos sujets." //[cite: 1]
+                log: "Vous vous concentrez sur la vie simple de vos sujets."
             }
         ]
     },
     {
         id: "age2_07_esclavage_ombre",
         title: "Les Mines de l'Est",
-        description: "L'Ombre grandit au Mordor. Des tribus humaines soumises à Sauron proposent de vous vendre des captifs pour travailler dans vos carrières.", //[cite: 1]
+        description: "L'Ombre grandit au Mordor. Des tribus humaines soumises à Sauron proposent de vous vendre des captifs pour travailler dans vos carrières.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 30 && gameState.state.shadow_level > 20),
         choices: [
@@ -2135,7 +2135,7 @@ export const EVENTS = [
                     gameState.resources.espoir -= 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "Vos monuments sortent de terre à une vitesse prodigieuse, baignés de larmes." //[cite: 1]
+                log: "Vos monuments sortent de terre à une vitesse prodigieuse, baignés de larmes."
             },
             {
                 label: "Refuser cette infamie (+40 Espoir, -30 Richesse)",
@@ -2144,14 +2144,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 40;
                     gameState.resources.richesse -= 30;
                 },
-                log: "Votre économie stagne, mais l'honneur de votre peuple reste intact." //[cite: 1]
+                log: "Votre économie stagne, mais l'honneur de votre peuple reste intact."
             }
         ]
     },
     {
         id: "age2_08_numenor_tribut",
         title: "L'Ombre sur Númenor",
-        description: "Les navires des Rois de la Mer reviennent, mais ils ne demandent plus l'amitié : ils exigent un lourd tribut en or et en bois, vous traitant comme des inférieurs.", //[cite: 1]
+        description: "Les navires des Rois de la Mer reviennent, mais ils ne demandent plus l'amitié : ils exigent un lourd tribut en or et en bois, vous traitant comme des inférieurs.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 35 && gameState.resources.richesse > 80),
         choices: [
@@ -2162,7 +2162,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 80;
                     gameState.resources.renom -= 20;
                 },
-                log: "Vous achetez la paix face à la plus grande flotte du monde." //[cite: 1]
+                log: "Vous achetez la paix face à la plus grande flotte du monde."
             },
             {
                 label: "Refuser et fortifier les côtes (-40 Richesse, +40 Renom, -20 Espoir)",
@@ -2172,14 +2172,14 @@ export const EVENTS = [
                     gameState.resources.renom += 40;
                     gameState.resources.espoir -= 20;
                 },
-                log: "La tension monte. Les voiles noires de Númenor guettent vos rivages." //[cite: 1]
+                log: "La tension monte. Les voiles noires de Númenor guettent vos rivages."
             }
         ]
     },
     {
         id: "age2_09_forge_barad_dur",
         title: "La Tour de Feu",
-        description: "Une immense forteresse noire s'élève dans les désolations du Sud. La terre tremble à chaque coup de marteau. La peur s'installe.", //[cite: 1]
+        description: "Une immense forteresse noire s'élève dans les désolations du Sud. La terre tremble à chaque coup de marteau. La peur s'installe.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 40),
         choices: [
@@ -2190,7 +2190,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.renom += 30;
                 },
-                log: "Vos soldats surveillent les cols, prêts à donner l'alerte." //[cite: 1]
+                log: "Vos soldats surveillent les cols, prêts à donner l'alerte."
             },
             {
                 label: "Financer des rituels d'espoir (-40 Richesse, +40 Espoir)",
@@ -2199,14 +2199,14 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.espoir += 40;
                 },
-                log: "Les temples résonnent de prières pour dissiper l'angoisse ambiante." //[cite: 1]
+                log: "Les temples résonnent de prières pour dissiper l'angoisse ambiante."
             }
         ]
     },
     {
         id: "age2_10_anneaux_distribution",
         title: "Le Cadeau du Maître",
-        description: "Un messager d'Annatar vous apporte un anneau d'or orné d'une gemme rouge, promettant une vie éternelle et une richesse infinie pour le dirigeant du domaine.", //[cite: 1]
+        description: "Un messager d'Annatar vous apporte un anneau d'or orné d'une gemme rouge, promettant une vie éternelle et une richesse infinie pour le dirigeant du domaine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 45 && gameState.resources.renom > 40),
         choices: [
@@ -2218,7 +2218,7 @@ export const EVENTS = [
                     gameState.resources.renom += 100;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 40);
                 },
-                log: "Votre volonté devient d'acier, la richesse abonde, mais vos nuits deviennent terrifiantes." //[cite: 1]
+                log: "Votre volonté devient d'acier, la richesse abonde, mais vos nuits deviennent terrifiantes."
             },
             {
                 label: "Jeter le présent dans les forges (+60 Espoir, -30 Richesse)",
@@ -2227,14 +2227,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 60;
                     gameState.resources.richesse -= 30;
                 },
-                log: "Le messager s'est volatilisé dans un cri strident. Votre peuple loue votre sagesse." //[cite: 1]
+                log: "Le messager s'est volatilisé dans un cri strident. Votre peuple loue votre sagesse."
             }
         ]
     },
     {
         id: "age2_11_erebor_alliance",
         title: "Le Pacte de la Pierre",
-        description: "Les Nains de Khazad-dûm ouvrent les plus grandes portes de leur histoire. Ils proposent une route commerciale exclusive à travers la montagne.", //[cite: 1]
+        description: "Les Nains de Khazad-dûm ouvrent les plus grandes portes de leur histoire. Ils proposent une route commerciale exclusive à travers la montagne.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 50 && gameState.resources.richesse > 60),
         choices: [
@@ -2246,7 +2246,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 120;
                     gameState.resources.savoir += 40;
                 },
-                log: "Le Mithril et l'or coulent dans votre économie. L'alliance est scellée." //[cite: 1]
+                log: "Le Mithril et l'or coulent dans votre économie. L'alliance est scellée."
             },
             {
                 label: "Décliner par méfiance envers les Nains (-20 Renom)",
@@ -2254,14 +2254,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom -= 20;
                 },
-                log: "Les Nains s'allient avec vos rivaux, vous isolant économiquement." //[cite: 1]
+                log: "Les Nains s'allient avec vos rivaux, vous isolant économiquement."
             }
         ]
     },
     {
         id: "age2_12_guerre_elfes_sauron",
         title: "Le Masque Tombe",
-        description: "Sauron s'est révélé. Ses armées de monstres envahissent l'Eregion et massacrent les forgerons elfes. Celebrimbor est mort. La guerre totale est là.", //[cite: 1]
+        description: "Sauron s'est révélé. Ses armées de monstres envahissent l'Eregion et massacrent les forgerons elfes. Celebrimbor est mort. La guerre totale est là.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 55 && gameState.population.hommes > 50),
         choices: [
@@ -2272,7 +2272,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 40);
                     gameState.resources.renom += 80;
                 },
-                log: "Vos troupes subissent de lourdes pertes, mais sauvent les restes du peuple elfe." //[cite: 1]
+                log: "Vos troupes subissent de lourdes pertes, mais sauvent les restes du peuple elfe."
             },
             {
                 label: "Murer le domaine et stocker les vivres (-50 Richesse, +30 Espoir, -40 Renom)",
@@ -2282,14 +2282,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 30;
                     gameState.resources.renom -= 40;
                 },
-                log: "Vous survivez lâchement pendant que l'Eregion brûle jusqu'aux fondations." //[cite: 1]
+                log: "Vous survivez lâchement pendant que l'Eregion brûle jusqu'aux fondations."
             }
         ]
     },
     {
         id: "age2_13_fondation_imladris",
         title: "La Vallée Cachée",
-        description: "Elrond a fui le désastre et fondé un refuge secret dans une vallée profonde : Fondcombe. Il vous demande d'y envoyer vos reliques historiques.", //[cite: 1]
+        description: "Elrond a fui le désastre et fondé un refuge secret dans une vallée profonde : Fondcombe. Il vous demande d'y envoyer vos reliques historiques.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 60 && gameState.resources.savoir > 80),
         choices: [
@@ -2301,7 +2301,7 @@ export const EVENTS = [
                     gameState.resources.renom += 40;
                     gameState.resources.espoir += 20;
                 },
-                log: "Vos parchemins sont en sécurité dans la maison d'Elrond pour les siècles futurs." //[cite: 1]
+                log: "Vos parchemins sont en sécurité dans la maison d'Elrond pour les siècles futurs."
             },
             {
                 label: "Garder vos écrits chez vous (+30 Savoir, -20 Espoir)",
@@ -2310,14 +2310,14 @@ export const EVENTS = [
                     gameState.resources.savoir += 30;
                     gameState.resources.espoir -= 20;
                 },
-                log: "Vous conservez votre savoir immédiat, mais risquez sa destruction future." //[cite: 1]
+                log: "Vous conservez votre savoir immédiat, mais risquez sa destruction future."
             }
         ]
     },
     {
         id: "age2_14_numenor_orgueil",
         title: "Les Temples de Sang",
-        description: "Les Númenoréens installés sur vos côtes ont érigé un immense temple dédié à Melkor. Ils y pratiquent des sacrifices pour obtenir la vie éternelle.", //[cite: 1]
+        description: "Les Númenoréens installés sur vos côtes ont érigé un immense temple dédié à Melkor. Ils y pratiquent des sacrifices pour obtenir la vie éternelle.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 65 && gameState.state.shadow_level > 30),
         choices: [
@@ -2328,7 +2328,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 150;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "L'or numénoréen emplit vos coffres, mais l'air empeste le soufre et la mort." //[cite: 1]
+                log: "L'or numénoréen emplit vos coffres, mais l'air empeste le soufre et la mort."
             },
             {
                 label: "Chasser leurs prêtres par la force (-20 Hommes, +50 Espoir, -15 Ombre)",
@@ -2338,14 +2338,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 50;
                     gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 15);
                 },
-                log: "Le temple est purifié par le feu. Votre peuple respire à nouveau." //[cite: 1]
+                log: "Le temple est purifié par le feu. Votre peuple respire à nouveau."
             }
         ]
     },
     {
         id: "age2_15_armee_sauron_siege",
         title: "Les Tambours du Mordor",
-        description: "L'armée de Sauron encercle votre domaine. Les ciels sont noirs de flèches incendiaires, vos murs tremblent.", //[cite: 1]
+        description: "L'armée de Sauron encercle votre domaine. Les ciels sont noirs de flèches incendiaires, vos murs tremblent.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 70 && gameState.population.hommes > 30),
         choices: [
@@ -2357,7 +2357,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 50;
                 },
-                log: "Vos lignes tiennent bon grâce à votre courage. L'ennemi s'épuise sur vos murs." //[cite: 1]
+                log: "Vos lignes tiennent bon grâce à votre courage. L'ennemi s'épuise sur vos murs."
             },
             {
                 label: "Négocier une reddition partielle (-100 Richesse, -30 Renom, +25 Ombre)",
@@ -2367,14 +2367,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 25);
                 },
-                log: "Vous sauvez des vies au prix de votre honneur et de votre fortune." //[cite: 1]
+                log: "Vous sauvez des vies au prix de votre honneur et de votre fortune."
             }
         ]
     },
     {
         id: "age2_16_ar_pharazon_debarquement",
         title: "L'Arrivée du Roi d'Or",
-        description: "Le Roi de Númenor, Ar-Pharazôn, débarque avec une armée si colossale et terrifiante que les forces de Sauron s'enfuient sans combattre. Le Roi exige votre soumission.", //[cite: 1]
+        description: "Le Roi de Númenor, Ar-Pharazôn, débarque avec une armée si colossale et terrifiante que les forces de Sauron s'enfuient sans combattre. Le Roi exige votre soumission.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 75),
         choices: [
@@ -2385,7 +2385,7 @@ export const EVENTS = [
                     gameState.resources.renom += 50;
                     gameState.resources.espoir -= 30;
                 },
-                log: "Vous rejoignez l'allégeance de l'Empire, ébloui et soumis." //[cite: 1]
+                log: "Vous rejoignez l'allégeance de l'Empire, ébloui et soumis."
             },
             {
                 label: "Rester neutre et distant (-40 Richesse)",
@@ -2393,14 +2393,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.richesse -= 40;
                 },
-                log: "Vous payez de lourdes amendes pour votre manque d'enthousiasme." //[cite: 1]
+                log: "Vous payez de lourdes amendes pour votre manque d'enthousiasme."
             }
         ]
     },
     {
         id: "age2_17_sauron_captif",
         title: "Le Prisonnier de l'Ouest",
-        description: "Sauron s'est rendu au Roi de Númenor et a été emmené enchaîné sur leur île. Une paix étrange et suspecte s'installe sur la Terre du Milieu.", //[cite: 1]
+        description: "Sauron s'est rendu au Roi de Númenor et a été emmené enchaîné sur leur île. Une paix étrange et suspecte s'installe sur la Terre du Milieu.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 78),
         choices: [
@@ -2411,7 +2411,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 60;
                     gameState.resources.renom -= 20;
                 },
-                log: "L'or retourne à l'agriculture, mais vos soldats s'amollissent." //[cite: 1]
+                log: "L'or retourne à l'agriculture, mais vos soldats s'amollissent."
             },
             {
                 label: "Rester vigilant et armé (-30 Richesse, +30 Espoir)",
@@ -2420,14 +2420,14 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.espoir += 30;
                 },
-                log: "Vous suspectez le piège. Votre peuple veille sur les remparts." //[cite: 1]
+                log: "Vous suspectez le piège. Votre peuple veille sur les remparts."
             }
         ]
     },
     {
         id: "age2_18_culte_melkor",
         title: "La Grande Dissimulation",
-        description: "Profitant de la paix, des sociétés secrètes adorant le Premier Seigneur Sombre s'installent parmi vos notables.", //[cite: 1]
+        description: "Profitant de la paix, des sociétés secrètes adorant le Premier Seigneur Sombre s'installent parmi vos notables.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 82 && gameState.state.shadow_level > 40),
         choices: [
@@ -2439,7 +2439,7 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 15);
                 },
-                log: "La chasse aux sorcières assombrit l'ambiance, mais le culte est éradiqué." //[cite: 1]
+                log: "La chasse aux sorcières assombrit l'ambiance, mais le culte est éradiqué."
             },
             {
                 label: "Laisser faire par tolérance (+40 Richesse, +20 Ombre)",
@@ -2448,14 +2448,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "L'élite s'enrichit grâce à ces réseaux, mais la morale se décompose." //[cite: 1]
+                log: "L'élite s'enrichit grâce à ces réseaux, mais la morale se décompose."
             }
         ]
     },
     {
         id: "age2_19_flotte_numenor",
         title: "L'Armada de l'Hubris",
-        description: "Le Roi de Númenor a construit la plus grande flotte de l'histoire pour attaquer les Dieux à l'Ouest et leur voler l'immortalité. Ils coupent toutes vos forêts pour faire des mâts.", //[cite: 1]
+        description: "Le Roi de Númenor a construit la plus grande flotte de l'histoire pour attaquer les Dieux à l'Ouest et leur voler l'immortalité. Ils coupent toutes vos forêts pour faire des mâts.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 85 && gameState.resources.richesse > 50),
         choices: [
@@ -2466,7 +2466,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 150;
                     gameState.resources.espoir -= 30;
                 },
-                log: "La richesse abonde, mais vos collines sont nues et le ciel gronde d'une colère divine." //[cite: 1]
+                log: "La richesse abonde, mais vos collines sont nues et le ciel gronde d'une colère divine."
             },
             {
                 label: "Saboter les chantiers navals de l'Empire (-15 Hommes, +50 Renom)",
@@ -2475,14 +2475,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 15);
                     gameState.resources.renom += 50;
                 },
-                log: "Vous ralentissez la folie du Roi au prix de vies humaines." //[cite: 1]
+                log: "Vous ralentissez la folie du Roi au prix de vies humaines."
             }
         ]
     },
     {
         id: "age2_20_submersion",
         title: "La Chute de l'Étoile",
-        description: "Un grondement cataclysmique secoue la planète. L'océan s'ouvre. L'Île de Númenor est engloutie sous les flots par la colère de Dieu. Une vague gigantesque frappe vos côtes.", //[cite: 1]
+        description: "Un grondement cataclysmique secoue la planète. L'océan s'ouvre. L'Île de Númenor est engloutie sous les flots par la colère de Dieu. Une vague gigantesque frappe vos côtes.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 90),
         choices: [
@@ -2494,7 +2494,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 25);
                     gameState.resources.espoir += 30;
                 },
-                log: "Le littoral est dévasté, mais le cœur de votre peuple survit sur la montagne." //[cite: 1]
+                log: "Le littoral est dévasté, mais le cœur de votre peuple survit sur la montagne."
             },
             {
                 label: "Tenter de sauver les ports bas (-60 Hommes, +20 Ombre)",
@@ -2503,14 +2503,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 60);
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "La vague géante balaie vos infrastructures et emporte vos marins." //[cite: 1]
+                log: "La vague géante balaie vos infrastructures et emporte vos marins."
             }
         ]
     },
     {
         id: "age2_21_survivants_elendil",
         title: "Les Fidèles de la Tempête",
-        description: "Des navires brisés par le cataclysme s'échouent. Menés par Elendil et ses fils, ces rescapés sont restés fidèles aux Dieux et aux Elfes. Ils demandent de la pierre pour bâtir de nouveaux royaumes.", //[cite: 1]
+        description: "Des navires brisés par le cataclysme s'échouent. Menés par Elendil et ses fils, ces rescapés sont restés fidèles aux Dieux et aux Elfes. Ils demandent de la pierre pour bâtir de nouveaux royaumes.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 92 && gameState.resources.richesse > 40),
         choices: [
@@ -2522,7 +2522,7 @@ export const EVENTS = [
                     gameState.resources.renom += 100;
                     gameState.resources.espoir += 40;
                 },
-                log: "Vous posez les premières pierres du Gondor et de l'Arnor. Une amitié éternelle renaît." //[cite: 1]
+                log: "Vous posez les premières pierres du Gondor et de l'Arnor. Une amitié éternelle renaît."
             },
             {
                 label: "Préserver vos matériaux pour vos propres besoins (-20 Renom)",
@@ -2530,14 +2530,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom -= 20;
                 },
-                log: "Les hauts rois s'installent plus loin, vous ignorant superbement." //[cite: 1]
+                log: "Les hauts rois s'installent plus loin, vous ignorant superbement."
             }
         ]
     },
     {
         id: "age2_22_retour_sauron",
         title: "L'Ombre se Réincarne",
-        description: "Sauron a survécu à la submersion. Son esprit est revenu au Mordor, et il a revêtu une armure de feu et de haine. La Montagne du Destin entre en éruption.", //[cite: 1]
+        description: "Sauron a survécu à la submersion. Son esprit est revenu au Mordor, et il a revêtu une armure de feu et de haine. La Montagne du Destin entre en éruption.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 94 && gameState.resources.espoir > 30),
         choices: [
@@ -2548,7 +2548,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.renom += 30;
                 },
-                log: "Le peuple s'arme. Personne ne se fait d'illusions sur la suite." //[cite: 1]
+                log: "Le peuple s'arme. Personne ne se fait d'illusions sur la suite."
             },
             {
                 label: "Paniquer et rationner (-20 Espoir, +5 Ombre)",
@@ -2557,14 +2557,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 5);
                 },
-                log: "Le découragement paralyse les industries de votre domaine." //[cite: 1]
+                log: "Le découragement paralyse les industries de votre domaine."
             }
         ]
     },
     {
         id: "age2_23_derniere_alliance",
         title: "La Dernière Alliance",
-        description: "Elendil et le Roi Elfe Gil-galad lèvent une armée unie pour anéantir Sauron une fois pour toutes. Ils appellent toutes les forces libres à les rejoindre.", //[cite: 1]
+        description: "Elendil et le Roi Elfe Gil-galad lèvent une armée unie pour anéantir Sauron une fois pour toutes. Ils appellent toutes les forces libres à les rejoindre.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 96 && gameState.population.hommes > 40),
         choices: [
@@ -2575,7 +2575,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 35);
                     gameState.resources.renom += 100;
                 },
-                log: "Vos bannières marchent aux côtés des plus grands rois de l'Histoire humaine et elfique." //[cite: 1]
+                log: "Vos bannières marchent aux côtés des plus grands rois de l'Histoire humaine et elfique."
             },
             {
                 label: "Rester pour défendre vos foyers (+20 Espoir, -50 Renom)",
@@ -2584,14 +2584,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 20;
                     gameState.resources.renom -= 50;
                 },
-                log: "La grande armée passe sans vous, vous marquant du sceau de la lâcheté." //[cite: 1]
+                log: "La grande armée passe sans vous, vous marquant du sceau de la lâcheté."
             }
         ]
     },
     {
         id: "age2_24_siege_mordor",
         title: "La Longue Veille au Noir",
-        description: "La guerre s'éternise aux portes du Mordor. Le siège dure depuis des années. On vous demande des convois constants de ravitaillement.", //[cite: 1]
+        description: "La guerre s'éternise aux portes du Mordor. Le siège dure depuis des années. On vous demande des convois constants de ravitaillement.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 97 && gameState.resources.richesse > 50),
         choices: [
@@ -2602,7 +2602,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.renom += 40;
                 },
-                log: "Vos paysans triment jour et nuit, mais l'armée de l'Alliance tient bon grâce à vous." //[cite: 1]
+                log: "Vos paysans triment jour et nuit, mais l'armée de l'Alliance tient bon grâce à vous."
             },
             {
                 label: "Garder la nourriture pour vos villages (-10 Hommes, -30 Renom)",
@@ -2611,14 +2611,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 10);
                     gameState.resources.renom -= 30;
                 },
-                log: "Les armées souffrent de famine au front et votre nom est maudit." //[cite: 1]
+                log: "Les armées souffrent de famine au front et votre nom est maudit."
             }
         ]
     },
     {
         id: "age2_25_montagne_destin_choc",
         title: "Le Duel des Sommets",
-        description: "La nouvelle arrive : Gil-galad et Elendil sont tombés en terrassant Sauron, mais le fils du roi, Isildur, a coupé le Doigt du Monstre. L'Anneau Unique est pris. Sauron est vaincu.", //[cite: 1]
+        description: "La nouvelle arrive : Gil-galad et Elendil sont tombés en terrassant Sauron, mais le fils du roi, Isildur, a coupé le Doigt du Monstre. L'Anneau Unique est pris. Sauron est vaincu.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 98),
         choices: [
@@ -2629,7 +2629,7 @@ export const EVENTS = [
                     gameState.resources.espoir += 50;
                     gameState.resources.renom += 20;
                 },
-                log: "Le cauchemar s'achève enfin après des décennies de conflit." //[cite: 1]
+                log: "Le cauchemar s'achève enfin après des décennies de conflit."
             },
             {
                 label: "Méditer sur la mort des grands rois (-20 Espoir)",
@@ -2637,14 +2637,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 20;
                 },
-                log: "La victoire est totale, mais le monde semble soudain plus vide." //[cite: 1]
+                log: "La victoire est totale, mais le monde semble soudain plus vide."
             }
         ]
     },
     {
         id: "age2_26_isildur_erreur",
         title: "La Faute d'Isildur",
-        description: "Isildur refuse de détruire l'Anneau Unique dans le brasier du destin, le gardant comme compensation pour la mort de son père. Le mal n'est pas éradiqué à la racine.", //[cite: 1]
+        description: "Isildur refuse de détruire l'Anneau Unique dans le brasier du destin, le gardant comme compensation pour la mort de son père. Le mal n'est pas éradiqué à la racine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 99),
         choices: [
@@ -2655,7 +2655,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 20;
                     gameState.resources.savoir += 40;
                 },
-                log: "Les érudits consignent cette folie dans les livres secrets du domaine." //[cite: 1]
+                log: "Les érudits consignent cette folie dans les livres secrets du domaine."
             },
             {
                 label: "Ignorer les affaires des grands rois (+10 Espoir)",
@@ -2663,14 +2663,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir += 10;
                 },
-                log: "Vous savourez la paix immédiate, refusant de penser à l'avenir." //[cite: 1]
+                log: "Vous savourez la paix immédiate, refusant de penser à l'avenir."
             }
         ]
     },
     {
         id: "age2_27_desastre_champs",
         title: "Le Désastre des Iris",
-        description: "Isildur est tombé dans une embuscade d'orques au Nord. L'Anneau Unique est perdu dans les eaux profondes de la Grande Rivière. Les lignées de rois se divisent.", //[cite: 1]
+        description: "Isildur est tombé dans une embuscade d'orques au Nord. L'Anneau Unique est perdu dans les eaux profondes de la Grande Rivière. Les lignées de rois se divisent.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 99 && gameState.state.shadow_level < 50),
         choices: [
@@ -2681,7 +2681,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.renom += 20;
                 },
-                log: "Vous protégez les routes face aux orques enhardis par la mort du Roi." //[cite: 1]
+                log: "Vous protégez les routes face aux orques enhardis par la mort du Roi."
             },
             {
                 label: "Se replier sur vos terres locales (+10 Richesse, -15 Espoir)",
@@ -2690,14 +2690,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 10;
                     gameState.resources.espoir -= 15;
                 },
-                log: "Le chaos politique du Nord jette un voile d'incertitude sur vos sujets." //[cite: 1]
+                log: "Le chaos politique du Nord jette un voile d'incertitude sur vos sujets."
             }
         ]
     },
     {
         id: "age2_28_depart_derniers_noldor",
         title: "Le Crépuscule des Rois",
-        description: "Blessés par la perte de Gil-galad, de nombreux hauts elfes décident de quitter définitivement le domaine pour s'embarquer vers l'Ouest.", //[cite: 1]
+        description: "Blessés par la perte de Gil-galad, de nombreux hauts elfes décident de quitter définitivement le domaine pour s'embarquer vers l'Ouest.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 100 && gameState.population.elfes > 10),
         choices: [
@@ -2709,7 +2709,7 @@ export const EVENTS = [
                     gameState.resources.renom += 30;
                     gameState.population.elfes = Math.max(0, gameState.population.elfes - 10);
                 },
-                log: "Leur départ affaiblit votre puissance magique, mais leur bénédiction demeure." //[cite: 1]
+                log: "Leur départ affaiblit votre puissance magique, mais leur bénédiction demeure."
             },
             {
                 label: "Tenter de les retenir de force (-15 Elfes, -30 Espoir, +10 Ombre)",
@@ -2719,14 +2719,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "La contrainte brise l'amitié. Ils partent en vous maudissant." //[cite: 1]
+                log: "La contrainte brise l'amitié. Ils partent en vous maudissant."
             }
         ]
     },
     {
         id: "age2_29_choix_heritage_ere",
         title: "L'Héritage du Gardien",
-        description: "Le Deuxième Âge se ferme. Vous devez décider du testament spirituel et matériel que vous léguez à vos descendants pour affronter l'avenir.", //[cite: 1]
+        description: "Le Deuxième Âge se ferme. Vous devez décider du testament spirituel et matériel que vous léguez à vos descendants pour affronter l'avenir.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 100),
         choices: [
@@ -2737,7 +2737,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.savoir += 60;
                 },
-                log: "Vos successeurs hériteront de parchemins et d'objets protecteurs cruciaux." //[cite: 1]
+                log: "Vos successeurs hériteront de parchemins et d'objets protecteurs cruciaux."
             },
             {
                 label: "Léguer une forteresse imprenable (+50 Renom, +20 Espoir)",
@@ -2746,14 +2746,14 @@ export const EVENTS = [
                     gameState.resources.renom += 50;
                     gameState.resources.espoir += 20;
                 },
-                log: "Vous transmettez un bastion de pierre et une discipline militaire de fer." //[cite: 1]
+                log: "Vous transmettez un bastion de pierre et une discipline militaire de fer."
             }
         ]
     },
     {
         id: "age2_30_fin_deuxieme_age",
         title: "La Fin du Deuxième Âge",
-        description: "Les chroniques de l'essor et de la chute des empires de l'or sont closes. Le monde s'assombrit, la magie s'éteint. Bienvenue dans le Troisième Âge.", //[cite: 1]
+        description: "Les chroniques de l'essor et de la chute des empires de l'or sont closes. Le monde s'assombrit, la magie s'éteint. Bienvenue dans le Troisième Âge.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 100),
         choices: [
@@ -2761,14 +2761,14 @@ export const EVENTS = [
                 label: "Passer au Troisième Âge (Aucun effet)",
                 canAfford: () => true,
                 effect: () => {},
-                log: "Le grand livre du Deuxième Âge se ferme. Le déclin commence." //[cite: 1]
+                log: "Le grand livre du Deuxième Âge se ferme. Le déclin commence."
             }
         ]
     },
     {
         id: "age3_01_fardeau",
         title: "L'Héritage des Ruines",
-        description: "Le Troisième Âge s'ouvre sur un monde fragmenté. Les grands empires d'autrefois ne sont plus que des souvenirs gravés sur des tombes. Il faut choisir la posture de vos premiers veilleurs.", //[cite: 1]
+        description: "Le Troisième Âge s'ouvre sur un monde fragmenté. Les grands empires d'autrefois ne sont plus que des souvenirs gravés sur des tombes. Il faut choisir la posture de vos premiers veilleurs.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 1),
         choices: [
@@ -2779,7 +2779,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.savoir += 50;
                 },
-                log: "Vous choisissez la voie de l'érudition et de la mémoire sacrée." //[cite: 1]
+                log: "Vous choisissez la voie de l'érudition et de la mémoire sacrée."
             },
             {
                 label: "Fortifier les cols et les accès (+40 Renom, -10 Espoir)",
@@ -2788,14 +2788,14 @@ export const EVENTS = [
                     gameState.resources.renom += 40;
                     gameState.resources.espoir -= 10;
                 },
-                log: "Vous transformez vos cités en bastions austères, prêts pour l'usure du temps." //[cite: 1]
+                log: "Vous transformez vos cités en bastions austères, prêts pour l'usure du temps."
             }
         ]
     },
     {
         id: "age3_02_istari_arrivee",
         title: "Les Envoyés de l'Ouest",
-        description: "Cinq voyageurs étranges, vêtus de longues robes de couleurs différentes, débarquent aux Havres Gris. L'un d'eux, habillé de gris, demande à consulter vos cartes.", //[cite: 1]
+        description: "Cinq voyageurs étranges, vêtus de longues robes de couleurs différentes, débarquent aux Havres Gris. L'un d'eux, habillé de gris, demande à consulter vos cartes.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 5),
         choices: [
@@ -2806,7 +2806,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 60;
                     gameState.resources.espoir += 30;
                 },
-                log: "Le magicien a partagé des paroles de réconfort. Un vent d'espoir souffle sur le domaine." //[cite: 1]
+                log: "Le magicien a partagé des paroles de réconfort. Un vent d'espoir souffle sur le domaine."
             },
             {
                 label: "Le traiter comme un vagabond suspect (-20 Espoir)",
@@ -2814,14 +2814,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 20;
                 },
-                log: "Il continue sa route en s'appuyant sur son bâton, le visage empreint de tristesse." //[cite: 1]
+                log: "Il continue sa route en s'appuyant sur son bâton, le visage empreint de tristesse."
             }
         ]
     },
     {
         id: "age3_03_rohan_naissance",
         title: "Les Fils d'Eorl",
-        description: "Une tribu de cavaliers venus du Grand Nord cherche des plaines pour faire paître leurs chevaux. Le Gondor leur offre des terres, et ils demandent votre bénédiction.", //[cite: 1]
+        description: "Une tribu de cavaliers venus du Grand Nord cherche des plaines pour faire paître leurs chevaux. Le Gondor leur offre des terres, et ils demandent votre bénédiction.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 10),
         choices: [
@@ -2832,7 +2832,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.renom += 40;
                 },
-                log: "Une alliance de sang et de fidélité se dessine avec les Seigneurs des Chevaux." //[cite: 1]
+                log: "Une alliance de sang et de fidélité se dessine avec les Seigneurs des Chevaux."
             },
             {
                 label: "Ignorer ces barbares nomades (-15 Renom)",
@@ -2840,14 +2840,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom -= 15;
                 },
-                log: "Ils s'installent dans les plaines du sud, ignorant désormais votre existence." //[cite: 1]
+                log: "Ils s'installent dans les plaines du sud, ignorant désormais votre existence."
             }
         ]
     },
     {
         id: "age3_04_grand_peste",
         title: "L'Ombre Invisible",
-        description: "Une peste noire venue de l'Est décime les cités du Gondor et se rapproche de vos frontières. Les villages se dépeuplent à vue d'œil.", //[cite: 1]
+        description: "Une peste noire venue de l'Est décime les cités du Gondor et se rapproche de vos frontières. Les villages se dépeuplent à vue d'œil.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 15 && gameState.population.hommes > 40),
         choices: [
@@ -2858,7 +2858,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.espoir += 20;
                 },
-                log: "Le remède limite les pertes et rassure la population terrifiée." //[cite: 1]
+                log: "Le remède limite les pertes et rassure la population terrifiée."
             },
             {
                 label: "Fermer les frontières et laisser faire la mort (-30 Hommes, -30 Espoir)",
@@ -2867,14 +2867,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 30);
                     gameState.resources.espoir -= 30;
                 },
-                log: "Les tombes se multiplient. Les survivants sont plongés dans la mélancolie." //[cite: 1]
+                log: "Les tombes se multiplient. Les survivants sont plongés dans la mélancolie."
             }
         ]
     },
     {
         id: "age3_05_angmar_guerre",
         title: "Le Roi-Sorcier",
-        description: "Un royaume maléfique s'est élevé dans les landes glacées du Nord, mené par le premier des spectres de l'Anneau. Le Nord appelle à l'aide.", //[cite: 1]
+        description: "Un royaume maléfique s'est élevé dans les landes glacées du Nord, mené par le premier des spectres de l'Anneau. Le Nord appelle à l'aide.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 20 && gameState.population.hommes > 20),
         choices: [
@@ -2885,7 +2885,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 20);
                     gameState.resources.renom += 60;
                 },
-                log: "Le Nord est dévasté, mais vos lignes ont permis de sauver la lignée des rois." //[cite: 1]
+                log: "Le Nord est dévasté, mais vos lignes ont permis de sauver la lignée des rois."
             },
             {
                 label: "Murer le domaine dans son isolement (-20 Renom, +10 Ombre)",
@@ -2894,14 +2894,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "L'Arnor s'effondre dans les ruines. La menace se rapproche de vous." //[cite: 1]
+                log: "L'Arnor s'effondre dans les ruines. La menace se rapproche de vous."
             }
         ]
     },
     {
         id: "age3_06_moria_ombre",
         title: "Le Fléau de Durin",
-        description: "Un grondement sourd retentit sous les Montagnes Brumeuses. Les Nains fuient en masse la Moria, affirmant qu'une terreur de feu et d'ombre s'est éveillée.", //[cite: 1]
+        description: "Un grondement sourd retentit sous les Montagnes Brumeuses. Les Nains fuient en masse la Moria, affirmant qu'une terreur de feu et d'ombre s'est éveillée.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 25),
         choices: [
@@ -2913,7 +2913,7 @@ export const EVENTS = [
                     gameState.resources.richesse += 20;
                     gameState.resources.espoir -= 10;
                 },
-                log: "Leurs artisans enrichissent vos forges, mais leur désespoir est contagieux." //[cite: 1]
+                log: "Leurs artisans enrichissent vos forges, mais leur désespoir est contagieux."
             },
             {
                 label: "Leur refuser l'asile par peur du monstre (-30 Renom)",
@@ -2921,14 +2921,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom -= 30;
                 },
-                log: "Les Nains errent dans la nature, maudissant la lâcheté des Hommes." //[cite: 1]
+                log: "Les Nains errent dans la nature, maudissant la lâcheté des Hommes."
             }
         ]
     },
     {
         id: "age3_07_gondor_sans_roi",
         title: "Le Trône Vide",
-        description: "Le dernier roi du Gondor a disparu en relevant le défi du Roi-Sorcier. Ce sont désormais les Intendants qui gouvernent. La légitimité du pouvoir vacille.", //[cite: 1]
+        description: "Le dernier roi du Gondor a disparu en relevant le défi du Roi-Sorcier. Ce sont désormais les Intendants qui gouvernent. La légitimité du pouvoir vacille.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 30 && gameState.resources.renom > 30),
         choices: [
@@ -2939,7 +2939,7 @@ export const EVENTS = [
                     gameState.resources.renom += 40;
                     gameState.resources.richesse -= 20;
                 },
-                log: "Vous stabilisez la politique des Hommes en finançant les messagers." //[cite: 1]
+                log: "Vous stabilisez la politique des Hommes en finançant les messagers."
             },
             {
                 label: "Laisser le chaos s'installer chez vos voisins (-20 Espoir, +5 Ombre)",
@@ -2948,14 +2948,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 5);
                 },
-                log: "Le désordre grandit au Sud, affaiblissant le dernier rempart contre le Mordor." //[cite: 1]
+                log: "Le désordre grandit au Sud, affaiblissant le dernier rempart contre le Mordor."
             }
         ]
     },
     {
         id: "age3_08_foret_noire_araignees",
         title: "La Toile Épaisse",
-        description: "La grande forêt verte s'est assombrie, envahie par des araignées géantes issues de Dol Guldur. Le commerce sylvestre meurt.", //[cite: 1]
+        description: "La grande forêt verte s'est assombrie, envahie par des araignées géantes issues de Dol Guldur. Le commerce sylvestre meurt.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 35),
         choices: [
@@ -2966,7 +2966,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 30;
                 },
-                log: "Les routes restent praticables au prix d'efforts constants de vos soldats." //[cite: 1]
+                log: "Les routes restent praticables au prix d'efforts constants de vos soldats."
             },
             {
                 label: "Abandonner la lisière forestière (-30 Richesse, +10 Ombre)",
@@ -2975,14 +2975,14 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "La forêt gagne du terrain, sombre, rampante et étouffante." //[cite: 1]
+                log: "La forêt gagne du terrain, sombre, rampante et étouffante."
             }
         ]
     },
     {
         id: "age3_09_relique_perdue",
         title: "L'Épée Brisée",
-        description: "Des éclaireurs rapportent qu'un fragment d'Andúril, l'épée qui coupa le doigt de Sauron, est enfoui dans de vieilles ruines infestées de trolls.", //[cite: 1]
+        description: "Des éclaireurs rapportent qu'un fragment d'Andúril, l'épée qui coupa le doigt de Sauron, est enfoui dans de vieilles ruines infestées de trolls.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 40 && gameState.resources.savoir > 60),
         choices: [
@@ -2994,7 +2994,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 100;
                     gameState.resources.renom += 40;
                 },
-                log: "Le fragment est retrouvé et placé en sécurité. L'honneur du passé est sauf." //[cite: 1]
+                log: "Le fragment est retrouvé et placé en sécurité. L'honneur du passé est sauf."
             },
             {
                 label: "Laisser la relique dans la boue (-20 Renom, +5 Ombre)",
@@ -3003,14 +3003,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 5);
                 },
-                log: "Le souvenir des anciens rois s'efface un peu plus du monde." //[cite: 1]
+                log: "Le souvenir des anciens rois s'efface un peu plus du monde."
             }
         ]
     },
     {
         id: "age3_10_dragon_erebor",
         title: "La Chute de la Montagne",
-        description: "Un dragon de feu, Smaug le Doré, s'est abattu sur la montagne d'Erebor, massacrant les Nains et brûlant les cités humaines du lac.", //[cite: 1]
+        description: "Un dragon de feu, Smaug le Doré, s'est abattu sur la montagne d'Erebor, massacrant les Nains et brûlant les cités humaines du lac.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 45),
         choices: [
@@ -3021,7 +3021,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.espoir += 40;
                 },
-                log: "Vous sauvez des milliers de vies de la misère du givre." //[cite: 1]
+                log: "Vous sauvez des milliers de vies de la misère du givre."
             },
             {
                 label: "Profiter de la crise pour doubler le prix du blé (+100 Richesse, -50 Renom, +20 Ombre)",
@@ -3031,14 +3031,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 50;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 20);
                 },
-                log: "Vous vous enrichissez de la misère des autres. L'Ombre jubile." //[cite: 1]
+                log: "Vous vous enrichissez de la misère des autres. L'Ombre jubile."
             }
         ]
     },
     {
         id: "age3_11_conseil_blanc",
         title: "L'Alliance des Sages",
-        description: "Saroumane le Blanc et Elrond convoquent les grands esprits pour analyser la puissance grandissante du Nécromancien de Dol Guldur.", //[cite: 1]
+        description: "Saroumane le Blanc et Elrond convoquent les grands esprits pour analyser la puissance grandissante du Nécromancien de Dol Guldur.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 50 && gameState.resources.savoir > 100),
         choices: [
@@ -3049,7 +3049,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 80;
                     gameState.resources.renom += 25;
                 },
-                log: "Votre érudition est saluée par le chef de l'Ordre des Magiciens." //[cite: 1]
+                log: "Votre érudition est saluée par le chef de l'Ordre des Magiciens."
             },
             {
                 label: "Garder vos connaissances secrètes (+20 Savoir)",
@@ -3057,14 +3057,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.savoir += 20;
                 },
-                log: "Vous préférez rester en dehors des querelles des puissants." //[cite: 1]
+                log: "Vous préférez rester en dehors des querelles des puissants."
             }
         ]
     },
     {
         id: "age3_12_rodeurs_du_nord",
         title: "Les Lignées Cachées",
-        description: "Les derniers descendants du royaume déchu d'Arnor vivent désormais cachés sous l'apparence de pauvres Rôdeurs. Ils demandent des lances d'acier pour leur veille.", //[cite: 1]
+        description: "Les derniers descendants du royaume déchu d'Arnor vivent désormais cachés sous l'apparence de pauvres Rôdeurs. Ils demandent des lances d'acier pour leur veille.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 55 && gameState.resources.richesse > 50),
         choices: [
@@ -3075,7 +3075,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.espoir += 40;
                 },
-                log: "En secret, ces rois sans couronne protègent vos villages des pires monstres." //[cite: 1]
+                log: "En secret, ces rois sans couronne protègent vos villages des pires monstres."
             },
             {
                 label: "Les chasser comme des mendiants inquiétants (-20 Espoir)",
@@ -3083,14 +3083,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 20;
                 },
-                log: "La frontière nord devient une passoire. La terreur s'infiltre." //[cite: 1]
+                log: "La frontière nord devient une passoire. La terreur s'infiltre."
             }
         ]
     },
     {
         id: "age3_13_saroumane_isengard",
         title: "L'Orgueil d'Orthanc",
-        description: "Le magicien Saroumane s'installe définitivement dans la tour d'Isengard. Il propose d'acheter toutes vos anciennes chroniques sur l'or.", //[cite: 1]
+        description: "Le magicien Saroumane s'installe définitivement dans la tour d'Isengard. Il propose d'acheter toutes vos anciennes chroniques sur l'or.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 60 && gameState.resources.savoir > 50),
         choices: [
@@ -3102,7 +3102,7 @@ export const EVENTS = [
                     gameState.resources.savoir -= 40;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "L'or emplit vos caisses, mais vos érudits pleurent la perte de l'histoire." //[cite: 1]
+                log: "L'or emplit vos caisses, mais vos érudits pleurent la perte de l'histoire."
             },
             {
                 label: "Refuser de céder vos écrits sacrés (+40 Savoir, +20 Espoir)",
@@ -3111,14 +3111,14 @@ export const EVENTS = [
                     gameState.resources.savoir += 40;
                     gameState.resources.espoir += 20;
                 },
-                log: "Saroumane vous regarde désormais avec une froideur méprisante." //[cite: 1]
+                log: "Saroumane vous regarde désormais avec une froideur méprisante."
             }
         ]
     },
     {
         id: "age3_14_balade_hobbit",
         title: "Le Récit du Semi-Homme",
-        description: "Un mage gris accompagne un petit Hobbit qui prétend avoir trompé un dragon et trouvé une bague magique dans les cavernes. L'histoire semble folle.", //[cite: 1]
+        description: "Un mage gris accompagne un petit Hobbit qui prétend avoir trompé un dragon et trouvé une bague magique dans les cavernes. L'histoire semble folle.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 65),
         choices: [
@@ -3129,7 +3129,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 60;
                     gameState.resources.espoir += 20;
                 },
-                log: "Vos scribes rient de ces contes, mais l'histoire retiendra ce nom." //[cite: 1]
+                log: "Vos scribes rient de ces contes, mais l'histoire retiendra ce nom."
             },
             {
                 label: "Chasser ces conteurs d'histoires (-10 Espoir)",
@@ -3137,14 +3137,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 10;
                 },
-                log: "Vous passez à côté de l'événement qui va changer le destin du monde." //[cite: 1]
+                log: "Vous passez à côté de l'événement qui va changer le destin du monde."
             }
         ]
     },
     {
         id: "age3_15_retour_mordor",
         title: "L'Oeil s'Ouvre",
-        description: "Les trois spectres de l'Anneau réoccupent le Mordor. Les ciels du Sud se teintent de fumées noires permanentes. La terre tremble de terreur.", //[cite: 1]
+        description: "Les trois spectres de l'Anneau réoccupent le Mordor. Les ciels du Sud se teintent de fumées noires permanentes. La terre tremble de terreur.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 70 && gameState.resources.espoir > 30),
         choices: [
@@ -3155,7 +3155,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 40;
                     gameState.resources.renom += 20;
                 },
-                log: "La discipline maintient le calme face à la panique qui vient." //[cite: 1]
+                log: "La discipline maintient le calme face à la panique qui vient."
             },
             {
                 label: "Rationner l'espoir et prier (-20 Espoir, +5 Ombre)",
@@ -3164,14 +3164,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 20;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 5);
                 },
-                log: "La population s'enfonce doucement dans la léthargie du désespoir." //[cite: 1]
+                log: "La population s'enfonce doucement dans la léthargie du désespoir."
             }
         ]
     },
     {
         id: "age3_16_nazgul_chevauchee",
         title: "Les Cavaliers Noirs",
-        description: "Neuf ombres vêtues de haillons noirs traversent vos plaines à bride abattue, cherchant un pays nommé 'Comté'. Leurs cris glacent le sang de vos chevaux.", //[cite: 1]
+        description: "Neuf ombres vêtues de haillons noirs traversent vos plaines à bride abattue, cherchant un pays nommé 'Comté'. Leurs cris glacent le sang de vos chevaux.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 75),
         choices: [
@@ -3181,7 +3181,7 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 20;
                 },
-                log: "Votre peuple se terre chez lui, évitant de croiser le regard des spectres." //[cite: 1]
+                log: "Votre peuple se terre chez lui, évitant de croiser le regard des spectres."
             },
             {
                 label: "Tenter de leur barrer la route (-15 Hommes, +50 Renom)",
@@ -3190,14 +3190,14 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 15);
                     gameState.resources.renom += 50;
                 },
-                log: "Vos braves ont affronté l'effroi pur. Peu ont survécu à leur lame empoisonnée." //[cite: 1]
+                log: "Vos braves ont affronté l'effroi pur. Peu ont survécu à leur lame empoisonnée."
             }
         ]
     },
     {
         id: "age3_17_minas_ithil_chute",
         title: "La Tour de la Lune de Sang",
-        description: "La cité frontalière de Minas Ithil tombe aux mains de l'ennemi et devient Minas Morgul, la tour de la sorcellerie. Une lueur verte et fétide illumine les nuits lointaines.", //[cite: 1]
+        description: "La cité frontalière de Minas Ithil tombe aux mains de l'ennemi et devient Minas Morgul, la tour de la sorcellerie. Une lueur verte et fétide illumine les nuits lointaines.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 78),
         choices: [
@@ -3208,7 +3208,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 60;
                     gameState.resources.renom += 30;
                 },
-                log: "Vous aidez à dresser la dernière ligne de défense des Hommes." //[cite: 1]
+                log: "Vous aidez à dresser la dernière ligne de défense des Hommes."
             },
             {
                 label: "S'enfoncer dans le deuil et l'impuissance (-30 Espoir, +10 Ombre)",
@@ -3217,14 +3217,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "La lueur verte semble consumer lentement l'espoir de vos sujets." //[cite: 1]
+                log: "La lueur verte semble consumer lentement l'espoir de vos sujets."
             }
         ]
     },
     {
         id: "age3_18_depart_fondcombe",
         title: "Les Havres Appellent",
-        description: "Elrond se prépare à quitter Fondcombe pour toujours. Il propose d'emmener vos derniers enfants elfes pour les sauver de la guerre totale qui s'annonce.", //[cite: 1]
+        description: "Elrond se prépare à quitter Fondcombe pour toujours. Il propose d'emmener vos derniers enfants elfes pour les sauver de la guerre totale qui s'annonce.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 82 && gameState.population.elfes > 10),
         choices: [
@@ -3236,7 +3236,7 @@ export const EVENTS = [
                     gameState.resources.renom += 30;
                     gameState.resources.espoir -= 20;
                 },
-                log: "Vous acceptez le crépuscule de la magie chez vous pour assurer leur salut." //[cite: 1]
+                log: "Vous acceptez le crépuscule de la magie chez vous pour assurer leur salut."
             },
             {
                 label: "Les forcer à rester pour combattre (+10 Elfes, -30 Espoir, +15 Ombre)",
@@ -3246,14 +3246,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 15);
                 },
-                log: "Leur chant devient triste et amer, la magie s'éteint dans la contrainte." //[cite: 1]
+                log: "Leur chant devient triste et amer, la magie s'éteint dans la contrainte."
             }
         ]
     },
     {
         id: "age3_19_trahison_isengard",
         title: "L'Effondrement du Blanc",
-        description: "La nouvelle tombe, impensable : Saroumane s'est allié au Mordor. Sa forteresse produit des monstres hybrides qui attaquent le Rohan. Les repères s'effacent.", //[cite: 1]
+        description: "La nouvelle tombe, impensable : Saroumane s'est allié au Mordor. Sa forteresse produit des monstres hybrides qui attaquent le Rohan. Les repères s'effacent.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 85),
         choices: [
@@ -3264,7 +3264,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 20;
                     gameState.resources.savoir += 30;
                 },
-                log: "Vous tentez de coordonner la résistance face à la trahison." //[cite: 1]
+                log: "Vous tentez de coordonner la résistance face à la trahison."
             },
             {
                 label: "Nier l'évidence par peur (-30 Espoir, +10 Ombre)",
@@ -3273,14 +3273,14 @@ export const EVENTS = [
                     gameState.resources.espoir -= 30;
                     gameState.state.shadow_level = Math.min(100, gameState.state.shadow_level + 10);
                 },
-                log: "Le doute s'installe. Si le plus sage capitule, comment espérer vaincre ?" //[cite: 1]
+                log: "Le doute s'installe. Si le plus sage capitule, comment espérer vaincre ?"
             }
         ]
     },
     {
         id: "age3_20_guerre_anneau_debut",
         title: "Le Grand Orage",
-        description: "Le Gondor allume les feux d'alarme. Le Mordor lance ses milliers d'orques sur Minas Tirith. C'est l'heure de la fin du monde des Hommes.", //[cite: 1]
+        description: "Le Gondor allume les feux d'alarme. Le Mordor lance ses milliers d'orques sur Minas Tirith. C'est l'heure de la fin du monde des Hommes.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 90 && gameState.population.hommes > 30),
         choices: [
@@ -3291,7 +3291,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 25);
                     gameState.resources.renom += 80;
                 },
-                log: "Vos bannières marchent vers la dernière guerre de cet Âge." //[cite: 1]
+                log: "Vos bannières marchent vers la dernière guerre de cet Âge."
             },
             {
                 label: "Défendre vos propres greniers (+10 Richesse, -40 Renom, -25 Espoir)",
@@ -3301,14 +3301,14 @@ export const EVENTS = [
                     gameState.resources.renom -= 40;
                     gameState.resources.espoir -= 25;
                 },
-                log: "Vous attendez la fin, tapi dans votre coin de terre stérile." //[cite: 1]
+                log: "Vous attendez la fin, tapi dans votre coin de terre stérile."
             }
         ]
     },
     {
         id: "age3_21_rohan_charge",
         title: "Les Sabots de l'Aube",
-        description: "Les rumeurs affirment que les cavaliers du Rohan ont brisé le siège du Gondor dans une charge héroïque au lever du soleil. Le Roi est mort, mais la cité tient.", //[cite: 1]
+        description: "Les rumeurs affirment que les cavaliers du Rohan ont brisé le siège du Gondor dans une charge héroïque au lever du soleil. Le Roi est mort, mais la cité tient.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 92),
         choices: [
@@ -3319,7 +3319,7 @@ export const EVENTS = [
                     gameState.resources.espoir += 50;
                     gameState.resources.renom += 20;
                 },
-                log: "Un frisson de fierté traverse le domaine. Les Hommes résistent encore." //[cite: 1]
+                log: "Un frisson de fierté traverse le domaine. Les Hommes résistent encore."
             },
             {
                 label: "Attendre la suite avec prudence (-10 Espoir)",
@@ -3327,14 +3327,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 10;
                 },
-                log: "La guerre n'est pas finie, la peur dicte vos silences." //[cite: 1]
+                log: "La guerre n'est pas finie, la peur dicte vos silences."
             }
         ]
     },
     {
         id: "age3_22_porte_noire_defis",
         title: "La Dernière Chance",
-        description: "Une armée désespérée de survivants marche vers la Porte Noire du Mordor pour attirer le Regard de l'Ennemi et offrir du temps à deux Hobbits perdus dans les ténèbres.", //[cite: 1]
+        description: "Une armée désespérée de survivants marche vers la Porte Noire du Mordor pour attirer le Regard de l'Ennemi et offrir du temps à deux Hobbits perdus dans les ténèbres.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 95),
         choices: [
@@ -3345,7 +3345,7 @@ export const EVENTS = [
                     gameState.population.hommes = Math.max(0, gameState.population.hommes - 15);
                     gameState.resources.renom += 100;
                 },
-                log: "Vous donnez tout ce qu'il vous reste pour une cause invisible." //[cite: 1]
+                log: "Vous donnez tout ce qu'il vous reste pour une cause invisible."
             },
             {
                 label: "Garder vos derniers hommes pour reconstruire (+20 Espoir, -40 Renom)",
@@ -3354,14 +3354,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 20;
                     gameState.resources.renom -= 40;
                 },
-                log: "Vous refusez ce qui semble être un suicide collectif." //[cite: 1]
+                log: "Vous refusez ce qui semble être un suicide collectif."
             }
         ]
     },
     {
         id: "age3_23_destruction_anneau",
         title: "La Chute de la Tour",
-        description: "Un cri surnaturel déchire la planète. La tour de Barad-dûr s'effondre. La Montagne du Destin explose. L'Anneau Unique est détruit. Le Seigneur Sombre s'évanouit dans le néant.", //[cite: 1]
+        description: "Un cri surnaturel déchire la planète. La tour de Barad-dûr s'effondre. La Montagne du Destin explose. L'Anneau Unique est détruit. Le Seigneur Sombre s'évanouit dans le néant.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 96),
         choices: [
@@ -3372,25 +3372,23 @@ export const EVENTS = [
                     gameState.resources.espoir += 100;
                     gameState.resources.renom += 40;
                     gameState.resources.richesse -= 30;
-                    gameState.state.shadow_level = 0; // Ajout stratégique pour purger l'Ombre au moment de la victoire !
                 },
-                log: "Les larmes de joie coulent. L'Ombre s'effondre instantanément partout." //[cite: 1]
+                log: "Les larmes de joie coulent. L'Ombre s'effondre instantanément partout."
             },
             {
                 label: "S'effondrer de fatigue et de soulagement (+40 Espoir)",
                 canAfford: () => true,
                 effect: (gameState) => {
                     gameState.resources.espoir += 40;
-                    gameState.state.shadow_level = 0; // Ajout stratégique également !
                 },
-                log: "Le poids de trois millénaires de terreur s'efface d'un coup." //[cite: 1]
+                log: "Le poids de trois millénaires de terreur s'efface d'un coup."
             }
         ]
     },
     {
         id: "age3_24_couronnement_roi",
         title: "Le Retour du Roi",
-        description: "Le Rôdeur du Nord a été couronné sous le nom d'Aragorn Elessar à Minas Tirith. Les deux royaumes sont réunis. Le Roi vous invite à sa cour.", //[cite: 1]
+        description: "Le Rôdeur du Nord a été couronné sous le nom d'Aragorn Elessar à Minas Tirith. Les deux royaumes sont réunis. Le Roi vous invite à sa cour.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 97 && gameState.resources.renom > 40),
         choices: [
@@ -3402,7 +3400,7 @@ export const EVENTS = [
                     gameState.resources.renom += 80;
                     gameState.resources.espoir += 40;
                 },
-                log: "Vous intégrez la Pax Romana de la Terre du Milieu restaurée." //[cite: 1]
+                log: "Vous intégrez la Pax Romana de la Terre du Milieu restaurée."
             },
             {
                 label: "Garder votre autonomie locale (+20 Richesse, -30 Renom)",
@@ -3411,14 +3409,14 @@ export const EVENTS = [
                     gameState.resources.richesse += 20;
                     gameState.resources.renom -= 30;
                 },
-                log: "Le Roi respecte votre indépendance, mais vous restez en marge de la Renaissance." //[cite: 1]
+                log: "Le Roi respecte votre indépendance, mais vous restez en marge de la Renaissance."
             }
         ]
     },
     {
         id: "age3_25_comte_epuration",
         title: "Le Dernier Sursaut de la Vermine",
-        description: "Des brigands humains, reliquats des armées de Saroumane, pillent les petits villages des Hobbits à l'Ouest. Le Roi interdit d'y envoyer l'armée, exigeant que les Hobbits gèrent seuls.", //[cite: 1]
+        description: "Des brigands humains, reliquats des armées de Saroumane, pillent les petits villages des Hobbits à l'Ouest. Le Roi interdit d'y envoyer l'armée, exigeant que les Hobbits gèrent seuls.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 98),
         choices: [
@@ -3429,7 +3427,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 30;
                     gameState.resources.espoir += 30;
                 },
-                log: "Vous aidez les Semi-hommes à libérer leur Comté en secret." //[cite: 1]
+                log: "Vous aidez les Semi-hommes à libérer leur Comté en secret."
             },
             {
                 label: "Laisser faire la justice de la nature (+10 Richesse)",
@@ -3437,14 +3435,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.richesse += 10;
                 },
-                log: "Les petits villages brûlent, mais les Hobbits finissent par l'emporter." //[cite: 1]
+                log: "Les petits villages brûlent, mais les Hobbits finissent par l'emporter."
             }
         ]
     },
     {
         id: "age3_26_depart_porteurs",
         title: "Le Dernier Navire",
-        description: "Elrond, Galadriel, Gandalf et les porteurs de l'Anneau montent à bord d'un navire blanc aux Havres Gris. C'est la fin définitive des choses anciennes.", //[cite: 1]
+        description: "Elrond, Galadriel, Gandalf et les porteurs de l'Anneau montent à bord d'un navire blanc aux Havres Gris. C'est la fin définitive des choses anciennes.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 99 && gameState.population.elfes > 0),
         choices: [
@@ -3456,7 +3454,7 @@ export const EVENTS = [
                     gameState.resources.savoir += 40;
                     gameState.resources.espoir -= 30;
                 },
-                log: "Les derniers Elfes quittent vos forêts. Le monde devient purement humain." //[cite: 1]
+                log: "Les derniers Elfes quittent vos forêts. Le monde devient purement humain."
             },
             {
                 label: "Fermer les yeux pour ne pas pleurer (-10 Espoir)",
@@ -3464,14 +3462,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.espoir -= 10;
                 },
-                log: "Le navire s'évanouit à l'horizon. L'air perd sa dernière once de magie." //[cite: 1]
+                log: "Le navire s'évanouit à l'horizon. L'air perd sa dernière once de magie."
             }
         ]
     },
     {
         id: "age3_27_quatrieme_age_aube",
         title: "L'Âge des Hommes",
-        description: "Le Troisième Âge se ferme. Le monde n'appartient plus aux Dieux, ni aux monstres, ni aux Elfes. Il appartient à la responsabilité humaine.", //[cite: 1]
+        description: "Le Troisième Âge se ferme. Le monde n'appartient plus aux Dieux, ni aux monstres, ni aux Elfes. Il appartient à la responsabilité humaine.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
@@ -3482,7 +3480,7 @@ export const EVENTS = [
                     gameState.resources.richesse -= 50;
                     gameState.resources.savoir += 80;
                 },
-                log: "Vous tournez votre peuple vers l'avenir, la médecine et l'architecture." //[cite: 1]
+                log: "Vous tournez votre peuple vers l'avenir, la médecine et l'architecture."
             },
             {
                 label: "Consacrer le domaine aux lois de la nature (+40 Espoir, +20 Richesse)",
@@ -3491,14 +3489,14 @@ export const EVENTS = [
                     gameState.resources.espoir += 40;
                     gameState.resources.richesse += 20;
                 },
-                log: "Vous choisissez de vivre en harmonie simple avec la terre nourricière." //[cite: 1]
+                log: "Vous choisissez de vivre en harmonie simple avec la terre nourricière."
             }
         ]
     },
     {
         id: "age3_28_bilan_gardien",
         title: "Le Grand Livre du Gardien",
-        description: "Toutes vos décisions à travers les siècles ont été consignées. Les scribes relisent l'histoire de vos choix moraux devant le peuple réuni.", //[cite: 1]
+        description: "Toutes vos décisions à travers les siècles ont été consignées. Les scribes relisent l'histoire de vos choix moraux devant le peuple réuni.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
@@ -3508,7 +3506,7 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom += 100;
                 },
-                log: "Votre nom restera gravé à jamais parmi les grands protecteurs de la Terre du Milieu." //[cite: 1]
+                log: "Votre nom restera gravé à jamais parmi les grands protecteurs de la Terre du Milieu."
             },
             {
                 label: "Le garder secret pour votre lignée (+40 Savoir)",
@@ -3516,14 +3514,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.savoir += 40;
                 },
-                log: "La sagesse accumulée reste un secret de famille bien gardé." //[cite: 1]
+                log: "La sagesse accumulée reste un secret de famille bien gardé."
             }
         ]
     },
     {
         id: "age3_29_prestige_testament",
         title: "Le Legs du Troisième Âge",
-        description: "Avant de fermer les yeux pour votre dernier sommeil, vous rédigez le testament qui accordera des bonus permanents de Prestige pour vos futures réincarnations.", //[cite: 1]
+        description: "Avant de fermer les yeux pour votre dernier sommeil, vous rédigez le testament qui accordera des bonus permanents de Prestige pour vos futures réincarnations.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
@@ -3533,7 +3531,7 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.savoir += 100;
                 },
-                log: "Vos futures parties commenceront avec une avance technologique majeure." //[cite: 1]
+                log: "Vos futures parties commenceront avec une avance technologique majeure."
             },
             {
                 label: "Léguer un héritage d'Honneur et de Gloire (+100 Renom)",
@@ -3541,14 +3539,14 @@ export const EVENTS = [
                 effect: (gameState) => {
                     gameState.resources.renom += 100;
                 },
-                log: "Vos futurs descendants naîtront avec une autorité naturelle reconnue." //[cite: 1]
+                log: "Vos futurs descendants naîtront avec une autorité naturelle reconnue."
             }
         ]
     },
     {
         id: "age3_20_fin_histoire",
         title: "Les Chroniques du Gardien",
-        description: "Le grand voyage à travers les trois Âges du Mythe est accompli. Le rideau tombe sur le monde ancien. Merci, Gardien.", //[cite: 1]
+        description: "Le grand voyage à travers les trois Âges du Mythe est accompli. Le rideau tombe sur le monde ancien. Merci, Gardien.",
         repeatable: false,
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
@@ -3556,7 +3554,7 @@ export const EVENTS = [
                 label: "Terminer la Légende (Aucun effet)",
                 canAfford: () => true,
                 effect: () => {},
-                log: "Les Chroniques se ferment. Vous avez préservé l'essentiel." //[cite: 1]
+                log: "Les Chroniques se ferment. Vous avez préservé l'essentiel."
             }
         ]
     }
