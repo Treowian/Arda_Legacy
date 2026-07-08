@@ -91,27 +91,29 @@
         /* Moteur d'infobulles (CSS Pur) */
         .tooltip {
             position: relative;
+            display: inline-block; /* Crucial pour fixer la bulle sur un texte ! */
             cursor: help;
-            border-bottom: 1px dotted #7f8c8d; /* Indique visuellement qu'on peut survoler */
+            border-bottom: 1px dotted #7f8c8d;
         }
-        ..tooltip:hover::after {
+        .tooltip:hover::after {
             content: attr(data-tip);
             position: absolute;
-            bottom: 130%;
-            left: 0; /* Aligné à gauche pour éviter la coupure */
-            background: #1a252f;
+            bottom: 100%; /* S'affiche juste au-dessus */
+            left: 0;
+            background: #2c3e50;
             color: #ecf0f1;
             padding: 8px 12px;
             border-radius: 4px;
             font-size: 0.85em;
-            font-weight: normal;
-            white-space: normal; /* Autorise le retour à la ligne */
+            font-family: var(--font-body);
+            white-space: normal; /* Autorise les retours à la ligne */
             width: max-content;
-            max-width: 220px; /* Empêche l'infobulle d'être trop large */
-            z-index: 10000;
+            max-width: 220px;
+            z-index: 999999; /* Forcé au premier plan absolu */
             pointer-events: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             line-height: 1.4;
+            margin-bottom: 8px; /* Petit espace avec le texte */
         }
     </style>
 </head>
