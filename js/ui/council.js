@@ -6,7 +6,6 @@ export function renderCouncil() {
     const container = document.getElementById('ui-council-container');
     if (!container) return;
 
-    // Progression des coûts indexée sur l'Âge : 2k à l'Âge 1, 20k à l'Âge 2, 200k à l'Âge 3
     const age = gameState.meta.current_age || 1;
     const basePrice = 2000 * Math.pow(10, age - 1); 
 
@@ -14,12 +13,18 @@ export function renderCouncil() {
 
     const members = [
         { id: 'senechal', name: 'Le Sénéchal', desc: 'Gère les Décrets (Auto-Switch à 70% et 30% d\'Ombre)' },
-        { id: 'batisseur', name: 'Maître Bâtisseur', desc: 'Achat d\'infrastructures (Sécurité : Ne bâtit que si Trésor > 3x le coût)' },
-        { id: 'heraut', name: 'Le Héraut', desc: 'Inspiration passive (Simule 10 clics d\'Inspiration automatique par an)' }
+        { id: 'batisseur', name: 'Maître Bâtisseur', desc: 'Achat d\'infrastructures (Sécurité : Trésor > 3x le coût)' },
+        { id: 'heraut', name: 'Le Héraut', desc: 'Inspiration passive (Simule 10 clics par an)' }
     ];
+
+    // Sécurité de migration pour les anciennes sauvegardes
+    if (!gameState.state.council_active) {
+        gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
+    }
 
     members.forEach(m => {
         const isHired = gameState.council[m.id];
+        const isActive = gameState.state.council_active[m.id];
         const canAfford = gameState.resources.richesse >= basePrice;
 
         const div = document.createElement('div');
@@ -32,9 +37,14 @@ export function renderCouncil() {
         div.style.alignItems = 'center';
         div.style.marginBottom = '8px';
         
-        if (isHired) {
+        // Code couleur : Vert si actif, Gris si en repos, Blanc si pas acheté
+        if (isHired && isActive) {
             div.style.background = 'rgba(39, 174, 96, 0.08)';
             div.style.borderLeft = '4px solid #27ae60';
+        } else if (isHired && !isActive) {
+            div.style.background = 'rgba(0,0,0,0.05)';
+            div.style.borderLeft = '4px solid #7f8c8d';
+            div.style.opacity = '0.7';
         }
 
         div.innerHTML = `
@@ -46,13 +56,26 @@ export function renderCouncil() {
                 <button class="btn-action" style="font-size: 0.75em; padding: 6px 10px; margin: 0; background: ${canAfford ? '#2980b9' : '#bbb'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; min-width: 95px;" ${!canAfford ? 'disabled' : ''}>
                     Recruter<br><span style="font-weight:bold;">${basePrice} OR</span>
                 </button>
-            ` : '<span style="color: #27ae60; font-weight: bold; font-size: 0.85em; padding-right:5px;">Siégeant</span>'}
+            ` : `
+                <button class="btn-action" style="font-size: 0.75em; padding: 6px 10px; margin: 0; background: ${isActive ? '#e74c3c' : '#27ae60'}; cursor: pointer; min-width: 95px;">
+                    ${isActive ? 'Mettre au repos' : 'Rappeler'}
+                </button>
+            `}
         `;
 
+        const btn = div.querySelector('button');
+        
         if (!isHired && canAfford) {
-            div.querySelector('button').onclick = () => {
+            btn.onclick = () => {
                 gameState.resources.richesse -= basePrice;
                 gameState.council[m.id] = true;
+                gameState.state.council_active[m.id] = true;
+                updateUI();
+            };
+        } else if (isHired) {
+            btn.onclick = () => {
+                // Bascule l'état actif/inactif
+                gameState.state.council_active[m.id] = !gameState.state.council_active[m.id];
                 updateUI();
             };
         }
