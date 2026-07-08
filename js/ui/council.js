@@ -17,7 +17,6 @@ export function renderCouncil() {
         { id: 'heraut', name: 'Le Héraut', desc: 'Inspiration passive (Simule 10 clics par an)' }
     ];
 
-    // Sécurité de migration
     if (!gameState.state.council_active) {
         gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
     }
@@ -46,15 +45,15 @@ export function renderCouncil() {
             div.style.opacity = '0.7';
         }
 
+        // L'icône a été retirée à côté de ${m.name}
         div.innerHTML = `
             <div style="flex: 1; padding-right: 15px; display: flex; flex-direction: column; justify-content: center;">
                 <div style="font-weight: bold; font-size: 0.95em; color: #2c3e50; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                    ${m.name} ${isHired ? '<span style="font-size: 1.1em;">💼</span>' : ''}
+                    ${m.name} 
                 </div>
                 <div style="font-size: 0.75em; opacity: 0.8; font-style: italic; line-height: 1.3;">${m.desc}</div>
             </div>
             
-            <!-- Conteneur fixe pour forcer une taille de bouton uniforme -->
             <div style="flex-shrink: 0; width: 110px;">
             ${!isHired ? `
                 <button class="btn-action" style="font-size: 0.8em; padding: 8px 5px; margin: 0; background: ${canAfford ? '#2980b9' : '#bbb'}; cursor: ${canAfford ? 'pointer' : 'not-allowed'}; width: 100%; height: 100%; border-radius: 4px;" ${!canAfford ? 'disabled' : ''}>
