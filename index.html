@@ -94,22 +94,24 @@
             cursor: help;
             border-bottom: 1px dotted #7f8c8d; /* Indique visuellement qu'on peut survoler */
         }
-        .tooltip:hover::after {
+        ..tooltip:hover::after {
             content: attr(data-tip);
             position: absolute;
             bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0; /* Aligné à gauche pour éviter la coupure */
             background: #1a252f;
             color: #ecf0f1;
-            padding: 6px 12px;
+            padding: 8px 12px;
             border-radius: 4px;
-            font-size: 0.8em;
+            font-size: 0.85em;
             font-weight: normal;
-            white-space: nowrap;
-            z-index: 1000;
+            white-space: normal; /* Autorise le retour à la ligne */
+            width: max-content;
+            max-width: 220px; /* Empêche l'infobulle d'être trop large */
+            z-index: 10000;
             pointer-events: none;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            line-height: 1.4;
         }
     </style>
 </head>
