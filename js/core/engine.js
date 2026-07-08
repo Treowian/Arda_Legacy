@@ -14,6 +14,8 @@ export function initEngine() {
     gameLoop = setInterval(gameTick, TICK_RATE);
 }
 
+// js/core/engine.js (Extrait à remplacer)
+
 function simulateOfflineProgress() {
     if (!gameState.meta.last_save_time) return;
     
@@ -22,14 +24,17 @@ function simulateOfflineProgress() {
     const missedTicks = Math.floor(diff / TICK_RATE);
     
     if (missedTicks > 0) {
-        const safeTicks = Math.min(missedTicks, 60480);
+        // ⚠️ CAP D'ÉQUILIBRAGE : 12 Heures maximum (4320 tics)
+        const safeTicks = Math.min(missedTicks, 4320);
+        const isCapped = missedTicks > 4320;
+        
         const richesBefore = gameState.resources.richesse;
         const savoirBefore = gameState.resources.savoir;
         
         for(let i = 0; i < safeTicks; i++) {
             if (!gameState.state.is_victory) {
                 gameState.state.current_year += 1;
-                processCouncilLogic(); // 🆕 Les intendants bossent aussi hors-ligne !
+                processCouncilLogic(); 
                 processEconomy();
             }
         }
@@ -37,7 +42,14 @@ function simulateOfflineProgress() {
         const richesGained = Math.floor(gameState.resources.richesse - richesBefore);
         const savoirGained = Math.floor(gameState.resources.savoir - savoirBefore);
         
-        alert(`Vous êtes de retour !\nPendant votre absence (${safeTicks} années se sont écoulées), votre royaume a généré :\n+ ${richesGained} Richesse\n+ ${savoirGained} Savoir`);
+        // Construction dynamique du message de retour
+        let msg = `Vous êtes de retour !\n\n`;
+        if (isCapped) {
+            msg += `⏳ Vos entrepôts ont débordé (Limite de 12h d'absence atteinte).\n`;
+        }
+        msg += `Pendant ce temps (${safeTicks} années), votre royaume a généré :\n+ ${richesGained} Richesse\n+ ${savoirGained} Savoir`;
+        
+        alert(msg);
         addChronicle(`<em>Votre règne reprend. ${safeTicks} années se sont écoulées en votre absence.</em>`);
         
         updateUI();
