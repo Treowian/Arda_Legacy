@@ -8,6 +8,7 @@ export const gameState = {
         redemption_achieved: false,
         last_save_time: Date.now()
     },
+    // js/core/state.js (Extrait à mettre à jour)
     state: {
         current_year: 1,
         shadow_level: 0,
@@ -18,12 +19,9 @@ export const gameState = {
         bonus_multiplicateur: 1.0,
         resolved_events: [],
         pending_events: [],
-        // 🆕 SUIVI DE L'ACTIVITÉ DES INTENDANTS
-        council_active: {
-            senechal: true,
-            batisseur: true,
-            heraut: true
-        }
+        council_active: { senechal: true, batisseur: true, heraut: true },
+        // 🆕 GESTION DES MALUS TEMPORAIRES
+        active_modifiers: [] 
     },
     resources: {
         savoir: 0, richesse: 50, renom: 10, espoir: 100
