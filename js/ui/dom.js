@@ -160,6 +160,7 @@ function renderBuildings() {
     const container = document.getElementById('ui-buildings-container');
     if (!container) return;
 
+    // Purge l'affichage existant
     container.innerHTML = '';
 
     BUILDINGS.forEach(b => {
@@ -169,10 +170,13 @@ function renderBuildings() {
         let affordable = true;
         let costStr = '';
 
-        // Vérification croisée (Ressources ET Population)
+        // Ciblage strict : Ressources vs Population
         for (const [res, baseValue] of Object.entries(b.baseCost)) {
             const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-            const currentAmount = gameState.resources[res] ?? gameState.population[res] ?? 0;
+            
+            const currentAmount = (res === 'hommes' || res === 'elfes') 
+                ? (gameState.population[res] || 0) 
+                : (gameState.resources[res] || 0);
             
             if (currentAmount < cost) affordable = false;
             costStr += `${cost} ${res.toUpperCase()}<br>`;
@@ -185,7 +189,7 @@ function renderBuildings() {
         btn.style.textAlign = 'left';
         btn.disabled = !affordable;
 
-        // Interface en blocs alignés
+        // Structure HTML interne du bouton en grille flex
         btn.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                 <strong style="font-size: 1.1em; letter-spacing: 0.5px;">${b.name} <span style="opacity: 0.6; font-weight: normal;">(${owned})</span></strong>
@@ -200,14 +204,14 @@ function renderBuildings() {
 
         btn.addEventListener('click', () => {
             if (affordable) {
-                // Déduction croisée
+                // Déduction stricte
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
                     
-                    if (gameState.resources[res] !== undefined) {
-                        gameState.resources[res] -= cost;
-                    } else if (gameState.population[res] !== undefined) {
+                    if (res === 'hommes' || res === 'elfes') {
                         gameState.population[res] -= cost;
+                    } else {
+                        gameState.resources[res] -= cost;
                     }
                 }
                 gameState.buildings[b.id] = owned + 1;
@@ -281,8 +285,11 @@ function renderProjects() {
     let canAfford = true;
     let reqText = [];
 
+    // Ciblage strict des coûts du projet
     for (const [key, value] of Object.entries(currentProject.cost)) {
-        const currentAmount = gameState.resources[key] ?? gameState.population[key] ?? 0;
+        const currentAmount = (key === 'hommes' || key === 'elfes') 
+            ? (gameState.population[key] || 0) 
+            : (gameState.resources[key] || 0);
         
         if (currentAmount < value) canAfford = false;
         reqText.push(`${value} ${key.toUpperCase()}`);
@@ -303,9 +310,13 @@ function renderProjects() {
 
     btn.addEventListener('click', () => {
         if (canAfford) {
+            // Déduction stricte
             for (const [key, value] of Object.entries(currentProject.cost)) {
-                if (gameState.resources[key] !== undefined) gameState.resources[key] -= value;
-                if (gameState.population[key] !== undefined) gameState.population[key] -= value;
+                if (key === 'hommes' || key === 'elfes') {
+                    gameState.population[key] -= value;
+                } else {
+                    gameState.resources[key] -= value;
+                }
             }
             gameState.state.resolved_events.push(currentProject.id);
             if (currentProject.effect) currentProject.effect(gameState);
