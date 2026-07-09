@@ -10,19 +10,18 @@
             --font-body: 'Arial', sans-serif;
             --bg-color: #f5f2eb; 
             --text-color: #2c3e50; 
-            /* 🆕 Ajout des variables dynamiques pour les encarts */
             --panel-bg: rgba(255, 255, 255, 0.92); 
             --border-color: rgba(0, 0, 0, 0.1); 
         }
         
         body {
             font-family: var(--font-body);
-            font-size: 1.1rem; /* 🆕 Texte plus grand pour une meilleure lisibilité */
+            font-size: 1.1rem;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
-            min-height: 100vh; /* 🆕 Permet à la page de respirer et de s'étendre */
+            min-height: 100vh;
             transition: background-color 1s ease, color 1s ease; 
         }
 
@@ -35,32 +34,29 @@
 
         .game-container {
             display: grid;
-            /* 🆕 Colonnes plus larges : 280px (gauche) et 380px (droite) */
             grid-template-columns: 280px 1fr 380px; 
             gap: 25px;
             max-width: 1500px;
             margin: 0 auto;
-            align-items: start; /* 🆕 Crucial pour le fonctionnement du "sticky" */
+            align-items: start;
         }
 
         .panel {
-            background: var(--panel-bg); /* 🔴 Modifié */
-            border: 1px solid var(--border-color); /* 🔴 Modifié */
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: background 1s ease, border-color 1s ease; /* 🆕 Ajout de l'animation */
+            transition: background 1s ease, border-color 1s ease;
         }
 
-        /* 🆕 LES COLONNES QUI RESTENT ACCROCHÉES À L'ÉCRAN */
         .sticky-panel {
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
-            overflow-y: auto; /* Permet un scroll interne discret si l'écran est très petit */
+            overflow-y: auto;
         }
 
-        /* Personnalisation discrète de la scrollbar des panneaux sticky */
         .sticky-panel::-webkit-scrollbar { width: 6px; }
         .sticky-panel::-webkit-scrollbar-track { background: transparent; }
         .sticky-panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
@@ -73,7 +69,7 @@
         .btn-action {
             display: block;
             width: 100%;
-            padding: 12px; /* 🆕 Boutons plus confortables au clic */
+            padding: 12px;
             margin: 10px 0;
             background-color: #34495e;
             color: #fff;
@@ -96,7 +92,7 @@
 
         #ui-shadow-bar {
             width: 100%;
-            height: 18px; /* 🆕 Barre légèrement plus épaisse */
+            height: 18px;
             background: rgba(0,0,0,0.1);
             border-radius: 4px;
             overflow: hidden;
@@ -111,7 +107,6 @@
         }
 
         #log-container {
-            /* Le log n'est plus bridé en hauteur, il allonge la page naturellement */
             padding: 10px;
         }
 
@@ -132,7 +127,6 @@
         }
         .pulse-anim { animation: pulse-gold 2s infinite; }
         
-        /* INFOBULLES */
         .tooltip {
             position: relative;
             display: inline-block; 
@@ -160,7 +154,6 @@
             margin-bottom: 8px; 
         }
 
-        /* ACCORDÉONS NATIFS */
         .ui-accordion {
             background: rgba(0,0,0,0.02);
             border: 1px solid rgba(0,0,0,0.05);
@@ -173,7 +166,7 @@
             font-family: var(--font-title);
             font-weight: bold;
             font-size: 1.1em;
-            color: var(--text-color); /* 🔴 Modifié : on retire le #2c3e50 codé en dur */
+            color: var(--text-color);
             background: rgba(0,0,0,0.03);
             cursor: pointer;
             list-style: none;
@@ -188,7 +181,6 @@
         .ui-accordion[open] summary { border-bottom: 1px solid rgba(0,0,0,0.05); }
         .ui-accordion .accordion-content { padding: 15px; }
 
-        /* PASTILLE DE NOTIFICATION */
         .notif-dot {
             display: inline-block;
             width: 12px;
@@ -205,7 +197,6 @@
             100% { transform: scale(0.95); opacity: 0.8; }
         }
 
-        /* MODALE DU CONSEIL */
         #council-modal {
             width: 90%; max-width: 600px; padding: 30px; border-radius: 8px;
             border: 1px solid #d4af37; background: #fff; color: #2c3e50;
@@ -213,14 +204,13 @@
         }
         #council-modal::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(3px); }
 
-        /* 📱 RESPONSIVE MOBILE */
         @media (max-width: 900px) {
             .game-container {
-                grid-template-columns: 1fr; /* Empile tout sur 1 colonne */
+                grid-template-columns: 1fr;
                 gap: 20px;
             }
             .sticky-panel {
-                position: static; /* Annule l'effet collant sur mobile */
+                position: static;
                 max-height: none;
             }
         }
@@ -242,10 +232,6 @@
                 <div><span class="tooltip" data-tip="Le nerf de la guerre. Permet de bâtir vos infrastructures.">Richesse</span> : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
                 <div><span class="tooltip" data-tip="Votre prestige mondial. Attire l'attention des Peuples Libres.">Renom</span> : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
                 <div><span class="tooltip" data-tip="Repousse l'Ombre et dicte votre croissance démographique.">Espoir</span> : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
-                
-                <p id="ui-prestige-display" style="display:none; color: #b89742; font-weight: bold; margin-top: 15px; font-size: 0.9em; background: rgba(184, 151, 66, 0.1); padding: 10px; border-radius: 4px; border: 1px solid rgba(184, 151, 66, 0.3);">
-                    ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus prod)
-                </p>
             </div>
 
             <hr style="border: 0; border-top: 1px dashed rgba(0,0,0,0.2); margin: 20px 0;">
@@ -255,6 +241,18 @@
                 <div><span class="tooltip" data-tip="Peuple mortel. Génère passivement de la Richesse.">Hommes</span> : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
                 <div><span class="tooltip" data-tip="Immortels. Génèrent passivement du Savoir.">Elfes</span> : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
             </div>
+            
+            <div id="ui-prestige-display" style="display:none; margin-top: 25px; padding: 15px; border-radius: 6px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.4);">
+                <h4 style="margin: 0 0 10px 0; color: #b89742; font-family: var(--font-title);">✨ Héritage Ancien</h4>
+                <div style="font-size: 0.95rem; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                    <span>Éclats de Silmaril :</span> 
+                    <strong id="ui-eclats" style="color: #d4af37;">0</strong>
+                </div>
+                <div style="font-size: 0.85rem; color: #7f8c8d; font-style: italic; line-height: 1.4;">
+                    Accorde un bonus permanent de <strong id="ui-eclats-bonus" style="color: #27ae60;">0</strong><strong>%</strong> sur la production de toutes vos ressources.
+                </div>
+            </div>
+
         </aside>
         
         <main class="panel" style="background: transparent; border: none; box-shadow: none; padding: 0;">
@@ -291,8 +289,8 @@
             </div>
 
             <button id="btn-open-council" class="btn-action" style="background-color: transparent; border: 1px solid #7f8c8d; color: #2c3e50; margin-bottom: 20px; padding: 10px; font-size: 1rem; transition: background 0.2s;">
-    👑 Gérer le Conseil
-</button>
+                👑 Gérer le Conseil
+            </button>
 
             <details class="ui-accordion" open>
                 <summary>
