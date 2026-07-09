@@ -155,6 +155,28 @@ export function updateUI() {
     renderCurrentProject();
     renderBuildings();
     renderCouncil(); 
+
+    // 🦇 LE "JUICE" : Assombrissement dynamique de l'écran selon l'Ombre
+    // L'Ombre à 0% donne un fond beige clair (#f5f2eb), à 100% un gris cendre sombre (#2c3e50).
+    const shadowRatio = Math.min(100, gameState.state.shadow_level) / 100;
+    
+    // Calcul d'interpolation de couleurs simplifié
+    // De rgb(245, 242, 235) vers rgb(44, 62, 80)
+    const r = Math.round(245 - (shadowRatio * (245 - 44)));
+    const g = Math.round(242 - (shadowRatio * (242 - 62)));
+    const b = Math.round(235 - (shadowRatio * (235 - 80)));
+    
+    document.documentElement.style.setProperty('--bg-color', `rgb(${r}, ${g}, ${b})`);
+    
+    // Si l'écran devient trop sombre (Ombre > 60%), on passe le texte principal en clair
+    if (shadowRatio > 0.6) {
+        document.documentElement.style.setProperty('--text-color', '#ecf0f1');
+        // On assombrit aussi la barre d'Ombre pour qu'elle devienne rouge sang
+        ui.shadowFill.style.backgroundColor = '#8e44ad'; 
+    } else {
+        document.documentElement.style.setProperty('--text-color', '#2c3e50');
+        ui.shadowFill.style.backgroundColor = '#c0392b';
+    }
 }
 
 export function addChronicle(text) {
