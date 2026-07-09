@@ -2,6 +2,7 @@
 import { gameState } from '../core/state.js';
 import { BUILDINGS } from '../data/buildings.js';
 import { EVENTS } from '../data/events.js';
+import { PROJECTS } from '../data/projects.js';
 
 // ==========================================
 // 1. INITIALISATION DE L'INTERFACE
@@ -124,9 +125,8 @@ export function updateUI() {
     // -- Rendu des listes (Bâtiments, Projets, Conseil) --
     renderBuildings();
     renderCouncil();
-    
-    // -- Mise à jour des alertes visuelles (Pastilles Rouges) --
-    updateNotifications();
+    renderProjects();
+
 }
 
 // ==========================================
@@ -221,13 +221,48 @@ function renderBuildings() {
 function renderCouncil() {
     const container = document.getElementById('ui-council-container');
     if (!container) return;
-    
-    // Le code de ton Conseil ira ici. Pour l'instant, on laisse une structure prête.
-    if (Object.values(gameState.council).every(val => !val)) {
-        container.innerHTML = `<p style="font-size: 0.9em; font-style: italic; opacity: 0.7;">Aucun membre du Conseil n'a encore été débloqué. Développez votre Renom.</p>`;
-    } else {
-        // TODO: Implémenter l'affichage des intendants actifs (Sénéchal, Bâtisseur, etc.)
-        container.innerHTML = `<p style="font-size: 0.9em; color: #27ae60;">Le Conseil est actif et siège en secret.</p>`;
+    container.innerHTML = '';
+
+    // Liste des intendants et leurs seuils de déblocage (Renom)
+    const councilors = [
+        { id: 'senechal', name: 'Sénéchal', req: 50, desc: 'Gère automatiquement les focus selon le niveau de l\'Ombre.' },
+        { id: 'batisseur', name: 'Bâtisseur', req: 200, desc: 'Achète automatiquement les infrastructures si les fonds le permettent.' },
+        { id: 'heraut', name: 'Héraut', req: 500, desc: 'Inspire automatiquement le peuple.' }
+    ];
+
+    let unlockedAny = false;
+
+    councilors.forEach(c => {
+        // Déblocage définitif si le Renom est atteint
+        if (gameState.resources.renom >= c.req || gameState.council[c.id]) {
+            gameState.council[c.id] = true; 
+            unlockedAny = true;
+
+            const isActive = gameState.state.council_active[c.id];
+            const btn = document.createElement('button');
+            btn.className = 'btn-action';
+            btn.style.backgroundColor = isActive ? '#27ae60' : '#7f8c8d';
+            btn.innerHTML = `${c.name} : ${isActive ? 'ACTIF' : 'EN PAUSE'}<br><span style="font-size:0.8em; font-weight:normal;">${c.desc}</span>`;
+
+            btn.addEventListener('click', () => {
+                gameState.state.council_active[c.id] = !isActive;
+                updateUI();
+            });
+            container.appendChild(btn);
+        } else {
+            // Affichage masqué si non débloqué
+            const div = document.createElement('div');
+            div.style.padding = '10px';
+            div.style.color = '#7f8c8d';
+            div.style.border = '1px dashed #ccc';
+            div.style.marginBottom = '10px';
+            div.innerHTML = `🔒 <em>Poste verrouillé (Requis : ${c.req} Renom)</em>`;
+            container.appendChild(div);
+        }
+    });
+
+    if (!unlockedAny) {
+        container.innerHTML = `<p style="font-size: 0.9em; font-style: italic; opacity: 0.7;">Aucun membre du Conseil n'a encore été débloqué.</p>`;
     }
 }
 
@@ -397,4 +432,61 @@ function updateRatesDisplay() {
     displayRate(rates.espoir, 'ui-rate-espoir');
     displayRate(rates.hommes, 'ui-rate-hommes');
     displayRate(rates.elfes, 'ui-rate-elfes');
+}
+
+function renderProjects() {
+    const container = document.getElementById('ui-project-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    // ⚠️ Assure-toi que PROJECTS est bien importé en haut de ton fichier dom.js
+    // import { PROJECTS } from '../data/projects.js';
+    if (typeof PROJECTS === 'undefined') return;
+
+    // Trouve le projet de l'âge en cours non résolu
+    const currentProject = PROJECTS.find(p => p.age === gameState.meta.current_age && !gameState.state.resolved_events.includes(p.id));
+
+    if (!currentProject) {
+        container.innerHTML = `<p style="color: #7f8c8d; font-style: italic; font-size: 0.9em;">Aucun grand projet pour le moment.</p>`;
+        return;
+    }
+
+    let canAfford = true;
+    let reqText = [];
+
+    // Vérification intelligente (Regarde dans resources ET dans population)
+    for (const [key, value] of Object.entries(currentProject.cost)) {
+        const currentAmount = gameState.resources[key] ?? gameState.population[key] ?? 0;
+        
+        if (currentAmount < value) canAfford = false;
+        reqText.push(`${value} ${key.toUpperCase()}`);
+    }
+
+    const btn = document.createElement('button');
+    btn.className = 'btn-action';
+    btn.style.backgroundColor = canAfford ? '#b89742' : '#7f8c8d';
+    btn.disabled = !canAfford;
+    
+    btn.innerHTML = `
+        <strong>${currentProject.title}</strong><br>
+        <span style="font-size: 0.8em; font-weight: normal;">${currentProject.description}</span><br>
+        <span style="font-size: 0.75em; display: block; margin-top: 5px;">
+            ${canAfford ? '✨ Clic pour achever l\'Ère' : '🔒 Requis : ' + reqText.join(', ')}
+        </span>
+    `;
+
+    btn.addEventListener('click', () => {
+        if (canAfford) {
+            // Paiement intelligent
+            for (const [key, value] of Object.entries(currentProject.cost)) {
+                if (gameState.resources[key] !== undefined) gameState.resources[key] -= value;
+                if (gameState.population[key] !== undefined) gameState.population[key] -= value;
+            }
+            gameState.state.resolved_events.push(currentProject.id);
+            if (currentProject.effect) currentProject.effect(gameState);
+            updateUI();
+        }
+    });
+
+    container.appendChild(btn);
 }
