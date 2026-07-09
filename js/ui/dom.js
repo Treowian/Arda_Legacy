@@ -129,7 +129,6 @@ export function updateUI() {
 // ==========================================
 // 3. RENDUS SPÉCIFIQUES
 // ==========================================
-
 function renderModifiers() {
     const container = document.getElementById('ui-modifiers-container');
     if (!container) return;
@@ -161,7 +160,6 @@ function renderBuildings() {
     const container = document.getElementById('ui-buildings-container');
     if (!container) return;
 
-    // Purge l'affichage existant
     container.innerHTML = '';
 
     BUILDINGS.forEach(b => {
@@ -171,10 +169,9 @@ function renderBuildings() {
         let affordable = true;
         let costStr = '';
 
-        // 🔴 1. Vérification intelligente des coûts (Ressources ET Population)
+        // Vérification croisée (Ressources ET Population)
         for (const [res, baseValue] of Object.entries(b.baseCost)) {
             const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-            // Cherche dans resources, sinon dans population, sinon 0
             const currentAmount = gameState.resources[res] ?? gameState.population[res] ?? 0;
             
             if (currentAmount < cost) affordable = false;
@@ -188,6 +185,7 @@ function renderBuildings() {
         btn.style.textAlign = 'left';
         btn.disabled = !affordable;
 
+        // Interface en blocs alignés
         btn.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                 <strong style="font-size: 1.1em; letter-spacing: 0.5px;">${b.name} <span style="opacity: 0.6; font-weight: normal;">(${owned})</span></strong>
@@ -202,7 +200,7 @@ function renderBuildings() {
 
         btn.addEventListener('click', () => {
             if (affordable) {
-                // 🔴 2. Déduction intelligente des coûts
+                // Déduction croisée
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
                     
@@ -321,7 +319,6 @@ function renderProjects() {
 // ==========================================
 // 4. NOTIFICATIONS ET MODALES
 // ==========================================
-
 export function showEventModal(eventObj) {
     const modal = document.getElementById('event-modal');
     if (!modal) return;
