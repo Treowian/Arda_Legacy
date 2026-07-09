@@ -10,6 +10,9 @@
             --font-body: 'Arial', sans-serif;
             --bg-color: #f5f2eb; 
             --text-color: #2c3e50; 
+            /* 🆕 Ajout des variables dynamiques pour les encarts */
+            --panel-bg: rgba(255, 255, 255, 0.92); 
+            --border-color: rgba(0, 0, 0, 0.1); 
         }
         
         body {
@@ -41,11 +44,12 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid rgba(0,0,0,0.1);
+            background: var(--panel-bg); /* 🔴 Modifié */
+            border: 1px solid var(--border-color); /* 🔴 Modifié */
             border-radius: 6px;
-            padding: 20px; /* 🆕 Plus de marges internes pour aérer */
+            padding: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: background 1s ease, border-color 1s ease; /* 🆕 Ajout de l'animation */
         }
 
         /* 🆕 LES COLONNES QUI RESTENT ACCROCHÉES À L'ÉCRAN */
@@ -169,7 +173,7 @@
             font-family: var(--font-title);
             font-weight: bold;
             font-size: 1.1em;
-            color: #2c3e50;
+            color: var(--text-color); /* 🔴 Modifié : on retire le #2c3e50 codé en dur */
             background: rgba(0,0,0,0.03);
             cursor: pointer;
             list-style: none;

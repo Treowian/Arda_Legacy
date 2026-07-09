@@ -99,10 +99,14 @@ export function updateUI() {
 
     if (ratio > 0.6) {
         document.documentElement.style.setProperty('--text-color', '#ecf0f1');
-        if (shadowFill) shadowFill.style.backgroundColor = '#8e44ad'; // Devient violacé/sombre
+        document.documentElement.style.setProperty('--panel-bg', 'rgba(30, 40, 55, 0.85)'); // 🆕 Les panneaux deviennent sombres
+        document.documentElement.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
+        if (shadowFill) shadowFill.style.backgroundColor = '#8e44ad';
     } else {
         document.documentElement.style.setProperty('--text-color', '#2c3e50');
-        if (shadowFill) shadowFill.style.backgroundColor = '#c0392b'; // Reste rouge
+        document.documentElement.style.setProperty('--panel-bg', 'rgba(255, 255, 255, 0.92)'); // 🆕 Les panneaux redeviennent clairs
+        document.documentElement.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
+        if (shadowFill) shadowFill.style.backgroundColor = '#c0392b';
     }
 
     // -- Affichage des Malédictions / Crises en cours --
