@@ -108,21 +108,7 @@ export function updateUI() {
         document.documentElement.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
         if (shadowFill) shadowFill.style.backgroundColor = '#c0392b';
     }
-
-    // -- Gestion de l'affichage du Prestige (New Game +) --
-    const heritageSection = document.getElementById('ui-heritage-section');
-    if (heritageSection) {
-        if (gameState.meta && gameState.meta.prestige_eclats > 0) {
-            heritageSection.style.display = 'block';
-            document.getElementById('ui-meta-eclats').textContent = gameState.meta.prestige_eclats;
-            
-            // Calcul visuel du bonus (1 Éclat = 5% de bonus selon ton updateRatesDisplay)
-            const bonusPercent = gameState.meta.prestige_eclats * 5; 
-            document.getElementById('ui-meta-bonus').textContent = `+${bonusPercent}%`;
-        } else {
-            heritageSection.style.display = 'none'; // Masqué pour les nouveaux joueurs
-        }
-    }
+    
     // -- Affichage des Malédictions / Crises en cours --
     renderModifiers();
 
