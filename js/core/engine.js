@@ -214,10 +214,23 @@ function processEconomy() {
     gameState.state.shadow_level = Math.max(0, Math.min(100, gameState.state.shadow_level));
 }
 
-// 🔵 CORRECTION CLIC OBSOLÈTE : Fonction à lier à ton eventListener du bouton "Inspirer"
-// Elle intègre désormais un scaling basé sur la population.
+// Variable globale pour garder en mémoire l'heure du dernier clic
+let lastClickTime = 0;
+
+// Limite stricte : 100 ms entre chaque clic (soit 10 clics maximum par seconde)
+const CLICK_COOLDOWN = 100; 
+
 export function handleManualClick() {
+    // 🔴 1. Bouclier Anti-Spam (Throttling)
+    const now = Date.now();
+    if (now - lastClickTime < CLICK_COOLDOWN) {
+        return; // Ignore silencieusement le clic si le joueur va trop vite
+    }
+    lastClickTime = now;
+
+    // 🔴 2. Ta logique originelle (intacte)
     if (gameState.state.is_paused) return;
+    
     const baseValue = 2;
     const scaling = gameState.population.hommes * 0.05; // Le clic scale avec la population
     const totalGain = baseValue + scaling;
@@ -226,8 +239,10 @@ export function handleManualClick() {
         gameState.resources.richesse += totalGain;
     } else {
         gameState.resources.espoir += totalGain;
+        // On s'assure que l'Ombre ne descend pas sous 0
         gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 0.1);
     }
+    
     updateUI();
 }
 
