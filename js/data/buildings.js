@@ -1,62 +1,89 @@
 // js/data/buildings.js
 
 export const BUILDINGS = [
-    // --- TIER 1 : Subsistance ---
+    // --- ÂGE 1 ---
     {
-        id: "ferme", name: "Ferme Humaine", description: "Génère +0.5 Richesse par an.",
-        baseCost: { richesse: 20 }, production: { richesse: 0.5 }, multiplier: 1.15,
-        isVisible: (st) => st.resources.richesse >= 20 || st.buildings.ferme > 0
-    },
-    {
-        id: "village", name: "Camp de Réfugiés", description: "Attire +0.2 Hommes par an.",
-        baseCost: { espoir: 50, richesse: 50 }, production: { hommes: 0.2 }, multiplier: 1.15,
-        isVisible: (st) => st.buildings.ferme >= 5
-    },
-    // --- TIER 2 : Développement urbain ---
-    {
-        id: "refuge_elfique", 
-        name: "Refuge Elfique", 
-        description: "Attire +0.1 Elfe par an.",
-        baseCost: { espoir: 200, savoir: 50 }, 
-        production: { elfes: 0.1 }, 
+        id: "bld_ferme",
+        name: "Fermes Agricoles",
+        description: "Génère de la Richesse. Nécessite de la main d'œuvre et de l'optimisme.",
+        req_age: 1,
+        baseCost: { hommes: 5, espoir: 10 },
         multiplier: 1.15,
-        isVisible: (st) => st.resources.savoir >= 50 || st.buildings.refuge_elfique > 0
-    },
-    
-    {
-        id: "forge", name: "Forge Naine", description: "Génère +4 Richesse par an.",
-        baseCost: { richesse: 150 }, production: { richesse: 4 }, multiplier: 1.15,
-        isVisible: (st) => st.buildings.ferme >= 10
+        production: { richesse: 3 },
+        isVisible: (s) => true
     },
     {
-        id: "scriptorium", name: "Scriptorium", description: "Génère +1 Savoir par an.",
-        baseCost: { richesse: 300 }, production: { savoir: 1 }, multiplier: 1.15,
-        isVisible: (st) => st.buildings.forge >= 1
+        id: "bld_mine",
+        name: "Carrières de Pierre",
+        description: "Génère Richesse et Renom, mais épuise vos travailleurs.",
+        req_age: 1,
+        baseCost: { richesse: 200, hommes: 15 },
+        multiplier: 1.20,
+        production: { richesse: 5, renom: 1 },
+        isVisible: (s) => true
     },
     {
-        id: "caserne", name: "Place d'Armes", description: "Génère +1 Renom par an.",
-        baseCost: { richesse: 500, hommes: 10 }, production: { renom: 1 }, multiplier: 1.15,
-        isVisible: (st) => st.buildings.forge >= 1
+        id: "bld_bibliotheque",
+        name: "Archives du Savoir",
+        description: "Génère du Savoir. Importer des manuscrits coûte très cher.",
+        req_age: 1,
+        baseCost: { richesse: 600, renom: 20 },
+        multiplier: 1.25,
+        production: { savoir: 4 },
+        isVisible: (s) => true
+    },
+
+    // --- ÂGE 2 ---
+    {
+        id: "bld_forge",
+        name: "Forges Elfiques",
+        description: "Génère beaucoup de Richesse et de Savoir. Nécessite l'alliance des deux peuples.",
+        req_age: 2,
+        baseCost: { richesse: 2500, hommes: 50, elfes: 10 },
+        multiplier: 1.30,
+        production: { richesse: 15, savoir: 8 },
+        isVisible: (s) => s.meta.current_age >= 2
     },
     {
-        id: "sanctuaire", name: "Sanctuaire", description: "Génère +0.5 Espoir par an.",
-        baseCost: { richesse: 800, savoir: 100 }, production: { espoir: 0.5 }, multiplier: 1.15,
-        isVisible: (st) => st.buildings.scriptorium >= 1
-    },
-    // --- TIER 3 : Les Enclaves des Peuples Libres (Âge 2+) ---
-    {
-        id: "hobbits", name: "Alliance de la Comté", description: "Génère +5 Espoir par an (Aucune corruption).",
-        baseCost: { richesse: 2500, renom: 500 }, production: { espoir: 5 }, multiplier: 1.50,
-        isVisible: (st) => st.meta.current_age >= 2 && st.resources.renom >= 300
-    },
-    {
-        id: "nains", name: "Ambassade d'Erebor", description: "Génère +25 Richesse par an, mais génère +0.5 Ombre par an due à l'or.",
-        baseCost: { richesse: 5000, savoir: 1000 }, production: { richesse: 25 }, multiplier: 1.50,
-        isVisible: (st) => st.meta.current_age >= 2 && st.resources.richesse >= 2000
+        id: "bld_caserne",
+        name: "Garnisons de Veille",
+        description: "Génère du Renom et maintient l'Espoir. L'armée coûte de l'or.",
+        req_age: 2,
+        baseCost: { richesse: 4000, hommes: 80 },
+        multiplier: 1.35,
+        production: { renom: 5, espoir: 2 },
+        isVisible: (s) => s.meta.current_age >= 2
     },
     {
-        id: "ents", name: "Pacte de Fangorn", description: "Écrase l'Ombre de -1.0 point par an.",
-        baseCost: { espoir: 3000, savoir: 3000 }, production: { }, multiplier: 2.0,
-        isVisible: (st) => st.meta.current_age >= 2 && st.resources.savoir >= 1500
+        id: "bld_sanctuaire",
+        name: "Sanctuaires Guérisseurs",
+        description: "Protège l'Espoir et génère du Savoir antique.",
+        req_age: 2,
+        baseCost: { richesse: 6000, renom: 250, elfes: 20 },
+        multiplier: 1.40,
+        production: { espoir: 4, savoir: 12 },
+        isVisible: (s) => s.meta.current_age >= 2
+    },
+
+    // --- ÂGE 3 ---
+    {
+        id: "bld_academie",
+        name: "Académie des Sages",
+        description: "Production massive de Savoir. Un gouffre financier pour l'État.",
+        req_age: 3,
+        baseCost: { richesse: 35000, renom: 1500 },
+        multiplier: 1.45,
+        production: { savoir: 40 },
+        isVisible: (s) => s.meta.current_age >= 3
+    },
+    {
+        id: "bld_place_armes",
+        name: "Citadelles de Guerre",
+        description: "Production massive de Renom face aux Ténèbres.",
+        req_age: 3,
+        baseCost: { richesse: 45000, hommes: 300, espoir: 500 },
+        multiplier: 1.50,
+        production: { renom: 25 },
+        isVisible: (s) => s.meta.current_age >= 3
     }
 ];
