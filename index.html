@@ -8,226 +8,206 @@
         :root {
             --font-title: 'Georgia', serif;
             --font-body: 'Arial', sans-serif;
-            --bg-color: #f5f2eb; /* Couleur dynamique gérée par JS */
-            --text-color: #2c3e50;
         }
-
-        /* RESET ET LAYOUT GLOBAL NO-SCROLL (Desktop) */
         body {
             font-family: var(--font-body);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #f5f2eb;
+            color: #2c3e50;
             margin: 0;
-            padding: 0;
-            height: 100vh; /* Prend 100% de la hauteur de l'écran */
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Empêche le scroll global sur ordinateur */
-            transition: background-color 1s ease, color 1s ease;
+            padding: 20px;
         }
-
-        header {
-            text-align: center;
-            padding: 10px 20px;
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-            flex-shrink: 0; /* Empêche le header de s'écraser */
-        }
-
         .game-container {
             display: grid;
-            grid-template-columns: 250px 1fr 320px; /* Colonne droite légèrement élargie */
+            grid-template-columns: 250px 1fr 300px;
             gap: 20px;
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
-            flex-grow: 1; /* Remplit l'espace restant sous le header */
-            overflow: hidden; /* Contient les colonnes */
         }
-
-        /* PANNEAUX ET SCROLL INTERNE */
         .panel {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0,0,0,0.1);
+            background: #fff;
+            border: 1px solid #dcd6cd;
             border-radius: 6px;
             padding: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Essentiel pour que l'enfant puisse scroller */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
-        .scroll-area {
-            flex-grow: 1; /* Prend tout l'espace de sa colonne */
-            overflow-y: auto; /* Autorise le scroll vertical uniquement ici */
-            padding-right: 10px; /* Espace pour la barre de défilement */
+        h2, h3, h4 {
+            font-family: var(--font-title);
+            margin-top: 0;
         }
-
-        /* Personnalisation de la barre de scroll */
-        .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
-
-        h2, h3, h4 { font-family: var(--font-title); margin-top: 0; }
-
-        /* BOUTONS ET ÉLÉMENTS UI */
         .btn-action {
-            display: block; width: 100%; padding: 10px; margin: 5px 0;
-            background-color: #34495e; color: #fff; border: none;
-            border-radius: 4px; cursor: pointer; font-weight: bold; text-align: center;
-            transition: transform 0.1s, background-color 0.2s;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #34495e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
         }
-        .btn-action:hover:not(:disabled) { background-color: #2c3e50; transform: translateY(-1px); }
-        .btn-action:disabled { background-color: #bdc3c7; cursor: not-allowed; opacity: 0.7; }
-
-        #ui-shadow-bar { width: 100%; height: 15px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
-        #ui-shadow-fill { height: 100%; width: 0%; background: #c0392b; transition: width 0.5s ease, background-color 0.5s; }
-
-        /* INFOBULLES ROBUSTES */
-        .tooltip { position: relative; display: inline-block; cursor: help; border-bottom: 1px dotted rgba(0,0,0,0.4); }
-        .tooltip:hover::after {
-            content: attr(data-tip); position: absolute; bottom: 100%; left: 0;
-            background: #2c3e50; color: #ecf0f1; padding: 8px 12px; border-radius: 4px;
-            font-size: 0.85em; font-family: var(--font-body); white-space: normal;
-            width: max-content; max-width: 220px; z-index: 999999;
-            pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 8px; line-height: 1.4;
+        .btn-action:hover {
+            background-color: #2c3e50;
         }
-
+        .btn-action:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #ui-shadow-bar {
+            width: 100%;
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        #ui-shadow-fill {
+            height: 100%;
+            width: 0%;
+            background: #c0392b;
+            transition: width 0.5s ease;
+        }
+        #log-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 10px;
+            background: #fafafa;
+        }
+        .focus-container label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
         @keyframes pulse-gold {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
             70% { transform: scale(1.02); box-shadow: 0 0 10px 5px rgba(212, 175, 55, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
         }
-        .pulse-anim { animation: pulse-gold 2s infinite; }
-        
-        /* 📱 RESPONSIVE MOBILE (Déclenchement sous 800px de large) */
-        @media (max-width: 800px) {
-            body {
-                height: auto; /* Annule le No-Scroll sur mobile */
-                overflow: auto; /* Autorise le scroll global sur mobile */
-            }
-            .game-container {
-                grid-template-columns: 1fr; /* Empile les 3 colonnes en 1 seule */
-                gap: 15px;
-                padding: 10px;
-                overflow: visible;
-            }
-            .panel {
-                height: auto; 
-                overflow: visible; 
-                max-height: none;
-            }
-            .scroll-area {
-                overflow-y: visible; /* Le contenu s'affiche en entier sur mobile */
-            }
-            #log-container {
-                max-height: 300px; /* On limite la taille des logs sur mobile */
-                overflow-y: auto;
-                border: 1px solid rgba(0,0,0,0.1);
-                padding: 10px;
-            }
+        .pulse-anim {
+            animation: pulse-gold 2s infinite;
+        }
+        /* Moteur d'infobulles (CSS Pur) */
+        .tooltip {
+            position: relative;
+            display: inline-block; /* Crucial pour fixer la bulle sur un texte ! */
+            cursor: help;
+            border-bottom: 1px dotted #7f8c8d;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%; /* S'affiche juste au-dessus */
+            left: 0;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-family: var(--font-body);
+            white-space: normal; /* Autorise les retours à la ligne */
+            width: max-content;
+            max-width: 220px;
+            z-index: 999999; /* Forcé au premier plan absolu */
+            pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            line-height: 1.4;
+            margin-bottom: 8px; /* Petit espace avec le texte */
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1 id="ui-age-title" style="margin-bottom: 5px;">Âge I : L'Aube</h1>
-        <div id="ui-year" style="font-size: 1.2em; font-weight: bold; opacity: 0.8;">An 1</div>
+    <header style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #dcd6cd; padding-bottom: 10px;">
+        <h1 id="ui-age-title" style="font-family: var(--font-title); margin-bottom: 5px;">Âge I : L'Aube</h1>
+        <div id="ui-year" style="font-size: 1.2em; font-weight: bold; color: #7f8c8d;">An 1</div>
     </header>
 
     <div class="game-container">
         
         <aside class="panel">
             <h2>L'État</h2>
-            <div class="scroll-area">
-                <div id="ui-resources" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-                    <div><span class="tooltip" data-tip="Requis pour les alliances elfiques et la magie.">Savoir</span> : <span id="ui-res-savoir" style="font-weight: bold;">0</span> <span id="ui-rate-savoir"></span></div>
-                    <div><span class="tooltip" data-tip="Le nerf de la guerre. Permet de bâtir vos infrastructures.">Richesse</span> : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
-                    <div><span class="tooltip" data-tip="Votre prestige mondial. Attire l'attention des Peuples Libres.">Renom</span> : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
-                    <div><span class="tooltip" data-tip="Repousse l'Ombre et dicte votre croissance démographique.">Espoir</span> : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
-                    
-                    <p id="ui-prestige-display" style="display:none; color: #b89742; font-weight: bold; margin-top: 10px; font-size: 0.9em; background: rgba(184, 151, 66, 0.1); padding: 8px; border-radius: 4px;">
-                        ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus)
-                    </p>
-                </div>
+            <div id="ui-resources" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                <div><span class="tooltip" data-tip="Requis pour les alliances elfiques et la magie.">Savoir</span> : <span id="ui-res-savoir" style="font-weight: bold;">0</span> <span id="ui-rate-savoir"></span></div>
+                <div><span class="tooltip" data-tip="Le nerf de la guerre. Permet de bâtir vos infrastructures.">Richesse</span> : <span id="ui-res-richesse" style="font-weight: bold;">50</span> <span id="ui-rate-richesse"></span></div>
+                <div><span class="tooltip" data-tip="Votre prestige mondial. Attire l'attention des Peuples Libres.">Renom</span> : <span id="ui-res-renom" style="font-weight: bold;">10</span> <span id="ui-rate-renom"></span></div>
+                <div><span class="tooltip" data-tip="Repousse l'Ombre et dicte votre croissance démographique.">Espoir</span> : <span id="ui-res-espoir" style="font-weight: bold;">100</span> <span id="ui-rate-espoir"></span></div>
+                
+                <p id="ui-prestige-display" style="display:none; color: #f1c40f; font-weight: bold; margin-top: 10px; font-size: 0.9em; background: rgba(241, 196, 15, 0.1); padding: 5px; border-radius: 4px;">
+                    ✨ Éclats de Silmaril : <span id="ui-eclats">0</span> (<span id="ui-eclats-bonus">0</span>% bonus prod)
+                </p>
+            </div>
 
-                <hr style="border: 0; border-top: 1px dashed rgba(0,0,0,0.2); margin: 15px 0;">
+            <hr style="border: 0; border-top: 1px dashed #dcd6cd; margin: 15px 0;">
 
-                <h3>Population</h3>
-                <div id="ui-population" style="display: flex; flex-direction: column; gap: 8px;">
-                    <div><span class="tooltip" data-tip="Peuple mortel. Génère passivement de la Richesse.">Hommes</span> : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
-                    <div><span class="tooltip" data-tip="Immortels. Génèrent passivement du Savoir.">Elfes</span> : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
-                </div>
+            <h3>Population</h3>
+            <div id="ui-population" style="display: flex; flex-direction: column; gap: 8px;">
+                <div><span class="tooltip" data-tip="Peuple mortel. Génère passivement de la Richesse.">Hommes</span> : <span id="ui-pop-hommes" style="font-weight: bold;">20</span> <span id="ui-rate-hommes"></span></div>
+                <div><span class="tooltip" data-tip="Immortels. Génèrent passivement du Savoir.">Elfes</span> : <span id="ui-pop-elfes" style="font-weight: bold;">0</span> <span id="ui-rate-elfes"></span></div>
             </div>
         </aside>
 
         <main class="panel">
             <h2>Les Chroniques</h2>
-            <div id="log-container" class="scroll-area"></div>
+            <div id="log-container"></div>
         </main>
 
         <aside class="panel">
             <h2>Les Actions</h2>
             
-            <button id="btn-inbox" style="display: none; width: 100%; padding: 12px; margin-bottom: 15px; background-color: #2c3e50; color: #d4af37; border: 1px solid #d4af37; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1.1em; flex-shrink: 0;"></button>
+            <button id="btn-inbox" style="display: none; width: 100%; padding: 12px; margin-bottom: 15px; background-color: #2c3e50; color: #d4af37; border: 1px solid #d4af37; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1.1em;"></button>
 
-            <div style="flex-shrink: 0;">
-                <div style="margin-bottom: 15px;">
-                    <label style="font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 5px;">Menace de l'Ombre :</label>
-                    <div id="ui-shadow-bar">
-                        <div id="ui-shadow-fill"></div>
-                    </div>
-                </div>
-
-                <div class="focus-container" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05);">
-                    <h3 style="font-size: 1em; margin-bottom: 10px;">Décrets de Focus</h3>
-                    <label style="display: block; margin-bottom: 5px; cursor: pointer;"><input type="radio" name="focus" value="agricole" checked> Focus Agricole</label>
-                    <label style="display: block; cursor: pointer;"><input type="radio" name="focus" value="frontalier"> Focus Frontalier</label>
-                </div>
-
-                <button id="btn-inspire" class="btn-action" style="height: 50px; font-size: 1.1em; background-color: #2c3e50;">
-                    INSPIRER LE PEUPLE
-                </button>
-                <div id="ui-ferveur-status" style="font-size: 0.8em; text-align: center; margin-top: 5px; margin-bottom: 10px; opacity: 0.8;">Ferveur : 0%</div>
-                <div style="width: 100%; height: 4px; background: rgba(0,0,0,0.1); margin-bottom: 15px; border-radius: 2px; overflow: hidden;">
-                    <div id="ui-ferveur-fill" style="width: 0%; height: 100%; background: #d4af37; transition: width 0.1s ease;"></div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; font-size: 0.9em; display: block; margin-bottom: 5px;">Menace de l'Ombre :</label>
+                <div id="ui-shadow-bar">
+                    <div id="ui-shadow-fill"></div>
                 </div>
             </div>
 
-            <div class="scroll-area">
-                
-                <div id="ui-modifiers-container" style="display: none; margin-bottom: 15px;"></div>
+            <div class="focus-container" style="background: rgba(0,0,0,0.02); padding: 10px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #eee;">
+                <h3 style="font-size: 1em; margin-bottom: 10px;">Décrets de Focus</h3>
+                <label><input type="radio" name="focus" value="agricole" checked> Focus Agricole (+Richesse au clic/passif)</label>
+                <label><input type="radio" name="focus" value="frontalier"> Focus Frontalier (+Espoir au clic, réduit l'ombre)</label>
+            </div>
 
-                <div id="ui-council-panel" style="border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 15px;">
-                    <h3 style="font-size: 1.1em; margin-bottom: 10px; color: #002b4e;">👑 LE CONSEIL</h3>
-                    <div id="ui-council-container"></div>
-                </div>
+            <button id="btn-inspire" class="btn-action" style="height: 60px; font-size: 1.1em; background-color: #2c3e50;">
+                INSPIRER LE PEUPLE
+            </button>
+            <div id="ui-ferveur-status" style="font-size: 0.8em; text-align: center; margin-top: -5px; color: #7f8c8d; margin-bottom: 15px;">Jauge de Ferveur : 0%</div>
+            <div style="width: 100%; height: 4px; background: #eee; margin-bottom: 20px; border-radius: 2px; overflow: hidden;">
+                <div id="ui-ferveur-fill" style="width: 0%; height: 100%; background: #d4af37; transition: width 0.1s ease;"></div>
+            </div>
 
-                <div id="ui-buildings-panel" style="display: none; margin-top: 15px; border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 15px;">
-                    <h3 style="font-size: 1.1em; margin-bottom: 10px;">🔨 INFRASTRUCTURES</h3>
-                    <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
-                </div>
+            <div id="ui-council-panel" style="margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #002b4e;">👑 LE CONSEIL DU ROI</h3>
+                <div id="ui-council-container"></div>
+            </div>
 
-                <div class="projects-panel" style="margin-top: 15px; border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 15px;">
-                    <h3 style="font-size: 1.1em; margin-bottom: 10px; color: #b89742;">📜 GRAND PROJET</h3>
-                    <div id="ui-project-container"></div>
-                </div>
+            <div id="ui-buildings-panel" style="display: none; margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #2c3e50;">🔨 INFRASTRUCTURES</h3>
+                <div id="ui-buildings-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+
+            <div class="projects-panel" style="margin-top: 20px; border-top: 1px dashed #333; padding-top: 15px;">
+                <h3 style="font-family: var(--font-title); font-size: 1.1em; margin-bottom: 10px; color: #b89742;">📜 GRAND PROJET DE L'ÈRE</h3>
+                <div id="ui-project-container"></div>
             </div>
         </aside>
 
     </div>
 
-    <dialog id="event-modal" style="width: 90%; max-width: 500px; padding: 20px; border-radius: 6px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.2); font-family: var(--font-body);">
+    <dialog id="event-modal" style="width: 500px; padding: 20px; border-radius: 6px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.2); font-family: var(--font-body);">
         <h3 id="modal-title" style="color: #c0392b; margin-top: 0;">Événement Majeur</h3>
-        <p id="modal-text" style="line-height: 1.5; font-size: 0.95em;"></p>
+        <p id="modal-text" style="line-height: 1.4; font-size: 0.95em; color: #34495e;"></p>
         <div id="modal-choices" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
     </dialog>
 
-    <div id="victory-modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px; box-sizing: border-box;">
-        <h1 id="victory-title" style="color: #f1c40f; font-family: var(--font-title); font-size: 3em; margin-bottom: 20px; letter-spacing: 2px;">LE CRÉPUSCULE S'ACHÈVE</h1>
-        <p id="victory-desc" style="font-size: 1.2em; max-width: 700px; margin-bottom: 40px; line-height: 1.6; font-style: italic; opacity: 0.9;"></p>
-        <button id="btn-prestige" style="padding: 15px 30px; font-size: 1.1em; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); transition: transform 0.2s;">
-            Accepter l'Héritage (New Game +)
+    <div id="victory-modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;">
+        <h1 id="victory-title" style="color: #f1c40f; font-family: var(--font-title); font-size: 3.5em; margin-bottom: 20px; letter-spacing: 2px;">LE QUATRIÈME ÂGE COMMENCE</h1>
+        <p id="victory-desc" style="font-size: 1.3em; max-width: 700px; margin-bottom: 40px; line-height: 1.6; font-style: italic; opacity: 0.9;"></p>
+        <button id="btn-prestige" style="padding: 18px 36px; font-size: 1.2em; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); transition: transform 0.2s;">
+            Accepter l'Héritage (Lancer le New Game +)
         </button>
     </div>
 
