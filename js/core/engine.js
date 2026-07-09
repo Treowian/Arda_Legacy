@@ -31,7 +31,7 @@ function simulateOfflineProgress() {
         for(let i = 0; i < safeTicks; i++) {
             if (!gameState.state.is_victory) {
                 gameState.state.current_year += 1;
-                processModifiers(); // On gère le temps des malus même hors ligne
+                processModifiers(); 
                 processCouncilLogic(); 
                 processEconomy();
             }
@@ -41,9 +41,7 @@ function simulateOfflineProgress() {
         const savoirGained = Math.floor(gameState.resources.savoir - savoirBefore);
         
         let msg = `Vous êtes de retour !\n\n`;
-        if (isCapped) {
-            msg += `⏳ Vos entrepôts ont débordé (Limite de 12h d'absence atteinte).\n`;
-        }
+        if (isCapped) msg += `⏳ Vos entrepôts ont débordé (Limite de 12h atteinte).\n`;
         msg += `Pendant ce temps (${safeTicks} années), votre royaume a généré :\n+ ${richesGained} Richesse\n+ ${savoirGained} Savoir`;
         
         alert(msg);
@@ -69,22 +67,16 @@ function gameTick() {
     saveGame();
 }
 
-// 🆕 FONCTION DE GESTION DU TEMPS DES MODIFICATEURS
 function processModifiers() {
     if (!gameState.state.active_modifiers) gameState.state.active_modifiers = [];
     
     if (gameState.state.active_modifiers.length > 0) {
-        // Réduit la durée de 1 an
         gameState.state.active_modifiers.forEach(mod => mod.duration -= 1);
-        
-        // Log la fin d'un malus pour informer le joueur
         gameState.state.active_modifiers.forEach(mod => {
             if (mod.duration === 0) {
-                addChronicle(`✨ <em>La malédiction "${mod.label}" s'est enfin dissipée.</em>`);
+                addChronicle(`✨ <em>La malédiction "${mod.label}" s'est dissipée.</em>`);
             }
         });
-
-        // Nettoie ceux qui sont arrivés à 0
         gameState.state.active_modifiers = gameState.state.active_modifiers.filter(mod => mod.duration > 0);
     }
 }
@@ -97,10 +89,10 @@ function processCouncilLogic() {
     if (gameState.council.senechal && gameState.state.council_active.senechal) {
         if (gameState.state.shadow_level >= 70 && gameState.state.active_focus !== 'frontalier') {
             gameState.state.active_focus = 'frontalier';
-            addChronicle("📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace de l'Ombre.</em>");
+            addChronicle("📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace.</em>");
         } else if (gameState.state.shadow_level <= 30 && gameState.state.active_focus !== 'agricole') {
             gameState.state.active_focus = 'agricole';
-            addChronicle("📜 <em>Le Sénéchal ré-alloue les bras de votre peuple vers le Focus Agricole.</em>");
+            addChronicle("📜 <em>Le Sénéchal ré-alloue les bras vers le Focus Agricole.</em>");
         }
     }
 
@@ -110,16 +102,14 @@ function processCouncilLogic() {
                 gameState.resources.espoir += 3;
                 gameState.resources.renom += 1;
             } else {
-                if (gameState.state.active_focus === 'agricole') {
-                    gameState.resources.richesse += 2;
-                } else {
-                    gameState.resources.espoir += 2;
-                }
+                if (gameState.state.active_focus === 'agricole') gameState.resources.richesse += 2;
+                else gameState.resources.espoir += 2;
             }
         }
     }
 
     if (gameState.council.batisseur && gameState.state.council_active.batisseur && !gameState.state.is_twilight) {
+        // 🔵 CORRECTION : Documenté. On reverse l'array pour prioriser les bâtiments haut-tiers (ROI).
         const prioritizedBuildings = [...BUILDINGS].reverse();
         
         prioritizedBuildings.forEach(b => {
@@ -131,13 +121,15 @@ function processCouncilLogic() {
                 if (gameState.resources[res] < (cost * 3)) canAffordSafe = false;
             }
 
+            // 🔴 CORRECTION IA SUICIDAIRE : Ne pas acheter de Nains si l'Ombre est déjà menaçante
+            if (b.id === 'nains' && gameState.state.shadow_level > 50) return;
+
             if (canAffordSafe && b.isVisible(gameState)) {
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
                     gameState.resources[res] -= cost;
                 }
                 gameState.buildings[b.id]++;
-                console.log(`🔨 Le Bâtisseur a privilégié : ${b.name}`);
             }
         });
     }
@@ -148,7 +140,6 @@ function processEconomy() {
     const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
     const multiplier = (gameState.state.bonus_multiplicateur || 1.0) * prestigeBonus * redemptionBonus;
 
-    // 🆕 CALCUL DES MALUS DE PRODUCTION ACTIFS
     let malusRichesse = 1.0;
     let malusEspoir = 1.0;
     
@@ -169,10 +160,23 @@ function processEconomy() {
         addChronicle("<strong>[EUCATASTROPHE]</strong> Vous avez purgé l'Ombre ! Bénédiction active.");
     }
     
-    // Le renom n'est pas soumis aux malus économiques
     if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
         gameState.resources.renom += 5 * multiplier;
     }
+
+    // 🔴 CORRECTION SOFTLOCK : Ces mécaniques opèrent MAINTENANT indépendamment de is_twilight
+    if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
+    const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
+    gameState.state.shadow_level -= auraEspoir * multiplier;
+
+    // Calcul des effets des bâtiments sur l'Ombre (actifs même en Crépuscule)
+    BUILDINGS.forEach(b => {
+        const owned = gameState.buildings[b.id] || 0;
+        if (owned > 0) {
+            if (b.id === 'nains') gameState.state.shadow_level += (0.5 * owned);
+            if (b.id === 'ents') gameState.state.shadow_level -= (1.0 * owned);
+        }
+    });
 
     if (gameState.state.is_twilight) {
         gameState.resources.richesse -= 50; 
@@ -183,31 +187,20 @@ function processEconomy() {
         if (gameState.resources.espoir > 1000) gameState.population.hommes += 1.5 * multiplier;
         
         let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
-        if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
 
-        const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
-        gameState.state.shadow_level -= auraEspoir * multiplier;
-
-        // 🆕 APPLICATION DES MALUS SUR LA POPULATION
         gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole * malusRichesse;
         gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
         
         BUILDINGS.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
-            if (owned > 0) {
-                if (b.id === 'nains') gameState.state.shadow_level += (0.5 * owned);
-                if (b.id === 'ents') gameState.state.shadow_level -= (1.0 * owned);
-                if (b.production) {
-                    for (const [res, amount] of Object.entries(b.production)) {
-                        let finalAmount = (amount * owned) * multiplier;
-                        
-                        // 🆕 APPLICATION DES MALUS SUR LES BÂTIMENTS
-                        if (res === 'richesse') finalAmount *= malusRichesse;
-                        if (res === 'espoir') finalAmount *= malusEspoir;
-                        
-                        if (gameState.resources[res] !== undefined) gameState.resources[res] += finalAmount;
-                        if (gameState.population[res] !== undefined) gameState.population[res] += finalAmount;
-                    }
+            if (owned > 0 && b.production) {
+                for (const [res, amount] of Object.entries(b.production)) {
+                    let finalAmount = (amount * owned) * multiplier;
+                    if (res === 'richesse') finalAmount *= malusRichesse;
+                    if (res === 'espoir') finalAmount *= malusEspoir;
+                    
+                    if (gameState.resources[res] !== undefined) gameState.resources[res] += finalAmount;
+                    if (gameState.population[res] !== undefined) gameState.population[res] += finalAmount;
                 }
             }
         });
@@ -219,6 +212,23 @@ function processEconomy() {
     gameState.population.hommes = Math.max(0, gameState.population.hommes);
     gameState.population.elfes = Math.max(0, gameState.population.elfes);
     gameState.state.shadow_level = Math.max(0, Math.min(100, gameState.state.shadow_level));
+}
+
+// 🔵 CORRECTION CLIC OBSOLÈTE : Fonction à lier à ton eventListener du bouton "Inspirer"
+// Elle intègre désormais un scaling basé sur la population.
+export function handleManualClick() {
+    if (gameState.state.is_paused) return;
+    const baseValue = 2;
+    const scaling = gameState.population.hommes * 0.05; // Le clic scale avec la population
+    const totalGain = baseValue + scaling;
+
+    if (gameState.state.active_focus === 'agricole') {
+        gameState.resources.richesse += totalGain;
+    } else {
+        gameState.resources.espoir += totalGain;
+        gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 0.1);
+    }
+    updateUI();
 }
 
 export function spawnEvent() {

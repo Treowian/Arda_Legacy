@@ -11,7 +11,7 @@ export const gameState = {
     state: {
         current_year: 1,
         shadow_level: 0,
-        active_focus: 'espoir',
+        active_focus: 'agricole',
         is_paused: false,
         is_victory: false,
         is_twilight: false,
