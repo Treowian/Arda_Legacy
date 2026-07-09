@@ -171,21 +171,23 @@ function renderBuildings() {
         let affordable = true;
         let costStr = '';
 
+        // 🔴 1. Vérification intelligente des coûts (Ressources ET Population)
         for (const [res, baseValue] of Object.entries(b.baseCost)) {
             const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-            if (gameState.resources[res] < cost) affordable = false;
+            // Cherche dans resources, sinon dans population, sinon 0
+            const currentAmount = gameState.resources[res] ?? gameState.population[res] ?? 0;
+            
+            if (currentAmount < cost) affordable = false;
             costStr += `${cost} ${res.toUpperCase()}<br>`;
         }
 
         const btn = document.createElement('button');
         btn.className = 'btn-action';
-        // 🔴 CORRECTION UX : On force l'affichage en block pour maîtriser la grille interne
         btn.style.display = 'block';
         btn.style.width = '100%';
         btn.style.textAlign = 'left';
         btn.disabled = !affordable;
 
-        // Structure HTML interne du bouton repensée
         btn.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                 <strong style="font-size: 1.1em; letter-spacing: 0.5px;">${b.name} <span style="opacity: 0.6; font-weight: normal;">(${owned})</span></strong>
@@ -200,9 +202,15 @@ function renderBuildings() {
 
         btn.addEventListener('click', () => {
             if (affordable) {
+                // 🔴 2. Déduction intelligente des coûts
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                    gameState.resources[res] -= cost;
+                    
+                    if (gameState.resources[res] !== undefined) {
+                        gameState.resources[res] -= cost;
+                    } else if (gameState.population[res] !== undefined) {
+                        gameState.population[res] -= cost;
+                    }
                 }
                 gameState.buildings[b.id] = owned + 1;
                 updateUI();
