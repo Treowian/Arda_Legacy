@@ -121,7 +121,7 @@ export const EVENTS = [
             { label: "Remplir les fumoirs (+20% Richesse, +10% Espoir)", canAfford: () => true, effect: (s) => { s.resources.richesse *= 1.20; s.resources.espoir *= 1.10; }, log: "Les greniers sont pleins. L'hiver ne fait plus peur." },
             { label: "Inviter les tribus voisines à chasser (-5% Richesse, +25% Renom)", canAfford: () => true, effect: (s) => { s.resources.richesse *= 0.95; s.resources.renom *= 1.25; }, log: "Le partage de la viande a forgé de solides amitiés." }
         ]
-    };
+    },
 // ==========================================
     // 2. ÉVÉNEMENTS DIPLOMATIQUES (Géo-Bloqués)
     // Refonte : Scaling % et ajouts de mécaniques de "Push your luck"
@@ -356,7 +356,7 @@ export const EVENTS = [
             { label: "Financer la foire (-30% Richesse, +45% Espoir, +30% Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; s.resources.espoir *= 1.45; s.resources.renom *= 1.30; }, log: "L'harmonie entre les deux races brille comme un phare contre l'Ombre." },
             { label: "Annuler par peur des troubles (+15% Richesse, -35% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.richesse *= 1.15; s.resources.espoir *= 0.65; }, log: "La méfiance s'est installée entre les quartiers du domaine." }
         ]
-    };
+    },
 // ==========================================
     // 3. CRISES SYSTÉMIQUES (Répétables)
     // Sévérité élevée (20% à 50% de pertes). Permet de faire redescendre l'Ombre.
@@ -616,7 +616,7 @@ export const EVENTS = [
                 log: "Vous tendez les clés du domaine. Votre histoire s'achève dans les ténèbres." 
             }
         ]
-    };
+    },
 // ==========================================
     // 4. ÉVÉNEMENTS NARRATIFS UNIQUES (Âge 1)
     // Refonte : Conversion en % et suppression de l'event de fin auto.
@@ -1398,7 +1398,7 @@ export const EVENTS = [
                 log: "Vous choisissez la voie de la vigilance militaire."
             }
         ]
-    };
+    },
 // ==========================================
     // 5. ÉVÉNEMENTS NARRATIFS UNIQUES (Âge 2)
     // L'ère des empires, de Númenor et de la Forge des Anneaux.
@@ -2236,7 +2236,7 @@ export const EVENTS = [
                 log: "Vous transmettez un bastion de pierre et une discipline militaire de fer."
             }
         ]
-    };
+    },
 // ==========================================
     // 6. ÉVÉNEMENTS NARRATIFS UNIQUES (Âge 3)
     // Le Crépuscule, la Guerre de l'Anneau et la Fin des Temps.
