@@ -110,7 +110,8 @@ export function updateUI() {
     if (btnInbox) {
         if (gameState.state.pending_events && gameState.state.pending_events.length > 0) {
             btnInbox.style.display = 'block';
-            btnInbox.textContent = `📬 ${gameState.state.pending_events.length} Décision(s) en attente`;
+            // 🔴 CORRECTION ORTHOGRAPHIQUE ICI
+            btnInbox.textContent = `📬 ${gameState.state.pending_events.length} Événement(s) en attente`;
             btnInbox.classList.add('pulse-anim');
         } else {
             btnInbox.style.display = 'none';

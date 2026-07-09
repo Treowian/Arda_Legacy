@@ -232,6 +232,9 @@ export function handleManualClick() {
 }
 
 export function spawnEvent() {
+    // 🔴 CORRECTION : On bloque la génération si le joueur a déjà 4 événements en attente
+    if (gameState.state.pending_events.length >= 4) return;
+
     const validEvents = EVENTS.filter(event => {
         if (!event.repeatable && gameState.state.resolved_events.includes(event.id)) return false;
         try { return event.condition(gameState); } catch (e) { return false; }
@@ -241,7 +244,14 @@ export function spawnEvent() {
         const randomIndex = Math.floor(Math.random() * validEvents.length);
         const eventId = validEvents[randomIndex].id;
         
-        gameState.state.pending_events.push(eventId);
-        addChronicle(`📜 <em>Un messager arrive. Une décision requiert votre attention !</em>`);
+        // 🛡️ Petite sécurité bonus : on évite d'avoir deux fois le même événement dans la file
+        if (!gameState.state.pending_events.includes(eventId)) {
+            gameState.state.pending_events.push(eventId);
+            
+            // J'ai profité pour corriger l'orthographe ici aussi au cas où !
+            import('../ui/dom.js').then(module => {
+                module.addChronicle(`📜 <em>Un messager arrive. Un événement requiert votre attention !</em>`);
+            });
+        }
     }
 }
