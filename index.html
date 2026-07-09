@@ -8,112 +8,123 @@
         :root {
             --font-title: 'Georgia', serif;
             --font-body: 'Arial', sans-serif;
+            --bg-color: #f5f2eb; /* Couleur dynamique gérée par JS */
+            --text-color: #2c3e50;
         }
+
+        /* RESET ET LAYOUT GLOBAL NO-SCROLL (Desktop) */
         body {
             font-family: var(--font-body);
-            background-color: #f5f2eb;
-            color: #2c3e50;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            height: 100vh; /* Prend 100% de la hauteur de l'écran */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Empêche le scroll global sur ordinateur */
+            transition: background-color 1s ease, color 1s ease;
         }
+
+        header {
+            text-align: center;
+            padding: 10px 20px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Empêche le header de s'écraser */
+        }
+
         .game-container {
             display: grid;
-            grid-template-columns: 250px 1fr 300px;
+            grid-template-columns: 250px 1fr 320px; /* Colonne droite légèrement élargie */
             gap: 20px;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+            padding: 15px;
+            flex-grow: 1; /* Remplit l'espace restant sous le header */
+            overflow: hidden; /* Contient les colonnes */
         }
+
+        /* PANNEAUX ET SCROLL INTERNE */
         .panel {
-            background: #fff;
-            border: 1px solid #dcd6cd;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0,0,0,0.1);
             border-radius: 6px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Essentiel pour que l'enfant puisse scroller */
         }
-        h2, h3, h4 {
-            font-family: var(--font-title);
-            margin-top: 0;
+
+        .scroll-area {
+            flex-grow: 1; /* Prend tout l'espace de sa colonne */
+            overflow-y: auto; /* Autorise le scroll vertical uniquement ici */
+            padding-right: 10px; /* Espace pour la barre de défilement */
         }
+
+        /* Personnalisation de la barre de scroll pour faire "pro" */
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+        h2, h3, h4 { font-family: var(--font-title); margin-top: 0; }
+
+        /* BOUTONS ET ÉLÉMENTS UI */
         .btn-action {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #34495e;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            text-align: center;
+            display: block; width: 100%; padding: 10px; margin: 5px 0;
+            background-color: #34495e; color: #fff; border: none;
+            border-radius: 4px; cursor: pointer; font-weight: bold; text-align: center;
+            transition: transform 0.1s, background-color 0.2s;
         }
-        .btn-action:hover {
-            background-color: #2c3e50;
+        .btn-action:hover:not(:disabled) { background-color: #2c3e50; transform: translateY(-1px); }
+        .btn-action:disabled { background-color: #bdc3c7; cursor: not-allowed; opacity: 0.7; }
+
+        #ui-shadow-bar { width: 100%; height: 15px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        #ui-shadow-fill { height: 100%; width: 0%; background: #c0392b; transition: width 0.5s ease, background-color 0.5s; }
+
+        /* INFOBULLES ROBUSTES */
+        .tooltip { position: relative; display: inline-block; cursor: help; border-bottom: 1px dotted #7f8c8d; }
+        .tooltip:hover::after {
+            content: attr(data-tip); position: absolute; bottom: 100%; left: 0;
+            background: #2c3e50; color: #ecf0f1; padding: 8px 12px; border-radius: 4px;
+            font-size: 0.85em; font-family: var(--font-body); white-space: normal;
+            width: max-content; max-width: 220px; z-index: 999999;
+            pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 8px;
         }
-        .btn-action:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
-        #ui-shadow-bar {
-            width: 100%;
-            height: 15px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        #ui-shadow-fill {
-            height: 100%;
-            width: 0%;
-            background: #c0392b;
-            transition: width 0.5s ease;
-        }
-        #log-container {
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            padding: 10px;
-            background: #fafafa;
-        }
-        .focus-container label {
-            display: block;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
+
         @keyframes pulse-gold {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
             70% { transform: scale(1.02); box-shadow: 0 0 10px 5px rgba(212, 175, 55, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
         }
-        .pulse-anim {
-            animation: pulse-gold 2s infinite;
-        }
-        /* Moteur d'infobulles (CSS Pur) */
-        .tooltip {
-            position: relative;
-            display: inline-block; /* Crucial pour fixer la bulle sur un texte ! */
-            cursor: help;
-            border-bottom: 1px dotted #7f8c8d;
-        }
-        .tooltip:hover::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: 100%; /* S'affiche juste au-dessus */
-            left: 0;
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-family: var(--font-body);
-            white-space: normal; /* Autorise les retours à la ligne */
-            width: max-content;
-            max-width: 220px;
-            z-index: 999999; /* Forcé au premier plan absolu */
-            pointer-events: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            line-height: 1.4;
-            margin-bottom: 8px; /* Petit espace avec le texte */
+        .pulse-anim { animation: pulse-gold 2s infinite; }
+        
+        /* 📱 RESPONSIVE MOBILE (Déclenchement sous 800px de large) */
+        @media (max-width: 800px) {
+            body {
+                height: auto; /* Annule le No-Scroll sur mobile */
+                overflow: auto; /* Autorise le scroll global sur mobile */
+            }
+            .game-container {
+                grid-template-columns: 1fr; /* Empile les 3 colonnes en 1 seule */
+                gap: 15px;
+                padding: 10px;
+                overflow: visible;
+            }
+            .panel {
+                height: auto; /* Annule la hauteur contrainte */
+                overflow: visible; /* Annule le scroll interne */
+                max-height: none;
+            }
+            .scroll-area {
+                overflow-y: visible; /* Le contenu s'affiche en entier sur mobile */
+            }
+            #log-container {
+                max-height: 250px; /* On limite un peu la taille des logs sur mobile */
+                overflow-y: auto;
+                border: 1px solid rgba(0,0,0,0.1);
+                padding: 10px;
+            }
         }
     </style>
 </head>
