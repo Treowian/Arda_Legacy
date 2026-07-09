@@ -40,7 +40,7 @@ export const EVENTS = [
         description: "Le soleil a baigné vos terres, et les récoltes dépassent toutes les espérances. Les silos débordent.",
         repeatable: true, condition: (gameState) => Math.random() < 0.10,
         choices: [
-            { label: "Stocker pour l'avenir (+3 ans Richesse, +2 ans Savoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); timeWarp(s, 'savoir', 2); }, log: "L'abondance est sagement mise de côté. Votre peuple apprend la prévoyance." },
+            { label: "Stocker pour l'avenir (+3 ans de prod. de Richesse, +2 ans de prod. de Savoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); timeWarp(s, 'savoir', 2); }, log: "L'abondance est sagement mise de côté. Votre peuple apprend la prévoyance." },
             { label: "Organiser un grand banquet (-10% Richesse, +30% Espoir)", canAfford: () => true, effect: (s) => { s.resources.richesse *= 0.90; s.resources.espoir *= 1.30; }, log: "La bière a coulé à flots. Cette nuit restera dans les mémoires." }
         ]
     },
@@ -49,7 +49,7 @@ export const EVENTS = [
         description: "Un été trop sec a déclenché un incendie dans la forêt. Les flammes menacent vos cabanes de bûcherons.",
         repeatable: true, condition: (gameState) => Math.random() < 0.10,
         choices: [
-            { label: "Lutter contre les flammes (-5% Hommes, +2 ans Renom)", canAfford: (s) => s.population.hommes >= 10, effect: (s) => { s.population.hommes *= 0.95; timeWarp(s, 'renom', 2); }, log: "Le feu est vaincu, mais les brûlures ont fauché plusieurs de vos braves." },
+            { label: "Lutter contre les flammes (-5% Hommes, +2 ans de prod. de Renom)", canAfford: (s) => s.population.hommes >= 10, effect: (s) => { s.population.hommes *= 0.95; timeWarp(s, 'renom', 2); }, log: "Le feu est vaincu, mais les brûlures ont fauché plusieurs de vos braves." },
             { label: "Laisser brûler la vieille forêt (-15% Richesse, +5 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; s.state.shadow_level = clamp(s.state.shadow_level + 5, 0, 100); }, log: "Le bois est en cendres et la faune a fui. Le paysage est désolé." }
         ]
     },
@@ -58,7 +58,7 @@ export const EVENTS = [
         description: "Au printemps, la fonte des neiges grossit les rivières qui menacent d'emporter le moulin principal.",
         repeatable: true, condition: (gameState) => Math.random() < 0.10,
         choices: [
-            { label: "Renforcer les digues en urgence (-10% Richesse, +2 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; timeWarp(s, 'renom', 2); }, log: "Vos hommes ont travaillé dans l'eau glacée, mais le moulin est sauvé." },
+            { label: "Renforcer les digues en urgence (-10% Richesse, +2 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; timeWarp(s, 'renom', 2); }, log: "Vos hommes ont travaillé dans l'eau glacée, mais le moulin est sauvé." },
             { label: "Laisser les eaux monter (-15% Richesse, -10% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; s.resources.espoir *= 0.90; }, log: "Le fleuve a emporté vos réserves. Il faudra rebâtir." }
         ]
     },
@@ -67,7 +67,7 @@ export const EVENTS = [
         description: "Aucune pluie n'est tombée depuis des mois. Les puits s'assèchent et le blé jaunit sur tige.",
         repeatable: true, condition: (gameState) => Math.random() < 0.10,
         choices: [
-            { label: "Rationner l'eau strictement (-10% Espoir, +2 ans Savoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.90; timeWarp(s, 'savoir', 2); }, log: "La soif a endurci les cœurs, mais l'ordre a été maintenu." },
+            { label: "Rationner l'eau strictement (-10% Espoir, +2 ans de prod. de Savoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.90; timeWarp(s, 'savoir', 2); }, log: "La soif a endurci les cœurs, mais l'ordre a été maintenu." },
             { label: "Creuser de nouveaux puits profonds (-15% Richesse, +15% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; s.resources.espoir *= 1.15; }, log: "L'eau claire a finalement jailli des profondeurs, au prix d'efforts." }
         ]
     },
@@ -76,7 +76,7 @@ export const EVENTS = [
         description: "Un hiver terrible pousse les meutes de loups à se rapprocher dangereusement de vos enclos.",
         repeatable: true, condition: (gameState) => Math.random() < 0.12,
         choices: [
-            { label: "Organiser une grande traque (-5% Hommes, +2 ans Renom)", canAfford: (s) => s.population.hommes >= 10, effect: (s) => { s.population.hommes *= 0.95; timeWarp(s, 'renom', 2); }, log: "Les loups ont été repoussés, mais la neige s'est teintée de rouge." },
+            { label: "Organiser une grande traque (-5% Hommes, +2 ans de prod. de Renom)", canAfford: (s) => s.population.hommes >= 10, effect: (s) => { s.population.hommes *= 0.95; timeWarp(s, 'renom', 2); }, log: "Les loups ont été repoussés, mais la neige s'est teintée de rouge." },
             { label: "Sacrifier du bétail pour les apaiser (-10% Richesse, +5 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; s.state.shadow_level = clamp(s.state.shadow_level + 5, 0, 100); }, log: "Les bêtes ont mangé à leur faim et sont reparties, mais elles reviendront." }
         ]
     },
@@ -96,7 +96,7 @@ export const EVENTS = [
         repeatable: true, condition: (gameState) => Math.random() < 0.08,
         choices: [
             { label: "L'aménager comme lieu de guérison (-10% Richesse, +25% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; s.resources.espoir *= 1.25; }, log: "Les malades viennent y boire et retrouvent la vigueur d'antan." },
-            { label: "L'exploiter secrètement pour vous (+3 ans Richesse, +10 Ombre)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "L'eau vous a enrichi, mais sa pureté s'est peu à peu ternie." }
+            { label: "L'exploiter secrètement pour vous (+3 ans de prod. de Richesse, +10 Ombre)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "L'eau vous a enrichi, mais sa pureté s'est peu à peu ternie." }
         ]
     },
     {
@@ -104,7 +104,7 @@ export const EVENTS = [
         description: "Une paroi rocheuse a cédé près d'un sentier très fréquenté, bloquant la route marchande.",
         repeatable: true, condition: (gameState) => Math.random() < 0.10,
         choices: [
-            { label: "Dégager la voie sans attendre (-15% Richesse, +2 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 2); }, log: "Le commerce a repris rapidement grâce à votre diligence." },
+            { label: "Dégager la voie sans attendre (-15% Richesse, +2 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 2); }, log: "Le commerce a repris rapidement grâce à votre diligence." },
             { label: "Laisser les voyageurs se débrouiller (+1 an Richesse, -15% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 1); s.resources.renom *= 0.85; }, log: "L'isolement appauvrit votre domaine, et votre nom est raillé." }
         ]
     },
@@ -113,7 +113,7 @@ export const EVENTS = [
         description: "Un essaim d'insectes voraces s'abat sur vos champs. Tout ce qui est vert risque de disparaître.",
         repeatable: true, condition: (gameState) => Math.random() < 0.08,
         choices: [
-            { label: "Brûler les champs infestés (-20% Richesse, +2 ans Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.80; timeWarp(s, 'savoir', 2); }, log: "La récolte est perdue, mais l'essaim n'a pas pu se reproduire." },
+            { label: "Brûler les champs infestés (-20% Richesse, +2 ans de prod. de Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.80; timeWarp(s, 'savoir', 2); }, log: "La récolte est perdue, mais l'essaim n'a pas pu se reproduire." },
             { label: "Prier pour qu'elles partent vite (-10% Richesse, -15% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.richesse *= 0.90; s.resources.espoir *= 0.85; }, log: "Elles ont tout dévoré avant de s'envoler." }
         ]
     },
@@ -122,8 +122,8 @@ export const EVENTS = [
         description: "Les chasseurs rapportent que les forêts regorgent de grand gibier cet automne. La viande ne manquera pas.",
         repeatable: true, condition: (gameState) => Math.random() < 0.12,
         choices: [
-            { label: "Remplir les fumoirs (+3 ans Richesse, +10% Espoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 1.10; }, log: "Les greniers sont pleins. L'hiver ne fait plus peur." },
-            { label: "Inviter les tribus voisines à chasser (-5% Richesse, +4 ans Renom)", canAfford: () => true, effect: (s) => { s.resources.richesse *= 0.95; timeWarp(s, 'renom', 4); }, log: "Le partage de la viande a forgé de solides amitiés." }
+            { label: "Remplir les fumoirs (+3 ans de prod. de Richesse, +10% Espoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 1.10; }, log: "Les greniers sont pleins. L'hiver ne fait plus peur." },
+            { label: "Inviter les tribus voisines à chasser (-5% Richesse, +4 ans de prod. de Renom)", canAfford: () => true, effect: (s) => { s.resources.richesse *= 0.95; timeWarp(s, 'renom', 4); }, log: "Le partage de la viande a forgé de solides amitiés." }
         ]
     },
     
@@ -135,8 +135,8 @@ export const EVENTS = [
         description: "Un messager du Gondor, épuisé et monté sur un cheval écumant, vous apporte un message cacheté de cire noire. L'allié demande une aide financière.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.12, 
         choices: [
-            { label: "Envoyer l'or demandé (-20% Richesse, +6 ans Renom)", canAfford: (s) => s.resources.richesse > 20, effect: (s) => { s.resources.richesse *= 0.80; timeWarp(s, 'renom', 6); }, log: "Votre loyauté est inscrite dans les annales des Rois. Le Gondor s'en souviendra." },
-            { label: "Préserver vos ressources (+2 ans Richesse, -20% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 2); s.resources.renom *= 0.80; }, log: "Le messager est reparti vers le sud, le visage sombre et désespéré." },
+            { label: "Envoyer l'or demandé (-20% Richesse, +6 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 20, effect: (s) => { s.resources.richesse *= 0.80; timeWarp(s, 'renom', 6); }, log: "Votre loyauté est inscrite dans les annales des Rois. Le Gondor s'en souviendra." },
+            { label: "Préserver vos ressources (+2 ans de prod. de Richesse, -20% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 2); s.resources.renom *= 0.80; }, log: "Le messager est reparti vers le sud, le visage sombre et désespéré." },
             { label: "Négocier un prêt militaire (Risqué)", canAfford: () => true, effect: (s) => { if(Math.random() < 0.5) { timeWarp(s, 'renom', 3); s.population.hommes *= 1.10; } else { s.resources.renom *= 0.70; } }, log: "Les négociations furent âpres. Le résultat est scellé." }
         ]
     },
@@ -145,8 +145,8 @@ export const EVENTS = [
         description: "Une patrouille de fiers cavaliers aux cheveux d'or s'arrête pour faire boire leurs bêtes et échanger des nouvelles.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.12, 
         choices: [
-            { label: "Offrir le meilleur fourrage (-10% Richesse, +4 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; timeWarp(s, 'renom', 4); }, log: "Les seigneurs des chevaux ont salué votre générosité." },
-            { label: "Exiger une taxe de passage (+3 ans Richesse, -15% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.renom *= 0.85; }, log: "Ils ont payé et fait demi-tour dans un nuage de poussière méprisant." }
+            { label: "Offrir le meilleur fourrage (-10% Richesse, +4 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.90; timeWarp(s, 'renom', 4); }, log: "Les seigneurs des chevaux ont salué votre générosité." },
+            { label: "Exiger une taxe de passage (+3 ans de prod. de Richesse, -15% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.renom *= 0.85; }, log: "Ils ont payé et fait demi-tour dans un nuage de poussière méprisant." }
         ]
     },
     {
@@ -154,8 +154,8 @@ export const EVENTS = [
         description: "Une somptueuse escorte de Nains transportant des métaux précieux souhaite traverser votre domaine pour rejoindre l'Ouest.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.15,
         choices: [
-            { label: "Les accueillir avec faste (-15% Richesse, +5 ans Renom, +3 ans Savoir)", canAfford: (s) => s.resources.richesse > 15, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 5); timeWarp(s, 'savoir', 3); }, log: "Votre hospitalité a impressionné les seigneurs de la Montagne Blanche." },
-            { label: "Exiger une taxe lourde (+5 ans Richesse, -20% Renom)", canAfford: (s) => s.resources.renom > 15, effect: (s) => { timeWarp(s, 'richesse', 5); s.resources.renom *= 0.80; }, log: "Ils ont payé en grimaçant, jurant de ne plus jamais emprunter vos routes." }
+            { label: "Les accueillir avec faste (-15% Richesse, +5 ans de prod. de Renom, +3 ans de prod. de Savoir)", canAfford: (s) => s.resources.richesse > 15, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 5); timeWarp(s, 'savoir', 3); }, log: "Votre hospitalité a impressionné les seigneurs de la Montagne Blanche." },
+            { label: "Exiger une taxe lourde (+5 ans de prod. de Richesse, -20% Renom)", canAfford: (s) => s.resources.renom > 15, effect: (s) => { timeWarp(s, 'richesse', 5); s.resources.renom *= 0.80; }, log: "Ils ont payé en grimaçant, jurant de ne plus jamais emprunter vos routes." }
         ]
     },
     {
@@ -163,9 +163,9 @@ export const EVENTS = [
         description: "Un vieil homme voûté, coiffé d'un grand chapeau bleu et appuyé sur un bâton, s'arrête à vos frontières.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.10, 
         choices: [
-            { label: "L'inviter à votre table (+6 ans Savoir, +25% Espoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'savoir', 6); s.resources.espoir *= 1.25; }, log: "Ses récits sur les temps anciens ont ravivé la flamme et la sagesse du domaine." },
+            { label: "L'inviter à votre table (+6 ans de prod. de Savoir, +25% Espoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'savoir', 6); s.resources.espoir *= 1.25; }, log: "Ses récits sur les temps anciens ont ravivé la flamme et la sagesse du domaine." },
             { label: "Le chasser (-15% Espoir, +10 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.85; s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "Il est parti avec un soupir lourd, laissant un sentiment de vide immense." },
-            { label: "Lui demander conseil mais le renvoyer (+2 ans Savoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'savoir', 2); }, log: "Vous prenez ses mots sans offrir l'hospitalité. Il sourit tristement." }
+            { label: "Lui demander conseil mais le renvoyer (+2 ans de prod. de Savoir)", canAfford: () => true, effect: (s) => { timeWarp(s, 'savoir', 2); }, log: "Vous prenez ses mots sans offrir l'hospitalité. Il sourit tristement." }
         ]
     },
     {
@@ -174,7 +174,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.15,
         choices: [
             { label: "Accepter leur veille sacrée (+20% Espoir, -15 Ombre)", canAfford: () => true, effect: (s) => { s.resources.espoir *= 1.20; s.state.shadow_level = capZero(s.state.shadow_level - 15); }, log: "L'Ombre recule là où leur regard se pose, mais votre peuple murmure." },
-            { label: "Les chasser par méfiance (+3 ans Renom, +10 Ombre)", canAfford: () => true, effect: (s) => { timeWarp(s, 'renom', 3); s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "Vous avez gardé le contrôle de vos terres, mais les nuits semblent plus noires." }
+            { label: "Les chasser par méfiance (+3 ans de prod. de Renom, +10 Ombre)", canAfford: () => true, effect: (s) => { timeWarp(s, 'renom', 3); s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "Vous avez gardé le contrôle de vos terres, mais les nuits semblent plus noires." }
         ]
     },
     {
@@ -191,8 +191,8 @@ export const EVENTS = [
         description: "De grands hommes farouches exigent que vous cessiez de chasser l'ours dans les forêts limitrophes.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.10,
         choices: [
-            { label: "Respecter leur décret (-15% Richesse, +5 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 5); }, log: "Les Beornides apprécient votre parole. Les frontières sont apaisées." },
-            { label: "Ignorer leurs menaces (+4 ans Richesse, -30% Renom, -10% Hommes)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 4); s.resources.renom *= 0.70; s.population.hommes *= 0.90; }, log: "Des escarmouches ont éclaté dans les bois. Le sang a coulé." },
+            { label: "Respecter leur décret (-15% Richesse, +5 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; timeWarp(s, 'renom', 5); }, log: "Les Beornides apprécient votre parole. Les frontières sont apaisées." },
+            { label: "Ignorer leurs menaces (+4 ans de prod. de Richesse, -30% Renom, -10% Hommes)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { timeWarp(s, 'richesse', 4); s.resources.renom *= 0.70; s.population.hommes *= 0.90; }, log: "Des escarmouches ont éclaté dans les bois. Le sang a coulé." },
             { label: "Proposer un concours de chasse (Risqué)", canAfford: () => true, effect: (s) => { if(Math.random() < 0.5) { timeWarp(s, 'renom', 8); } else { s.population.hommes *= 0.85; s.resources.renom *= 0.85; } }, log: "Le défi fut relevé. La forêt en gardera longtemps le souvenir." }
         ]
     },
@@ -201,7 +201,7 @@ export const EVENTS = [
         description: "Une caravane marchande humaine alliée a été encerclée par des pillards orques à quelques lieues de vos avant-postes.",
         repeatable: true, condition: (s) => Math.random() < 0.10 && s.population.hommes > 20,
         choices: [
-            { label: "Envoyer l'infanterie lourde (-15% Hommes, +10 ans Renom, +20% Espoir)", canAfford: (s) => s.population.hommes > 15, effect: (s) => { s.population.hommes *= 0.85; timeWarp(s, 'renom', 10); s.resources.espoir *= 1.20; }, log: "La caravane est sauvée. Les survivants jurent de chanter votre courage." },
+            { label: "Envoyer l'infanterie lourde (-15% Hommes, +10 ans de prod. de Renom, +20% Espoir)", canAfford: (s) => s.population.hommes > 15, effect: (s) => { s.population.hommes *= 0.85; timeWarp(s, 'renom', 10); s.resources.espoir *= 1.20; }, log: "La caravane est sauvée. Les survivants jurent de chanter votre courage." },
             { label: "Sécuriser vos remparts (-25% Renom, +10 Ombre)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.75; s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "La caravane a été massacrée. L'Ombre se nourrit de votre passivité." },
             { label: "Tenter une mission de sauvetage furtive (Risqué)", canAfford: () => true, effect: (s) => { if(Math.random() < 0.5) { timeWarp(s, 'renom', 6); timeWarp(s, 'richesse', 4); } else { s.population.hommes *= 0.80; } }, log: "L'opération s'est jouée à un fil sous le couvert de la nuit." }
         ]
@@ -211,7 +211,7 @@ export const EVENTS = [
         description: "Un haut seigneur Elfe vient étudier vos chroniques pour y chercher la trace d'une ancienne légende.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08 && s.resources.savoir > 50,
         choices: [
-            { label: "Ouvrir vos archives (+12 ans Savoir, +10% Elfes, -15% Richesse)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { timeWarp(s, 'savoir', 12); s.population.elfes *= 1.10; s.resources.richesse *= 0.85; }, log: "L'érudit a déchiffré des parchemins oubliés. L'alliance est renforcée." },
+            { label: "Ouvrir vos archives (+12 ans de prod. de Savoir, +10% Elfes, -15% Richesse)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { timeWarp(s, 'savoir', 12); s.population.elfes *= 1.10; s.resources.richesse *= 0.85; }, log: "L'érudit a déchiffré des parchemins oubliés. L'alliance est renforcée." },
             { label: "Refuser l'accès aux secrets (-20% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.80; }, log: "L'Elfe est reparti en silence, déplorant la fermeture d'esprit des mortels." }
         ]
     },
@@ -220,7 +220,7 @@ export const EVENTS = [
         description: "Des Hobbits proposent d'échanger des graines de céréales inconnues contre de vieux parchemins d'histoire.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08 && s.resources.savoir > 30,
         choices: [
-            { label: "Accepter l'échange (-25% Savoir, +10 ans Richesse)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.75; timeWarp(s, 'richesse', 10); }, log: "Les champs produiront davantage l'an prochain grâce à ces méthodes agricoles." },
+            { label: "Accepter l'échange (-25% Savoir, +10 ans de prod. de Richesse)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.75; timeWarp(s, 'richesse', 10); }, log: "Les champs produiront davantage l'an prochain grâce à ces méthodes agricoles." },
             { label: "Garder vos écrits sacrés (-15% Richesse)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; }, log: "Les Hobbits sont repartis déçus, grignotant tristement leurs provisions." }
         ]
     },
@@ -229,8 +229,8 @@ export const EVENTS = [
         description: "Des Elfes sylvains réclament une compensation en or pour les arbres coupés par vos pionniers aux lisières.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.10,
         choices: [
-            { label: "Payer le tribut (-25% Richesse, +4 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.75; timeWarp(s, 'renom', 4); }, log: "La paix est maintenue avec les gens des bois." },
-            { label: "Refuser le chantage (+3 ans Richesse, -20% Espoir, +5 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.80; s.state.shadow_level = clamp(s.state.shadow_level + 5, 0, 100); }, log: "Les flèches volent désormais bas près des chantiers forestiers." }
+            { label: "Payer le tribut (-25% Richesse, +4 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.75; timeWarp(s, 'renom', 4); }, log: "La paix est maintenue avec les gens des bois." },
+            { label: "Refuser le chantage (+3 ans de prod. de Richesse, -20% Espoir, +5 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.80; s.state.shadow_level = clamp(s.state.shadow_level + 5, 0, 100); }, log: "Les flèches volent désormais bas près des chantiers forestiers." }
         ]
     },
     {
@@ -238,7 +238,7 @@ export const EVENTS = [
         description: "Un artisan Nain banni de son clan cherche un atelier pour prouver sa valeur. Il demande de l'or pour s'installer.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08,
         choices: [
-            { label: "Financer son installation (-30% Richesse, +11 ans Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; timeWarp(s, 'savoir', 11); }, log: "Ses méthodes de traitement du fer ont révolutionné vos forges." },
+            { label: "Financer son installation (-30% Richesse, +11 ans de prod. de Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; timeWarp(s, 'savoir', 11); }, log: "Ses méthodes de traitement du fer ont révolutionné vos forges." },
             { label: "Le renvoyer à sa montagne (-15% Savoir)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.85; }, log: "Il est parti offrir son génie à des rivaux plus offrants." }
         ]
     },
@@ -256,7 +256,7 @@ export const EVENTS = [
         description: "Un marchand itinérant qui logeait chez vous est suspecté d'envoyer des lettres codées vers le Nord.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08 && s.state.shadow_level > 20,
         choices: [
-            { label: "L'arrêter et confisquer ses biens (+5 ans Richesse, +3 ans Renom, -20% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 5); timeWarp(s, 'renom', 3); s.resources.espoir *= 0.80; }, log: "L'or a été saisi, mais le doute s'est instillé parmi vos proches." },
+            { label: "L'arrêter et confisquer ses biens (+5 ans de prod. de Richesse, +3 ans de prod. de Renom, -20% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 5); timeWarp(s, 'renom', 3); s.resources.espoir *= 0.80; }, log: "L'or a été saisi, mais le doute s'est instillé parmi vos proches." },
             { label: "Le bannir sans preuve (-25% Renom, +10 Ombre)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.75; s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "Il est parti colporter vos secrets à vos pires ennemis." },
             { label: "Tenter d'en faire un agent double (Risqué)", canAfford: () => true, effect: (s) => { if(Math.random() < 0.4) { timeWarp(s, 'savoir', 8); s.state.shadow_level = capZero(s.state.shadow_level - 10); } else { s.resources.renom *= 0.70; s.state.shadow_level += 15; } }, log: "Le jeu d'espions est un art mortel aux conséquences imprévisibles." }
         ]
@@ -266,8 +266,8 @@ export const EVENTS = [
         description: "Un seigneur local d'une colonie voisine propose de sceller une alliance par un mariage entre vos deux lignées.",
         repeatable: true, condition: (s) => Math.random() < 0.06 && s.resources.renom > 40,
         choices: [
-            { label: "Accepter l'union (-35% Richesse, +11 ans Renom, +30% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.65; timeWarp(s, 'renom', 11); s.resources.espoir *= 1.30; }, log: "Les festivités ont uni les deux peuples sous une même bannière." },
-            { label: "Refuser pour préserver votre sang (+4 ans Renom, -30% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'renom', 4); s.resources.espoir *= 0.70; }, log: "L'orgueil a sauvé votre lignée, mais vous a laissé cruellement isolé." }
+            { label: "Accepter l'union (-35% Richesse, +11 ans de prod. de Renom, +30% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.65; timeWarp(s, 'renom', 11); s.resources.espoir *= 1.30; }, log: "Les festivités ont uni les deux peuples sous une même bannière." },
+            { label: "Refuser pour préserver votre sang (+4 ans de prod. de Renom, -30% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'renom', 4); s.resources.espoir *= 0.70; }, log: "L'orgueil a sauvé votre lignée, mais vous a laissé cruellement isolé." }
         ]
     },
     {
@@ -276,7 +276,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08 && s.state.shadow_level > 30,
         choices: [
             { label: "Acheter la paix (-40% Richesse, -30% Renom, +15 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.60; s.resources.renom *= 0.70; s.state.shadow_level = clamp(s.state.shadow_level + 15, 0, 100); }, log: "Les raids cessent, mais vous financez votre propre destruction future." },
-            { label: "Exécuter le monstre (+10 ans Renom, +20% Espoir, -20% Richesse)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { timeWarp(s, 'renom', 10); s.resources.espoir *= 1.20; s.resources.richesse *= 0.80; }, log: "La guerre totale est déclarée, mais les cœurs brûlent de courage." }
+            { label: "Exécuter le monstre (+10 ans de prod. de Renom, +20% Espoir, -20% Richesse)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { timeWarp(s, 'renom', 10); s.resources.espoir *= 1.20; s.resources.richesse *= 0.80; }, log: "La guerre totale est déclarée, mais les cœurs brûlent de courage." }
         ]
     },
     {
@@ -284,7 +284,7 @@ export const EVENTS = [
         description: "Un homme vêtu de brun terreux, entouré d'oiseaux, traverse vos champs pour soigner la faune.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.06, 
         choices: [
-            { label: "L'aider dans sa tâche (-15% Richesse, +30% Espoir, +5 ans Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; s.resources.espoir *= 1.30; timeWarp(s, 'savoir', 5); }, log: "La nature semble s'épanouir autour de vous, bénie par Radagast." },
+            { label: "L'aider dans sa tâche (-15% Richesse, +30% Espoir, +5 ans de prod. de Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.85; s.resources.espoir *= 1.30; timeWarp(s, 'savoir', 5); }, log: "La nature semble s'épanouir autour de vous, bénie par Radagast." },
             { label: "Le repousser comme un fou (-20% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.80; }, log: "Les oiseaux ont fui et la terre semble un peu plus stérile cet automne." }
         ]
     },
@@ -293,7 +293,7 @@ export const EVENTS = [
         description: "Des Nains affirment avoir découvert de l'or, mais exigent votre aide militaire pour chasser les ogres.",
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08 && s.population.hommes > 20,
         choices: [
-            { label: "Fournir des soldats (-20% Hommes, +15 ans Richesse, +4 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'richesse', 15); timeWarp(s, 'renom', 4); }, log: "La bataille fut sanglante, mais les chariots d'or remplissent vos cales." },
+            { label: "Fournir des soldats (-20% Hommes, +15 ans de prod. de Richesse, +4 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'richesse', 15); timeWarp(s, 'renom', 4); }, log: "La bataille fut sanglante, mais les chariots d'or remplissent vos cales." },
             { label: "Laisser le trésor aux monstres (-25% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.75; }, log: "Les Nains vous méprisent pour votre lâcheté et ferment leurs comptoirs." }
         ]
     },
@@ -311,7 +311,7 @@ export const EVENTS = [
         description: "Une herboriste elfe formée à Fondcombe propose d'ouvrir une maison de guérison, si vous fournissez les pierres.",
         repeatable: true, condition: (s) => s.meta.current_age === 3 && Math.random() < 0.06,
         choices: [
-            { label: "Bâtir le dispensaire (-30% Richesse, +40% Espoir, +5 ans Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; s.resources.espoir *= 1.40; timeWarp(s, 'savoir', 5); }, log: "Les malades guérissent plus vite et bénissent la science d'Elrond." },
+            { label: "Bâtir le dispensaire (-30% Richesse, +40% Espoir, +5 ans de prod. de Savoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; s.resources.espoir *= 1.40; timeWarp(s, 'savoir', 5); }, log: "Les malades guérissent plus vite et bénissent la science d'Elrond." },
             { label: "Économiser vos pierres (-15% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.85; }, log: "Les blessés souffrent en silence dans des cahutes insalubres." }
         ]
     },
@@ -321,7 +321,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.meta.current_age >= 2 && Math.random() < 0.08,
         choices: [
             { label: "Acheter la cargaison pour les fêtes (-25% Richesse, +35% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.75; s.resources.espoir *= 1.35; }, log: "Le vin a apporté l'allégresse, bien que les réveils soient lourds." },
-            { label: "Refuser ce luxe inutile (+3 ans Richesse, -20% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.80; }, log: "La sobriété maintient la discipline, mais l'ambiance est austère." }
+            { label: "Refuser ce luxe inutile (+3 ans de prod. de Richesse, -20% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.80; }, log: "La sobriété maintient la discipline, mais l'ambiance est austère." }
         ]
     },
     {
@@ -329,7 +329,7 @@ export const EVENTS = [
         description: "Des Elfes blessés demandent à se reposer quelques années dans vos sanctuaires sacrés.",
         repeatable: true, condition: (s) => Math.random() < 0.08 && s.resources.espoir > 50,
         choices: [
-            { label: "Ouvrir vos lieux saints (-25% Espoir, +10% Elfes, +10 ans Savoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.75; s.population.elfes *= 1.10; timeWarp(s, 'savoir', 10); }, log: "Leurs traumatismes pèsent sur le moral, mais leur savoir est immense." },
+            { label: "Ouvrir vos lieux saints (-25% Espoir, +10% Elfes, +10 ans de prod. de Savoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.75; s.population.elfes *= 1.10; timeWarp(s, 'savoir', 10); }, log: "Leurs traumatismes pèsent sur le moral, mais leur savoir est immense." },
             { label: "Préserver la paix des sanctuaires (-25% Renom, -15% Savoir)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.75; s.resources.savoir *= 0.85; }, log: "Les Elfes ont continué leur douloureuse marche vers les Havres Gris." }
         ]
     },
@@ -338,7 +338,7 @@ export const EVENTS = [
         description: "Un jeune noble d'une principauté voisine vient prêter serment d'amitié, offrant son épée.",
         repeatable: true, condition: (s) => Math.random() < 0.06 && s.resources.renom > 30,
         choices: [
-            { label: "Accepter son allégeance (+10% Hommes, +6 ans Renom)", canAfford: () => true, effect: (s) => { s.population.hommes *= 1.10; timeWarp(s, 'renom', 6); }, log: "Le jeune homme est fier et ses troupes renforcent vos patrouilles." },
+            { label: "Accepter son allégeance (+10% Hommes, +6 ans de prod. de Renom)", canAfford: () => true, effect: (s) => { s.population.hommes *= 1.10; timeWarp(s, 'renom', 6); }, log: "Le jeune homme est fier et ses troupes renforcent vos patrouilles." },
             { label: "Le rejeter par prudence (-20% Renom)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.80; }, log: "Il est reparti blessé dans son honneur, devenant un rival dangereux." }
         ]
     },
@@ -347,8 +347,8 @@ export const EVENTS = [
         description: "Les communautés d'Hommes et d'Elfes de votre domaine proposent d'organiser une grande foire commune.",
         repeatable: true, condition: (s) => Math.random() < 0.05 && s.population.elfes > 5 && s.population.hommes > 50,
         choices: [
-            { label: "Financer la foire (-30% Richesse, +45% Espoir, +8 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; s.resources.espoir *= 1.45; timeWarp(s, 'renom', 8); }, log: "L'harmonie entre les deux races brille comme un phare contre l'Ombre." },
-            { label: "Annuler par peur des troubles (+3 ans Richesse, -35% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.65; }, log: "La méfiance s'est installée entre les quartiers du domaine." }
+            { label: "Financer la foire (-30% Richesse, +45% Espoir, +8 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.70; s.resources.espoir *= 1.45; timeWarp(s, 'renom', 8); }, log: "L'harmonie entre les deux races brille comme un phare contre l'Ombre." },
+            { label: "Annuler par peur des troubles (+3 ans de prod. de Richesse, -35% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 3); s.resources.espoir *= 0.65; }, log: "La méfiance s'est installée entre les quartiers du domaine." }
         ]
     },
 
@@ -407,7 +407,7 @@ export const EVENTS = [
         description: "Profitant de votre faiblesse, des orques passent vos palissades et brûlent les faubourgs.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 75 && s.population.hommes > 30,
         choices: [
-            { label: "Sacrifier l'arrière-garde (-25% Hommes, +5 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.75; timeWarp(s, 'renom', 5); }, log: "La forteresse tient, mais le sacrifice de vos braves pèse sur vous." },
+            { label: "Sacrifier l'arrière-garde (-25% Hommes, +5 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.75; timeWarp(s, 'renom', 5); }, log: "La forteresse tient, mais le sacrifice de vos braves pèse sur vous." },
             { label: "Payer une rançon en métaux (-45% Richesse, +15 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.55; s.state.shadow_level = clamp(s.state.shadow_level + 15, 0, 100); }, log: "Les monstres repartent chargés d'or, ricanant de votre impuissance." }
         ]
     },
@@ -425,7 +425,7 @@ export const EVENTS = [
         description: "Vos conseillers les plus éminents ont été achetés. Ils sabotent discrètement vos défenses.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 72 && s.resources.savoir > 30,
         choices: [
-            { label: "Exécuter votre cour (-40% Savoir, +7 ans Renom, -20 Ombre)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.60; timeWarp(s, 'renom', 7); s.state.shadow_level = capZero(s.state.shadow_level - 20); }, log: "Le gouvernement est décapité, mais la trahison est stoppée." },
+            { label: "Exécuter votre cour (-40% Savoir, +7 ans de prod. de Renom, -20 Ombre)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.60; timeWarp(s, 'renom', 7); s.state.shadow_level = capZero(s.state.shadow_level - 20); }, log: "Le gouvernement est décapité, mais la trahison est stoppée." },
             { label: "Faire semblant de ne rien voir (-35% Espoir, +15 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.65; s.state.shadow_level = clamp(s.state.shadow_level + 15, 0, 100); }, log: "L'élite festoie pendant que votre pouvoir pourrit." }
         ]
     },
@@ -443,7 +443,7 @@ export const EVENTS = [
         description: "Le désespoir vous gagne. Votre peuple panique en voyant votre regard s'égarer dans le vide.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 80,
         choices: [
-            { label: "S'enfermer pour méditer (-45% Renom, +5 ans Savoir)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.55; timeWarp(s, 'savoir', 5); }, log: "Votre absence affaiblit l'État, mais préserve votre lucidité." },
+            { label: "S'enfermer pour méditer (-45% Renom, +5 ans de prod. de Savoir)", canAfford: (s) => s.resources.renom > 10, effect: (s) => { s.resources.renom *= 0.55; timeWarp(s, 'savoir', 5); }, log: "Votre absence affaiblit l'État, mais préserve votre lucidité." },
             { label: "Se livrer aux excès (-45% Espoir, +20 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.55; s.state.shadow_level = clamp(s.state.shadow_level + 20, 0, 100); }, log: "Vous sombrez ouvertement dans la déchéance." }
         ]
     },
@@ -453,7 +453,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.state.shadow_level >= 70 && s.resources.savoir > 50,
         choices: [
             { label: "Sauver les parchemins (-15% Hommes, -25% Savoir)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.85; s.resources.savoir *= 0.75; }, log: "Quelques secrets sont sauvés au prix de terribles brûlures." },
-            { label: "Sécuriser l'or plutôt que les livres (-55% Savoir, +7 ans Richesse)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.45; timeWarp(s, 'richesse', 7); }, log: "Le passé est mort. Vos coffres sont pleins, mais vous êtes aveugles." }
+            { label: "Sécuriser l'or plutôt que les livres (-55% Savoir, +7 ans de prod. de Richesse)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.45; timeWarp(s, 'richesse', 7); }, log: "Le passé est mort. Vos coffres sont pleins, mais vous êtes aveugles." }
         ]
     },
     {
@@ -462,7 +462,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.state.shadow_level >= 72,
         choices: [
             { label: "Abandonner l'élevage extérieur (-35% Richesse, -20% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.65; s.resources.espoir *= 0.80; }, log: "Le bétail est parqué à l'intérieur, les rations diminuent cruellement." },
-            { label: "Forcer les bergers à s'armer (-20% Hommes, +4 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 4); }, log: "Les pertes sont lourdes, mais la frontière agricole refuse de plier." }
+            { label: "Forcer les bergers à s'armer (-20% Hommes, +4 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 4); }, log: "Les pertes sont lourdes, mais la frontière agricole refuse de plier." }
         ]
     },
     {
@@ -480,7 +480,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.state.shadow_level >= 74,
         choices: [
             { label: "Sceller la mine définitivement (-50% Richesse, -10 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.50; s.state.shadow_level = capZero(s.state.shadow_level - 10); }, log: "Vous murez le monstre au prix de vos revenus miniers." },
-            { label: "Envoyer des soldats (-20% Hommes, +6 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 6); }, log: "Le sang inonde les tunnels. La créature est tuée." },
+            { label: "Envoyer des soldats (-20% Hommes, +6 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 6); }, log: "Le sang inonde les tunnels. La créature est tuée." },
             { label: "Faire appel à des mercenaires nains (Risqué)", canAfford: () => true, effect: (s) => { if(Math.random() < 0.6) { s.resources.richesse *= 0.70; s.state.shadow_level = capZero(s.state.shadow_level - 15); } else { s.resources.richesse *= 0.50; s.resources.renom *= 0.70; } }, log: "Les Nains demandent un paiement d'avance, sans garantie de retour." }
         ]
     },
@@ -498,7 +498,7 @@ export const EVENTS = [
         description: "Des enfants ont disparu des lisières des villages, enlevés par des silhouettes encapuchonnées.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 73,
         choices: [
-            { label: "Traquer les ravisseuses (-20% Hommes, +7 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 7); }, log: "Une loge sombre est détruite, mais certains enfants manquent à l'appel." },
+            { label: "Traquer les ravisseuses (-20% Hommes, +7 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; timeWarp(s, 'renom', 7); }, log: "Une loge sombre est détruite, mais certains enfants manquent à l'appel." },
             { label: "Instaurer un couvre-feu strict (-30% Espoir, +5 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.70; s.state.shadow_level = clamp(s.state.shadow_level + 5, 0, 100); }, log: "La terreur paralyse les chaumières. On s'enferme dès le coucher du soleil." }
         ]
     },
@@ -508,7 +508,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.state.shadow_level >= 76 && s.resources.richesse > 50,
         choices: [
             { label: "Jeter le trésor dans le fleuve (-45% Richesse, -10 Ombre, +25% Espoir)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.55; s.state.shadow_level = capZero(s.state.shadow_level - 10); s.resources.espoir *= 1.25; }, log: "Le sacrifice de l'or guérit la folie des esprits." },
-            { label: "Garder le trésor (+20 ans Richesse, +30 Ombre, -40% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 20); s.state.shadow_level = clamp(s.state.shadow_level + 30, 0, 100); s.resources.espoir *= 0.60; }, log: "L'or brille, mais la paranoïa s'installe à votre table." }
+            { label: "Garder le trésor (+20 ans de prod. de Richesse, +30 Ombre, -40% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { timeWarp(s, 'richesse', 20); s.state.shadow_level = clamp(s.state.shadow_level + 30, 0, 100); s.resources.espoir *= 0.60; }, log: "L'or brille, mais la paranoïa s'installe à votre table." }
         ]
     },
     {
@@ -525,7 +525,7 @@ export const EVENTS = [
         description: "Un homme se présente comme messager divin, mais ses paroles distillent le découragement et le renoncement.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 70,
         choices: [
-            { label: "L'exécuter pour hérésie (+5 ans Renom, -25% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.75; timeWarp(s, 'renom', 5); }, log: "Vous tuez le menteur, mais ses paroles hantent les esprits." },
+            { label: "L'exécuter pour hérésie (+5 ans de prod. de Renom, -25% Espoir)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.75; timeWarp(s, 'renom', 5); }, log: "Vous tuez le menteur, mais ses paroles hantent les esprits." },
             { label: "Publier ses décrets de défaite (-45% Espoir, +20 Ombre)", canAfford: (s) => s.resources.espoir > 10, effect: (s) => { s.resources.espoir *= 0.55; s.state.shadow_level = clamp(s.state.shadow_level + 20, 0, 100); }, log: "Le découragement brise les dernières volontés de résistance." }
         ]
     },
@@ -534,7 +534,7 @@ export const EVENTS = [
         description: "Des voleurs profanent les tombes de vos ancêtres pour y dérober des épées antiques, les revendant aux forces de l'Ombre.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 74 && s.resources.savoir > 40,
         choices: [
-            { label: "Traquer les receleurs (-25% Richesse, +5 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.75; timeWarp(s, 'renom', 5); }, log: "Vous récupérez les reliques, mais l'affront reste entier." },
+            { label: "Traquer les receleurs (-25% Richesse, +5 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.75; timeWarp(s, 'renom', 5); }, log: "Vous récupérez les reliques, mais l'affront reste entier." },
             { label: "Laisser faire (-40% Savoir, +10 Ombre)", canAfford: (s) => s.resources.savoir > 10, effect: (s) => { s.resources.savoir *= 0.60; s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "Le passé est pillé. Votre domaine perd son identité et sa magie." }
         ]
     },
@@ -543,7 +543,7 @@ export const EVENTS = [
         description: "Des pillards ont capturé les enfants de vos généraux et exigent l'ouverture de vos portes en pleine nuit.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 77 && s.population.hommes > 20,
         choices: [
-            { label: "Refuser et attaquer (-20% Hommes, -35% Espoir, +12 ans Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; s.resources.espoir *= 0.65; timeWarp(s, 'renom', 12); }, log: "Les otages meurent, mais l'honneur militaire et le bastion sont saufs." },
+            { label: "Refuser et attaquer (-20% Hommes, -35% Espoir, +12 ans de prod. de Renom)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.80; s.resources.espoir *= 0.65; timeWarp(s, 'renom', 12); }, log: "Les otages meurent, mais l'honneur militaire et le bastion sont saufs." },
             { label: "Livrer le bastion ouest (-45% Richesse, -40% Renom, +25 Ombre)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.55; s.resources.renom *= 0.60; s.state.shadow_level = clamp(s.state.shadow_level + 25, 0, 100); }, log: "Vous sauvez les enfants au prix d'une brèche stratégique majeure." }
         ]
     },
@@ -570,7 +570,7 @@ export const EVENTS = [
         description: "Vos sentinelles abandonnent leurs postes, terrifiées par des voix chuchotant dans l'obscurité.",
         repeatable: true, condition: (s) => s.state.shadow_level >= 73,
         choices: [
-            { label: "Allumer des grands feux de garde (-35% Richesse, +3 ans Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.65; timeWarp(s, 'renom', 3); }, log: "Le domaine dépense des fortunes en huile pour repousser le Noir." },
+            { label: "Allumer des grands feux de garde (-35% Richesse, +3 ans de prod. de Renom)", canAfford: (s) => s.resources.richesse > 10, effect: (s) => { s.resources.richesse *= 0.65; timeWarp(s, 'renom', 3); }, log: "Le domaine dépense des fortunes en huile pour repousser le Noir." },
             { label: "Punir les déserteurs de mort (-10% Hommes, -35% Espoir, +10 Ombre)", canAfford: (s) => s.population.hommes > 10, effect: (s) => { s.population.hommes *= 0.90; s.resources.espoir *= 0.65; s.state.shadow_level = clamp(s.state.shadow_level + 10, 0, 100); }, log: "La terreur de vos propres lois remplace la terreur de la nuit." }
         ]
     },
@@ -581,7 +581,7 @@ export const EVENTS = [
         repeatable: true, condition: (s) => s.state.shadow_level >= 80,
         choices: [
             { 
-                label: "Brûler le messager et combattre pour la Lumière (+20 ans Renom, +40% Espoir, -30% Richesse)", 
+                label: "Brûler le messager et combattre pour la Lumière (+20 ans de prod. de Renom, +40% Espoir, -30% Richesse)", 
                 canAfford: (s) => s.resources.richesse > 10, 
                 effect: (s) => { s.resources.richesse *= 0.70; timeWarp(s, 'renom', 20); s.resources.espoir *= 1.40; s.state.shadow_level -= 15; }, 
                 log: "Vous choisissez de mourir debout. L'espoir brille d'un éclat désespéré, repoussant légèrement les ténèbres." 
@@ -630,7 +630,7 @@ export const EVENTS = [
                 log: "La lueur des brasiers a réchauffé les cœurs et uni les premiers Hommes."
             },
             {
-                label: "S'enfoncer dans les grottes obscures (+4 ans Richesse, +10 Ombre, -15% Espoir)",
+                label: "S'enfoncer dans les grottes obscures (+4 ans de prod. de Richesse, +10 Ombre, -15% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 4);
@@ -649,7 +649,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 3),
         choices: [
             {
-                label: "Forger les premières armes de bronze (-20% Richesse, +5 ans Renom)",
+                label: "Forger les premières armes de bronze (-20% Richesse, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.80;
@@ -675,7 +675,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 5 && gameState.population.hommes > 20),
         choices: [
             {
-                label: "Mener la contre-attaque (-10% Hommes, +6 ans Renom, +15% Espoir)",
+                label: "Mener la contre-attaque (-10% Hommes, +6 ans de prod. de Renom, +15% Espoir)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.90;
@@ -704,7 +704,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 8),
         choices: [
             {
-                label: "Invoquer le nom d'Oromë (+40% Espoir, +4 ans Renom)",
+                label: "Invoquer le nom d'Oromë (+40% Espoir, +4 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     s.resources.espoir *= 1.40;
@@ -728,7 +728,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 12 && gameState.resources.savoir > 20),
         choices: [
             {
-                label: "Accepter leur enseignement (+11 ans Savoir, +3 ans Renom)",
+                label: "Accepter leur enseignement (+11 ans de prod. de Savoir, +3 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 11);
@@ -755,7 +755,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 15 && gameState.resources.renom > 10),
         choices: [
             {
-                label: "Envoyer vos meilleurs guerriers (-15% Hommes, +11 ans Renom)",
+                label: "Envoyer vos meilleurs guerriers (-15% Hommes, +11 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.85;
@@ -796,7 +796,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 20),
         choices: [
             {
-                label: "Leur jurer amitié et soutien (+15 ans Renom, +10 ans Savoir, -20% Richesse)",
+                label: "Leur jurer amitié et soutien (+15 ans de prod. de Renom, +10 ans de prod. de Savoir, -20% Richesse)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     timeWarp(s, 'renom', 15);
@@ -824,7 +824,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 24 && gameState.resources.richesse > 50),
         choices: [
             {
-                label: "Livrer le charbon (-35% Richesse, +15 ans Savoir)",
+                label: "Livrer le charbon (-35% Richesse, +15 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.65;
@@ -851,7 +851,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 28 && gameState.state.shadow_level > 20),
         choices: [
             {
-                label: "Traquer et pendre les agitateurs (+3 ans Renom, -20% Espoir)",
+                label: "Traquer et pendre les agitateurs (+3 ans de prod. de Renom, -20% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'renom', 3);
@@ -905,7 +905,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 36 && gameState.resources.savoir > 40),
         choices: [
             {
-                label: "L'offrir à un roi Elfe (+15 ans Renom, +10 ans Savoir)",
+                label: "L'offrir à un roi Elfe (+15 ans de prod. de Renom, +10 ans de prod. de Savoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'renom', 15);
@@ -914,7 +914,7 @@ export const EVENTS = [
                 log: "Le Roi a pleuré en voyant la gemme et vous a comblé de bénédictions."
             },
             {
-                label: "La garder dans vos coffres (+12 ans Richesse, +10 Ombre)",
+                label: "La garder dans vos coffres (+12 ans de prod. de Richesse, +10 Ombre)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 12);
@@ -932,7 +932,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 40 && gameState.population.hommes > 40),
         choices: [
             {
-                label: "Soutenir la garnison à tout prix (-20% Hommes, +12 ans Renom)",
+                label: "Soutenir la garnison à tout prix (-20% Hommes, +12 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.80;
@@ -960,7 +960,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 45),
         choices: [
             {
-                label: "Céder à leur effrayante fierté (-25% Richesse, +8 ans Renom, +10 Ombre)",
+                label: "Céder à leur effrayante fierté (-25% Richesse, +8 ans de prod. de Renom, +10 Ombre)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -988,7 +988,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 50 && gameState.resources.savoir > 60),
         choices: [
             {
-                label: "Les cacher (-25% Richesse, +15 ans Savoir, +30% Espoir)",
+                label: "Les cacher (-25% Richesse, +15 ans de prod. de Savoir, +30% Espoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -998,7 +998,7 @@ export const EVENTS = [
                 log: "En remerciement, ils vous confient des parchemins d'une sagesse immense."
             },
             {
-                label: "Piller leurs chariots (+20 ans Richesse, -50% Renom, +25 Ombre)",
+                label: "Piller leurs chariots (+20 ans de prod. de Richesse, -50% Renom, +25 Ombre)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 20);
@@ -1098,7 +1098,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 66 && gameState.resources.richesse > 50),
         choices: [
             {
-                label: "Envoyer la délégation (-35% Richesse, +18 ans Savoir, +6 ans Renom)",
+                label: "Envoyer la délégation (-35% Richesse, +18 ans de prod. de Savoir, +6 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.65;
@@ -1162,7 +1162,7 @@ export const EVENTS = [
                 log: "Le domaine étouffe sous le nombre, mais l'entraide ravive l'espoir."
             },
             {
-                label: "Fermer les frontières (+3 ans Richesse, -35% Renom, -20% Espoir)",
+                label: "Fermer les frontières (+3 ans de prod. de Richesse, -35% Renom, -20% Espoir)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 3);
@@ -1181,7 +1181,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 78),
         choices: [
             {
-                label: "Célébrer cet exploit (+50% Espoir, +5 ans Renom)",
+                label: "Célébrer cet exploit (+50% Espoir, +5 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     s.resources.espoir *= 1.50;
@@ -1207,7 +1207,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 82 && gameState.resources.richesse > 80),
         choices: [
             {
-                label: "Acheter les masques (-45% Richesse, +15 ans Savoir, +5 ans Renom)",
+                label: "Acheter les masques (-45% Richesse, +15 ans de prod. de Savoir, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.55;
@@ -1234,7 +1234,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 85),
         choices: [
             {
-                label: "Décréter un deuil national (-30% Espoir, +6 ans Renom)",
+                label: "Décréter un deuil national (-30% Espoir, +6 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     s.resources.espoir *= 0.70;
@@ -1272,7 +1272,7 @@ export const EVENTS = [
                 log: "Le domaine recueille les morceaux brisés d'un monde qui se meurt."
             },
             {
-                label: "Se barricader totalement (+2 ans Richesse, +15 Ombre)",
+                label: "Se barricader totalement (+2 ans de prod. de Richesse, +15 Ombre)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 2);
@@ -1290,7 +1290,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 95),
         choices: [
             {
-                label: "Mobiliser vos dernières forces (-20% Hommes, +15 ans Renom)",
+                label: "Mobiliser vos dernières forces (-20% Hommes, +15 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.80;
@@ -1345,7 +1345,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 99),
         choices: [
             {
-                label: "Bâtir le mémorial de l'Aube (-30% Richesse, +18 ans Renom)",
+                label: "Bâtir le mémorial de l'Aube (-30% Richesse, +18 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1372,7 +1372,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 1 && (gameState.state.current_year >= 100),
         choices: [
             {
-                label: "Structurer des guildes de bâtisseurs (-30% Richesse, +10 ans Savoir)",
+                label: "Structurer des guildes de bâtisseurs (-30% Richesse, +10 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1381,7 +1381,7 @@ export const EVENTS = [
                 log: "Vous jetez les bases d'un empire axé sur l'architecture."
             },
             {
-                label: "Établir un ordre de gardiens (+10 ans Renom, +20% Espoir)",
+                label: "Établir un ordre de gardiens (+10 ans de prod. de Renom, +20% Espoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'renom', 10);
@@ -1403,7 +1403,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 1),
         choices: [
             {
-                label: "Ériger de grandes cités de pierre (-30% Richesse, +10 ans Renom)",
+                label: "Ériger de grandes cités de pierre (-30% Richesse, +10 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1412,7 +1412,7 @@ export const EVENTS = [
                 log: "Les fondations sont solides, tournées vers la grandeur architecturale."
             },
             {
-                label: "Privilégier l'agriculture et les bois (+10 ans Richesse, +10% Espoir)",
+                label: "Privilégier l'agriculture et les bois (+10 ans de prod. de Richesse, +10% Espoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 10);
@@ -1430,7 +1430,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 5),
         choices: [
             {
-                label: "Créer un comptoir commun (-25% Richesse, +15 ans Savoir, +5 ans Renom)",
+                label: "Créer un comptoir commun (-25% Richesse, +15 ans de prod. de Savoir, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -1458,7 +1458,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 10 && gameState.resources.savoir > 50),
         choices: [
             {
-                label: "Accepter ses cadeaux (+25 ans Savoir, +12 ans Richesse, +25 Ombre)",
+                label: "Accepter ses cadeaux (+25 ans de prod. de Savoir, +12 ans de prod. de Richesse, +25 Ombre)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 25);
@@ -1499,7 +1499,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 15 && gameState.resources.richesse > 100),
         choices: [
             {
-                label: "Leur céder le contrôle (-30% Renom, +20 ans Richesse)",
+                label: "Leur céder le contrôle (-30% Renom, +20 ans de prod. de Richesse)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     s.resources.renom *= 0.70;
@@ -1508,7 +1508,7 @@ export const EVENTS = [
                 log: "L'économie explose, mais votre autorité politique s'effrite face aux marchands."
             },
             {
-                label: "Maintenir l'autorité de l'Intendant (-30% Richesse, +8 ans Renom)",
+                label: "Maintenir l'autorité de l'Intendant (-30% Richesse, +8 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1526,7 +1526,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 20),
         choices: [
             {
-                label: "Payer une compensation et reboiser (-30% Richesse, +5 ans Renom)",
+                label: "Payer une compensation et reboiser (-30% Richesse, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1535,7 +1535,7 @@ export const EVENTS = [
                 log: "La paix est préservée avec le peuple des bois au détriment de vos chantiers."
             },
             {
-                label: "Forcer le passage (+8 ans Richesse, -30% Renom, +10 Ombre)",
+                label: "Forcer le passage (+8 ans de prod. de Richesse, -30% Renom, +10 Ombre)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 8);
@@ -1554,7 +1554,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 25 && gameState.resources.savoir > 100),
         choices: [
             {
-                label: "Envoyer des érudits enquêter (-20% Richesse, +20 ans Savoir)",
+                label: "Envoyer des érudits enquêter (-20% Richesse, +20 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.80;
@@ -1580,7 +1580,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 30 && gameState.state.shadow_level > 20),
         choices: [
             {
-                label: "Acheter les captifs (+25 ans Richesse, -40% Espoir, +20 Ombre)",
+                label: "Acheter les captifs (+25 ans de prod. de Richesse, -40% Espoir, +20 Ombre)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 25);
@@ -1617,7 +1617,7 @@ export const EVENTS = [
                 log: "Vous achetez la paix face à la plus grande flotte du monde."
             },
             {
-                label: "Refuser et fortifier (-30% Richesse, +10 ans Renom, -20% Espoir)",
+                label: "Refuser et fortifier (-30% Richesse, +10 ans de prod. de Renom, -20% Espoir)",
                 canAfford: (s) => s.resources.richesse > 10 && s.resources.espoir > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1636,7 +1636,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 40),
         choices: [
             {
-                label: "Renforcer les garnisons frontalières (-35% Richesse, +7 ans Renom)",
+                label: "Renforcer les garnisons frontalières (-35% Richesse, +7 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.65;
@@ -1690,7 +1690,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 50 && gameState.resources.richesse > 60),
         choices: [
             {
-                label: "Investir massivement (-30% Richesse, +20 ans Richesse, +10 ans Savoir)",
+                label: "Investir massivement (-30% Richesse, +20 ans de prod. de Richesse, +10 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -1717,7 +1717,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 55 && gameState.population.hommes > 50),
         choices: [
             {
-                label: "Envoyer votre armée soutenir les Elfes (-30% Hommes, +20 ans Renom)",
+                label: "Envoyer votre armée soutenir les Elfes (-30% Hommes, +20 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.70;
@@ -1745,7 +1745,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 60 && gameState.resources.savoir > 80),
         choices: [
             {
-                label: "Envoyer vos archives (-40% Savoir, +10 ans Renom, +20% Espoir)",
+                label: "Envoyer vos archives (-40% Savoir, +10 ans de prod. de Renom, +20% Espoir)",
                 canAfford: (s) => s.resources.savoir > 10,
                 effect: (s) => {
                     s.resources.savoir *= 0.60;
@@ -1755,7 +1755,7 @@ export const EVENTS = [
                 log: "Vos parchemins sont en sécurité dans la maison d'Elrond pour les siècles futurs."
             },
             {
-                label: "Garder vos écrits chez vous (+8 ans Savoir, -20% Espoir)",
+                label: "Garder vos écrits chez vous (+8 ans de prod. de Savoir, -20% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 8);
@@ -1773,7 +1773,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 65 && gameState.state.shadow_level > 30),
         choices: [
             {
-                label: "Fermer les yeux pour garder leurs profits (+25 ans Richesse, +20 Ombre)",
+                label: "Fermer les yeux pour garder leurs profits (+25 ans de prod. de Richesse, +20 Ombre)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 25);
@@ -1801,7 +1801,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 70 && gameState.population.hommes > 30),
         choices: [
             {
-                label: "Soutenir le siège (-20% Hommes, -30% Richesse, +12 ans Renom)",
+                label: "Soutenir le siège (-20% Hommes, -30% Richesse, +12 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10 && s.resources.richesse > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.80;
@@ -1844,7 +1844,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 75),
         choices: [
             {
-                label: "S'incliner devant sa puissance (+12 ans Renom, -30% Espoir)",
+                label: "S'incliner devant sa puissance (+12 ans de prod. de Renom, -30% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'renom', 12);
@@ -1870,7 +1870,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 78),
         choices: [
             {
-                label: "Démanteler les industries de guerre (+15 ans Richesse, -20% Renom)",
+                label: "Démanteler les industries de guerre (+15 ans de prod. de Richesse, -20% Renom)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 15);
@@ -1907,7 +1907,7 @@ export const EVENTS = [
                 log: "La chasse aux sorcières assombrit l'ambiance, mais le culte est éradiqué."
             },
             {
-                label: "Laisser faire par tolérance (+10 ans Richesse, +20 Ombre)",
+                label: "Laisser faire par tolérance (+10 ans de prod. de Richesse, +20 Ombre)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 10);
@@ -1925,7 +1925,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 85 && gameState.resources.richesse > 50),
         choices: [
             {
-                label: "Vendre votre bois à la flotte (+25 ans Richesse, -30% Espoir)",
+                label: "Vendre votre bois à la flotte (+25 ans de prod. de Richesse, -30% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 25);
@@ -1934,7 +1934,7 @@ export const EVENTS = [
                 log: "La richesse abonde, mais vos collines sont nues et le ciel gronde."
             },
             {
-                label: "Saboter les chantiers de l'Empire (-15% Hommes, +12 ans Renom)",
+                label: "Saboter les chantiers de l'Empire (-15% Hommes, +12 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.85;
@@ -1980,7 +1980,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 92 && gameState.resources.richesse > 40),
         choices: [
             {
-                label: "Fournir la pierre (-30% Richesse, +25 ans Renom, +40% Espoir)",
+                label: "Fournir la pierre (-30% Richesse, +25 ans de prod. de Renom, +40% Espoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2007,7 +2007,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 94 && gameState.resources.espoir > 30),
         choices: [
             {
-                label: "Décréter la guerre totale (-25% Richesse, +7 ans Renom)",
+                label: "Décréter la guerre totale (-25% Richesse, +7 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -2034,7 +2034,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 96 && gameState.population.hommes > 40),
         choices: [
             {
-                label: "Mobiliser vos troupes (-25% Hommes, +25 ans Renom)",
+                label: "Mobiliser vos troupes (-25% Hommes, +25 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.75;
@@ -2061,7 +2061,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 97 && gameState.resources.richesse > 50),
         choices: [
             {
-                label: "Envoyer les convois de vivres (-35% Richesse, +10 ans Renom)",
+                label: "Envoyer les convois de vivres (-35% Richesse, +10 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.65;
@@ -2101,7 +2101,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 98),
         choices: [
             {
-                label: "Organiser des fêtes de délivrance (+50% Espoir, +5 ans Renom)",
+                label: "Organiser des fêtes de délivrance (+50% Espoir, +5 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     s.resources.espoir *= 1.50;
@@ -2127,7 +2127,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 99),
         choices: [
             {
-                label: "Avertir vos sages en secret (-15% Richesse, +10 ans Savoir)",
+                label: "Avertir vos sages en secret (-15% Richesse, +10 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.85;
@@ -2153,7 +2153,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 99 && gameState.state.shadow_level < 50),
         choices: [
             {
-                label: "Sécuriser les frontières du Nord (-25% Richesse, +5 ans Renom)",
+                label: "Sécuriser les frontières du Nord (-25% Richesse, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -2162,7 +2162,7 @@ export const EVENTS = [
                 log: "Vous protégez les routes face aux orques enhardis par la mort du Roi."
             },
             {
-                label: "Se replier sur vos terres (+2 ans Richesse, -15% Espoir)",
+                label: "Se replier sur vos terres (+2 ans de prod. de Richesse, -15% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 2);
@@ -2180,7 +2180,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 100 && gameState.population.elfes > 10),
         choices: [
             {
-                label: "Offrir une garde d'honneur (-15% Richesse, +7 ans Renom, -20% Elfes)",
+                label: "Offrir une garde d'honneur (-15% Richesse, +7 ans de prod. de Renom, -20% Elfes)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.85;
@@ -2209,7 +2209,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 2 && (gameState.state.current_year >= 100),
         choices: [
             {
-                label: "Rassembler des reliques sacrées (-30% Richesse, +15 ans Savoir)",
+                label: "Rassembler des reliques sacrées (-30% Richesse, +15 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2218,7 +2218,7 @@ export const EVENTS = [
                 log: "Vos successeurs hériteront de parchemins et d'objets protecteurs cruciaux."
             },
             {
-                label: "Léguer une forteresse imprenable (+12 ans Renom, +20% Espoir)",
+                label: "Léguer une forteresse imprenable (+12 ans de prod. de Renom, +20% Espoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'renom', 12);
@@ -2240,7 +2240,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 1),
         choices: [
             {
-                label: "Conserver les reliques du passé (-30% Richesse, +12 ans Savoir)",
+                label: "Conserver les reliques du passé (-30% Richesse, +12 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2249,7 +2249,7 @@ export const EVENTS = [
                 log: "Vous choisissez la voie de l'érudition et de la mémoire sacrée."
             },
             {
-                label: "Fortifier les cols et les accès (+10 ans Renom, -10% Espoir)",
+                label: "Fortifier les cols et les accès (+10 ans de prod. de Renom, -10% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'renom', 10);
@@ -2267,7 +2267,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 5),
         choices: [
             {
-                label: "Lui ouvrir vos cartes de géographie (+15 ans Savoir, +30% Espoir)",
+                label: "Lui ouvrir vos cartes de géographie (+15 ans de prod. de Savoir, +30% Espoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 15);
@@ -2307,7 +2307,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 10),
         choices: [
             {
-                label: "Envoyer des présents de bienvenue (-25% Richesse, +10 ans Renom)",
+                label: "Envoyer des présents de bienvenue (-25% Richesse, +10 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.75;
@@ -2360,7 +2360,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 20 && gameState.population.hommes > 20),
         choices: [
             {
-                label: "Envoyer vos guerriers au secours de l'Arnor (-15% Hommes, +15 ans Renom)",
+                label: "Envoyer vos guerriers au secours de l'Arnor (-15% Hommes, +15 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.85;
@@ -2387,7 +2387,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 25),
         choices: [
             {
-                label: "Accueillir les mineurs exilés (+10 ans Savoir, +5 ans Richesse, -10% Espoir)",
+                label: "Accueillir les mineurs exilés (+10 ans de prod. de Savoir, +5 ans de prod. de Richesse, -10% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 10);
@@ -2414,7 +2414,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 30 && gameState.resources.renom > 30),
         choices: [
             {
-                label: "Soutenir l'autorité des Intendants (+10 ans Renom, -20% Richesse)",
+                label: "Soutenir l'autorité des Intendants (+10 ans de prod. de Renom, -20% Richesse)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     timeWarp(s, 'renom', 10);
@@ -2441,7 +2441,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 35),
         choices: [
             {
-                label: "Financer des patrouilles (-30% Richesse, +7 ans Renom)",
+                label: "Financer des patrouilles (-30% Richesse, +7 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2468,7 +2468,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 40 && gameState.resources.savoir > 60),
         choices: [
             {
-                label: "Envoyer une expédition d'érudits (-10% Hommes, +20 ans Savoir, +10 ans Renom)",
+                label: "Envoyer une expédition d'érudits (-10% Hommes, +20 ans de prod. de Savoir, +10 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.90;
@@ -2505,7 +2505,7 @@ export const EVENTS = [
                 log: "Vous sauvez des milliers de vies de la misère du givre."
             },
             {
-                label: "Profiter de la crise (+20 ans Richesse, -40% Renom, +20 Ombre)",
+                label: "Profiter de la crise (+20 ans de prod. de Richesse, -40% Renom, +20 Ombre)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 20);
@@ -2524,7 +2524,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 50 && gameState.resources.savoir > 100),
         choices: [
             {
-                label: "Envoyer vos rapports à Saroumane (+15 ans Savoir, +6 ans Renom)",
+                label: "Envoyer vos rapports à Saroumane (+15 ans de prod. de Savoir, +6 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 15);
@@ -2533,7 +2533,7 @@ export const EVENTS = [
                 log: "Votre érudition est saluée par le chef de l'Ordre des Magiciens."
             },
             {
-                label: "Garder vos connaissances secrètes (+5 ans Savoir)",
+                label: "Garder vos connaissances secrètes (+5 ans de prod. de Savoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 5);
@@ -2576,7 +2576,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 85),
         choices: [
             {
-                label: "Envoyer des messages d'alerte (-20% Richesse, +8 ans Savoir)",
+                label: "Envoyer des messages d'alerte (-20% Richesse, +8 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.80;
@@ -2603,7 +2603,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 65),
         choices: [
             {
-                label: "Consigner ce récit extraordinaire (+12 ans Savoir, +20% Espoir)",
+                label: "Consigner ce récit extraordinaire (+12 ans de prod. de Savoir, +20% Espoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 12);
@@ -2629,7 +2629,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 70 && gameState.resources.espoir > 30),
         choices: [
             {
-                label: "Doublez la solde des sentinelles (-30% Richesse, +5 ans Renom)",
+                label: "Doublez la solde des sentinelles (-30% Richesse, +5 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2664,7 +2664,7 @@ export const EVENTS = [
                 log: "Votre peuple se terre chez lui, évitant de croiser le regard des spectres."
             },
             {
-                label: "Tenter de leur barrer la route (-10% Hommes, +12 ans Renom)",
+                label: "Tenter de leur barrer la route (-10% Hommes, +12 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.90;
@@ -2682,7 +2682,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 78),
         choices: [
             {
-                label: "Financer les fortifications (-40% Richesse, +7 ans Renom)",
+                label: "Financer les fortifications (-40% Richesse, +7 ans de prod. de Renom)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.60;
@@ -2709,7 +2709,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 82 && gameState.population.elfes > 10),
         choices: [
             {
-                label: "Les laisser partir (-10% Elfes, +7 ans Renom, -20% Espoir)",
+                label: "Les laisser partir (-10% Elfes, +7 ans de prod. de Renom, -20% Espoir)",
                 canAfford: (s) => s.population.elfes > 10 && s.resources.espoir > 10,
                 effect: (s) => {
                     s.population.elfes *= 0.90;
@@ -2738,7 +2738,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 90 && gameState.population.hommes > 30),
         choices: [
             {
-                label: "Mobiliser vos dernières forces (-20% Hommes, +20 ans Renom)",
+                label: "Mobiliser vos dernières forces (-20% Hommes, +20 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.80;
@@ -2747,7 +2747,7 @@ export const EVENTS = [
                 log: "Vos bannières marchent vers la dernière guerre de cet Âge."
             },
             {
-                label: "Défendre vos propres greniers (+3 ans Richesse, -35% Renom, -25% Espoir)",
+                label: "Défendre vos propres greniers (+3 ans de prod. de Richesse, -35% Renom, -25% Espoir)",
                 canAfford: (s) => s.resources.renom > 10 && s.resources.espoir > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 3);
@@ -2766,7 +2766,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 92),
         choices: [
             {
-                label: "Sonner le clairon de la joie (+50% Espoir, +5 ans Renom)",
+                label: "Sonner le clairon de la joie (+50% Espoir, +5 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     s.resources.espoir *= 1.50;
@@ -2792,7 +2792,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 95),
         choices: [
             {
-                label: "Envoyer vos soldats se sacrifier (-15% Hommes, +25 ans Renom)",
+                label: "Envoyer vos soldats se sacrifier (-15% Hommes, +25 ans de prod. de Renom)",
                 canAfford: (s) => s.population.hommes > 10,
                 effect: (s) => {
                     s.population.hommes *= 0.85;
@@ -2819,7 +2819,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 96),
         choices: [
             {
-                label: "Décréter la fête nationale (+100% Espoir, +10 ans Renom, -30% Richesse)",
+                label: "Décréter la fête nationale (+100% Espoir, +10 ans de prod. de Renom, -30% Richesse)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.espoir *= 2.00;
@@ -2848,7 +2848,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 97 && gameState.resources.renom > 40),
         choices: [
             {
-                label: "Aller prêter serment au Roi (-30% Richesse, +20 ans Renom, +40% Espoir)",
+                label: "Aller prêter serment au Roi (-30% Richesse, +20 ans de prod. de Renom, +40% Espoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.70;
@@ -2858,7 +2858,7 @@ export const EVENTS = [
                 log: "Vous intégrez la Pax Romana de la Terre du Milieu restaurée."
             },
             {
-                label: "Garder votre autonomie (+5 ans Richesse, -30% Renom)",
+                label: "Garder votre autonomie (+5 ans de prod. de Richesse, -30% Renom)",
                 canAfford: (s) => s.resources.renom > 10,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 5);
@@ -2885,7 +2885,7 @@ export const EVENTS = [
                 log: "Vous aidez les Semi-hommes à libérer leur Comté en secret."
             },
             {
-                label: "Laisser faire la justice de la nature (+4 ans Richesse)",
+                label: "Laisser faire la justice de la nature (+4 ans de prod. de Richesse)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'richesse', 4);
@@ -2902,7 +2902,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 99 && gameState.population.elfes > 0),
         choices: [
             {
-                label: "Esquisser un geste d'adieu (-15% Elfes, +10 ans Savoir, -25% Espoir)",
+                label: "Esquisser un geste d'adieu (-15% Elfes, +10 ans de prod. de Savoir, -25% Espoir)",
                 canAfford: (s) => s.resources.espoir > 10,
                 effect: (s) => {
                     s.population.elfes *= 0.85;
@@ -2929,7 +2929,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
             {
-                label: "Consacrer le domaine aux sciences (-40% Richesse, +20 ans Savoir)",
+                label: "Consacrer le domaine aux sciences (-40% Richesse, +20 ans de prod. de Savoir)",
                 canAfford: (s) => s.resources.richesse > 10,
                 effect: (s) => {
                     s.resources.richesse *= 0.60;
@@ -2938,7 +2938,7 @@ export const EVENTS = [
                 log: "Vous tournez votre peuple vers l'avenir, la médecine et l'architecture."
             },
             {
-                label: "Consacrer le domaine à la nature (+40% Espoir, +10 ans Richesse)",
+                label: "Consacrer le domaine à la nature (+40% Espoir, +10 ans de prod. de Richesse)",
                 canAfford: () => true,
                 effect: (s) => {
                     s.resources.espoir *= 1.40;
@@ -2956,7 +2956,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
             {
-                label: "Offrir le livre aux archives du Roi (+25 ans Renom)",
+                label: "Offrir le livre aux archives du Roi (+25 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'renom', 25);
@@ -2964,7 +2964,7 @@ export const EVENTS = [
                 log: "Votre nom restera gravé à jamais parmi les grands protecteurs de la Terre du Milieu."
             },
             {
-                label: "Le garder secret pour votre lignée (+10 ans Savoir)",
+                label: "Le garder secret pour votre lignée (+10 ans de prod. de Savoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 10);
@@ -2981,7 +2981,7 @@ export const EVENTS = [
         condition: (gameState) => gameState.meta.current_age === 3 && (gameState.state.current_year >= 100),
         choices: [
             {
-                label: "Léguer un héritage de Sagesse (+25 ans Savoir)",
+                label: "Léguer un héritage de Sagesse (+25 ans de prod. de Savoir)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'savoir', 25);
@@ -2989,7 +2989,7 @@ export const EVENTS = [
                 log: "La complétion de votre Voie Finale (Projet) actera cette sagesse pour les ères futures."
             },
             {
-                label: "Léguer un héritage d'Honneur (+25 ans Renom)",
+                label: "Léguer un héritage d'Honneur (+25 ans de prod. de Renom)",
                 canAfford: () => true,
                 effect: (s) => {
                     timeWarp(s, 'renom', 25);

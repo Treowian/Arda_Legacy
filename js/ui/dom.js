@@ -161,6 +161,7 @@ function renderBuildings() {
     const container = document.getElementById('ui-buildings-container');
     if (!container) return;
 
+    // Purge l'affichage existant
     container.innerHTML = '';
 
     BUILDINGS.forEach(b => {
@@ -173,28 +174,29 @@ function renderBuildings() {
         for (const [res, baseValue] of Object.entries(b.baseCost)) {
             const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
             if (gameState.resources[res] < cost) affordable = false;
-            costStr += `${cost} ${res.toUpperCase()} <br>`;
+            costStr += `${cost} ${res.toUpperCase()}<br>`;
         }
 
         const btn = document.createElement('button');
         btn.className = 'btn-action';
-        btn.style.display = 'flex';
-        btn.style.justifyContent = 'space-between';
-        btn.style.alignItems = 'center';
+        // 🔴 CORRECTION UX : On force l'affichage en block pour maîtriser la grille interne
+        btn.style.display = 'block';
+        btn.style.width = '100%';
         btn.style.textAlign = 'left';
         btn.disabled = !affordable;
 
-        const leftDiv = document.createElement('div');
-        leftDiv.innerHTML = `<strong>${b.name} (${owned})</strong><br><span style="font-size:0.8em; font-weight:normal; opacity:0.8;">${b.description}</span>`;
-
-        const rightDiv = document.createElement('div');
-        rightDiv.style.fontSize = '0.75em';
-        rightDiv.style.textAlign = 'right';
-        rightDiv.style.color = affordable ? '#2ecc71' : '#e74c3c';
-        rightDiv.innerHTML = costStr;
-
-        btn.appendChild(leftDiv);
-        btn.appendChild(rightDiv);
+        // Structure HTML interne du bouton repensée
+        btn.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <strong style="font-size: 1.1em; letter-spacing: 0.5px;">${b.name} <span style="opacity: 0.6; font-weight: normal;">(${owned})</span></strong>
+                <div style="text-align: right; font-size: 0.85em; font-family: monospace; font-weight: bold; color: ${affordable ? '#2ecc71' : '#e74c3c'}; line-height: 1.3;">
+                    ${costStr}
+                </div>
+            </div>
+            <div style="font-size: 0.85em; font-weight: normal; opacity: 0.85; line-height: 1.4;">
+                ${b.description}
+            </div>
+        `;
 
         btn.addEventListener('click', () => {
             if (affordable) {
@@ -427,7 +429,7 @@ function updateRatesDisplay() {
     }
 
     gameState.state.current_rates = rates;
-    
+
     const displayRate = (val, id) => {
         const el = document.getElementById(id);
         if (!el) return;
