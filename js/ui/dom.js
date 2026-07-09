@@ -314,3 +314,85 @@ export function addChronicle(htmlMsg) {
     entry.innerHTML = yearSpan + htmlMsg;
     container.prepend(entry); // Le log le plus récent apparaît en haut
 }
+
+// ==========================================
+// 6. CALCUL DES FLUX (RATES)
+// ==========================================
+function updateRatesDisplay() {
+    const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
+    const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
+    const multiplier = (gameState.state.bonus_multiplicateur || 1.0) * prestigeBonus * redemptionBonus;
+
+    let malusRichesse = 1.0;
+    let malusEspoir = 1.0;
+    if (gameState.state.active_modifiers) {
+        gameState.state.active_modifiers.forEach(mod => {
+            if (mod.target === 'richesse') malusRichesse *= mod.power;
+            if (mod.target === 'espoir') malusEspoir *= mod.power;
+        });
+    }
+
+    let rates = { savoir: 0, richesse: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
+
+    if (gameState.state.is_twilight) {
+        rates.richesse -= 50;
+        rates.espoir -= 5;
+        rates.hommes -= 1;
+    } else {
+        if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
+        if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
+
+        let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
+        
+        rates.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole * malusRichesse;
+        rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
+        rates.espoir -= 0.5;
+
+        // Bâtiments
+        BUILDINGS.forEach(b => {
+            const owned = gameState.buildings[b.id] || 0;
+            if (owned > 0 && b.production) {
+                for (const [res, amount] of Object.entries(b.production)) {
+                    let finalAmount = (amount * owned) * multiplier;
+                    if (res === 'richesse') finalAmount *= malusRichesse;
+                    if (res === 'espoir') finalAmount *= malusEspoir;
+                    if (rates[res] !== undefined) rates[res] += finalAmount;
+                }
+            }
+        });
+
+        // Automatisation du Conseil (Héraut)
+        if (gameState.council.heraut && gameState.state.council_active.heraut) {
+            if (gameState.state.active_focus === 'agricole') rates.richesse += 20; // 10 ticks * 2
+            else rates.espoir += 20;
+        }
+    }
+    
+    // Cas spéciaux de Renom et Héraut (Crépuscule)
+    if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
+        rates.renom += 5 * multiplier;
+    }
+    if (gameState.council.heraut && gameState.state.council_active.heraut && gameState.state.is_twilight) {
+         rates.espoir += 30; // 10 ticks * 3
+         rates.renom += 10;  // 10 ticks * 1
+    }
+
+    // Mise à jour de l'HTML
+    const displayRate = (val, id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (val === 0) { el.textContent = ''; return; }
+        const sign = val > 0 ? '+' : '';
+        const color = val > 0 ? '#27ae60' : '#c0392b';
+        el.textContent = ` ${sign}${val.toFixed(1)}/an`;
+        el.style.color = color;
+        el.style.fontSize = '0.85em';
+    };
+
+    displayRate(rates.savoir, 'ui-rate-savoir');
+    displayRate(rates.richesse, 'ui-rate-richesse');
+    displayRate(rates.renom, 'ui-rate-renom');
+    displayRate(rates.espoir, 'ui-rate-espoir');
+    displayRate(rates.hommes, 'ui-rate-hommes');
+    displayRate(rates.elfes, 'ui-rate-elfes');
+}
