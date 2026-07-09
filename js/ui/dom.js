@@ -294,7 +294,6 @@ export function showEventModal(eventObj) {
 
     modal.showModal();
 }
-
 // ==========================================
 // 5. MOTEUR DE CHRONIQUES (Logs)
 // ==========================================
