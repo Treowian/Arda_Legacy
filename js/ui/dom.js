@@ -1,193 +1,316 @@
 // js/ui/dom.js
 import { gameState } from '../core/state.js';
-import { BUILDINGS } from '../data/buildings.js'; 
-import { renderCurrentProject } from './projects.js';
-import { renderBuildings } from './buildings.js';
-import { renderCouncil } from './council.js'; 
+import { BUILDINGS } from '../data/buildings.js';
+import { EVENTS } from '../data/events.js';
 
-const ui = {};
-
+// ==========================================
+// 1. INITIALISATION DE L'INTERFACE
+// ==========================================
 export function initUI() {
-    ui.year = document.getElementById('ui-year');
-    ui.shadowFill = document.getElementById('ui-shadow-fill');
-    
-    ui.savoir = document.getElementById('ui-res-savoir');
-    ui.richesse = document.getElementById('ui-res-richesse');
-    ui.renom = document.getElementById('ui-res-renom');
-    ui.espoir = document.getElementById('ui-res-espoir');
-    ui.hommes = document.getElementById('ui-pop-hommes');
-    ui.elfes = document.getElementById('ui-pop-elfes');
+    console.log("🖥️ Initialisation de l'UI...");
 
-    ui.rateSavoir = document.getElementById('ui-rate-savoir');
-    ui.rateRichesse = document.getElementById('ui-rate-richesse');
-    ui.rateRenom = document.getElementById('ui-rate-renom');
-    ui.rateEspoir = document.getElementById('ui-rate-espoir');
-    ui.rateHommes = document.getElementById('ui-rate-hommes');
-    ui.rateElfes = document.getElementById('ui-rate-elfes');
-    
-    const btnPrestige = document.getElementById('btn-prestige');
-    if (btnPrestige) {
-        btnPrestige.onclick = () => {
-            import('../core/save.js').then(module => {
-                const scoreTotal = gameState.resources.richesse + gameState.resources.savoir + gameState.resources.renom;
-                module.triggerPrestige(scoreTotal);
+    // Gestion du bouton manuel (Inspirer)
+    const btnInspire = document.getElementById('btn-inspire');
+    if (btnInspire) {
+        btnInspire.addEventListener('click', () => {
+            // Import dynamique pour éviter les dépendances circulaires
+            import('../core/engine.js').then(module => {
+                if (module.handleManualClick) module.handleManualClick();
             });
-        };
-    }
-    
-    const inboxBtn = document.getElementById('btn-inbox');
-    if (inboxBtn) {
-        inboxBtn.onclick = () => {
-            import('./modal.js').then(module => {
-                module.openPendingEvents();
-            });
-        };
-    }
-    
-    updateUI();
-}
-
-function formatRate(value) {
-    if (value === 0) return "";
-    const sign = value > 0 ? "+" : "";
-    const color = value > 0 ? "#27ae60" : "#c0392b"; 
-    return `<span style="font-size: 0.85em; color: ${color}; margin-left: 8px; font-weight: normal;">${sign}${value.toFixed(1)}/an</span>`;
-}
-
-export function updateUI() {
-    if (!ui.year) return; 
-
-    const titleEl = document.getElementById('ui-age-title');
-    if (titleEl) {
-        if (gameState.meta.current_age === 1) titleEl.textContent = "Âge I : L'Aube";
-        else if (gameState.meta.current_age === 2) titleEl.textContent = "Âge II : L'Essor";
-        else if (gameState.meta.current_age === 3) titleEl.textContent = "Âge III : Le Crépuscule";
+        });
     }
 
-    ui.year.textContent = `An ${gameState.state.current_year}`;
-    ui.shadowFill.style.width = `${gameState.state.shadow_level}%`;
-    
-    // 🆕 SYNCHRONISATION VISUELLE DU SÉNÉCHAL
-    const radioAgricole = document.querySelector('input[value="agricole"]');
-    const radioFrontalier = document.querySelector('input[value="frontalier"]');
-    if (radioAgricole && radioFrontalier) {
-        radioAgricole.checked = (gameState.state.active_focus === 'agricole');
-        radioFrontalier.checked = (gameState.state.active_focus === 'frontalier');
+    // Gestion des Décrets de Focus (Radios)
+    const radios = document.querySelectorAll('input[name="focus"]');
+    radios.forEach(radio => {
+        // Synchronise l'interface avec l'état de la sauvegarde
+        if (radio.value === gameState.state.active_focus) {
+            radio.checked = true;
+        }
+        radio.addEventListener('change', (e) => {
+            gameState.state.active_focus = e.target.value;
+            updateUI();
+        });
+    });
+
+    // 🆕 GESTION DE LA MODALE DU CONSEIL
+    const councilModal = document.getElementById('council-modal');
+    const btnOpenCouncil = document.getElementById('btn-open-council');
+    const btnCloseCouncil = document.getElementById('btn-close-council');
+
+    if (btnOpenCouncil && councilModal) {
+        btnOpenCouncil.addEventListener('click', () => {
+            councilModal.showModal();
+            // Masque la pastille rouge lors de l'ouverture
+            const notifCouncil = document.getElementById('notif-council');
+            if (notifCouncil) notifCouncil.style.display = 'none';
+        });
+        btnCloseCouncil.addEventListener('click', () => councilModal.close());
     }
-    
-    // --- EVALUATION DES REVENUS ANNUELS ---
-    let rates = { richesse: 0, savoir: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
-    
-    const prestigeBonus = 1 + ((gameState.meta.prestige_eclats || 0) * 0.05);
-    const redemptionBonus = gameState.meta.redemption_achieved ? 1.5 : 1.0;
-    const multiplier = (gameState.state.bonus_multiplicateur || 1.0) * prestigeBonus * redemptionBonus;
 
-    if (gameState.state.is_twilight) {
-        rates.richesse -= 50;
-        rates.espoir -= 5;
-        rates.hommes -= 1;
-    } else {
-        if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
-        if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
-        
-        let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
-        
-        rates.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole;
-        rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
-        rates.espoir -= 0.5;
-
-        BUILDINGS.forEach(b => {
-            const owned = gameState.buildings[b.id] || 0;
-            if (owned > 0 && b.production) {
-                for (const [res, amount] of Object.entries(b.production)) {
-                    if (rates[res] !== undefined) {
-                        rates[res] += (amount * owned) * multiplier;
-                    }
-                }
+    // Gestion de la boîte de réception des événements
+    const btnInbox = document.getElementById('btn-inbox');
+    if (btnInbox) {
+        btnInbox.addEventListener('click', () => {
+            if (gameState.state.pending_events.length > 0) {
+                // Récupère le plus vieil événement en attente
+                const eventId = gameState.state.pending_events[0];
+                const eventObj = EVENTS.find(e => e.id === eventId);
+                if (eventObj) showEventModal(eventObj);
             }
         });
     }
 
-    if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
-        rates.renom += 5 * multiplier;
-    }
+    // Premier rendu visuel
+    updateUI();
+}
 
-    // Affichage des compteurs mis à jour
-    ui.savoir.textContent = Math.floor(gameState.resources.savoir);
-    ui.richesse.textContent = Math.floor(gameState.resources.richesse);
-    ui.renom.textContent = Math.floor(gameState.resources.renom);
-    ui.espoir.textContent = Math.floor(gameState.resources.espoir);
-    ui.hommes.textContent = Math.floor(gameState.population.hommes);
-    ui.elfes.textContent = Math.floor(gameState.population.elfes);
+// ==========================================
+// 2. BOUCLE PRINCIPALE DE MISE À JOUR VISUELLE
+// ==========================================
+export function updateUI() {
+    if (!document.getElementById('ui-year')) return; // Garde-fou
 
-    if (ui.rateSavoir) ui.rateSavoir.innerHTML = formatRate(rates.savoir);
-    if (ui.rateRichesse) ui.rateRichesse.innerHTML = formatRate(rates.richesse);
-    if (ui.rateRenom) ui.rateRenom.innerHTML = formatRate(rates.renom);
-    if (ui.rateEspoir) ui.rateEspoir.innerHTML = formatRate(rates.espoir);
-    if (ui.rateHommes) ui.rateHommes.innerHTML = formatRate(rates.hommes);
-    if (ui.rateElfes) ui.rateElfes.innerHTML = formatRate(rates.elfes);
-
-    const prestigeDisp = document.getElementById('ui-prestige-display');
-    if (prestigeDisp) {
-        if (gameState.meta.prestige_eclats > 0) {
-            prestigeDisp.style.display = 'block';
-            document.getElementById('ui-eclats').textContent = gameState.meta.prestige_eclats;
-            document.getElementById('ui-eclats-bonus').textContent = (gameState.meta.prestige_eclats * 5);
-        } else {
-            prestigeDisp.style.display = 'none';
-        }
-    }
-
-    // Affichage de la boîte de réception
-    const inboxBtn = document.getElementById('btn-inbox');
-    if (inboxBtn) {
-        const pendingCount = (gameState.state.pending_events || []).length;
-        if (pendingCount > 0) {
-            inboxBtn.style.display = 'block';
-            inboxBtn.textContent = `📬 ${pendingCount} Événement(s) en attente !`;
-            inboxBtn.classList.add('pulse-anim');
-        } else {
-            inboxBtn.style.display = 'none';
-            inboxBtn.classList.remove('pulse-anim');
-        }
-    }
-
-    renderCurrentProject();
-    renderBuildings();
-    renderCouncil(); 
-
-    // 🦇 LE "JUICE" : Assombrissement dynamique de l'écran selon l'Ombre
-    // L'Ombre à 0% donne un fond beige clair (#f5f2eb), à 100% un gris cendre sombre (#2c3e50).
-    const shadowRatio = Math.min(100, gameState.state.shadow_level) / 100;
+    // -- Mise à jour des valeurs textuelles --
+    document.getElementById('ui-year').textContent = `An ${gameState.state.current_year}`;
+    document.getElementById('ui-res-savoir').textContent = Math.floor(gameState.resources.savoir);
+    document.getElementById('ui-res-richesse').textContent = Math.floor(gameState.resources.richesse);
+    document.getElementById('ui-res-renom').textContent = Math.floor(gameState.resources.renom);
+    document.getElementById('ui-res-espoir').textContent = Math.floor(gameState.resources.espoir);
     
-    // Calcul d'interpolation de couleurs simplifié
-    // De rgb(245, 242, 235) vers rgb(44, 62, 80)
-    const r = Math.round(245 - (shadowRatio * (245 - 44)));
-    const g = Math.round(242 - (shadowRatio * (242 - 62)));
-    const b = Math.round(235 - (shadowRatio * (235 - 80)));
+    document.getElementById('ui-pop-hommes').textContent = Math.floor(gameState.population.hommes);
+    document.getElementById('ui-pop-elfes').textContent = Math.floor(gameState.population.elfes);
+
+    // -- Gestion de l'Ombre et du JUICE (Couleur dynamique) --
+    const shadowRatio = Math.min(100, Math.max(0, gameState.state.shadow_level));
+    const shadowFill = document.getElementById('ui-shadow-fill');
+    if (shadowFill) shadowFill.style.width = `${shadowRatio}%`;
+
+    // Calcul de l'assombrissement du thème (CSS Custom Properties)
+    const ratio = shadowRatio / 100;
+    const r = Math.round(245 - (ratio * (245 - 44)));
+    const g = Math.round(242 - (ratio * (242 - 62)));
+    const b = Math.round(235 - (ratio * (235 - 80)));
     
     document.documentElement.style.setProperty('--bg-color', `rgb(${r}, ${g}, ${b})`);
-    
-    // Si l'écran devient trop sombre (Ombre > 60%), on passe le texte principal en clair
-    if (shadowRatio > 0.6) {
+
+    if (ratio > 0.6) {
         document.documentElement.style.setProperty('--text-color', '#ecf0f1');
-        // On assombrit aussi la barre d'Ombre pour qu'elle devienne rouge sang
-        ui.shadowFill.style.backgroundColor = '#8e44ad'; 
+        if (shadowFill) shadowFill.style.backgroundColor = '#8e44ad'; // Devient violacé/sombre
     } else {
         document.documentElement.style.setProperty('--text-color', '#2c3e50');
-        ui.shadowFill.style.backgroundColor = '#c0392b';
+        if (shadowFill) shadowFill.style.backgroundColor = '#c0392b'; // Reste rouge
+    }
+
+    // -- Affichage des Malédictions / Crises en cours --
+    renderModifiers();
+
+    // -- Affichage de l'Inbox --
+    const btnInbox = document.getElementById('btn-inbox');
+    if (btnInbox) {
+        if (gameState.state.pending_events && gameState.state.pending_events.length > 0) {
+            btnInbox.style.display = 'block';
+            btnInbox.textContent = `📬 ${gameState.state.pending_events.length} Décision(s) en attente`;
+            btnInbox.classList.add('pulse-anim');
+        } else {
+            btnInbox.style.display = 'none';
+            btnInbox.classList.remove('pulse-anim');
+        }
+    }
+
+    // -- Rendu des listes (Bâtiments, Projets, Conseil) --
+    renderBuildings();
+    renderCouncil();
+    
+    // -- Mise à jour des alertes visuelles (Pastilles Rouges) --
+    updateNotifications();
+}
+
+// ==========================================
+// 3. RENDUS SPÉCIFIQUES
+// ==========================================
+
+function renderModifiers() {
+    const container = document.getElementById('ui-modifiers-container');
+    if (!container) return;
+
+    if (gameState.state.active_modifiers && gameState.state.active_modifiers.length > 0) {
+        container.style.display = 'block';
+        
+        // Utilisation de .map().join('') sécurisée car données internes au jeu
+        container.innerHTML = gameState.state.active_modifiers.map(mod => {
+            const penalty = Math.round((1 - mod.power) * 100);
+            const targetName = mod.target.charAt(0).toUpperCase() + mod.target.slice(1);
+            return `
+            <div style="background: rgba(231, 76, 60, 0.1); border-left: 4px solid #c0392b; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+                <div style="color: #c0392b; font-weight: bold; font-size: 0.9em; margin-bottom: 4px;">
+                    ⚠️ ${mod.label}
+                </div>
+                <div style="font-size: 0.8em;">
+                    Production de ${targetName} : <strong>-${penalty}%</strong> <br>
+                    <span style="font-style: italic; opacity: 0.8;">Se dissipe dans ${mod.duration} an(s)</span>
+                </div>
+            </div>`;
+        }).join('');
+    } else {
+        container.style.display = 'none';
+        container.innerHTML = '';
     }
 }
 
-export function addChronicle(text) {
-    const logContainer = document.getElementById('log-container') || document.getElementById('chronicles');
-    if (logContainer) {
-        const entry = document.createElement('p');
-        entry.style.marginBottom = "10px";
-        entry.style.fontStyle = "italic";
-        entry.style.fontSize = "0.9em";
-        entry.style.lineHeight = "1.4";
-        entry.innerHTML = "- " + text;
-        logContainer.prepend(entry);
+function renderBuildings() {
+    const container = document.getElementById('ui-buildings-container');
+    if (!container) return;
+
+    // Purge l'affichage existant
+    container.innerHTML = '';
+
+    BUILDINGS.forEach(b => {
+        if (!b.isVisible(gameState)) return;
+
+        const owned = gameState.buildings[b.id] || 0;
+        let affordable = true;
+        let costStr = '';
+
+        for (const [res, baseValue] of Object.entries(b.baseCost)) {
+            const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
+            if (gameState.resources[res] < cost) affordable = false;
+            costStr += `${cost} ${res.toUpperCase()} <br>`;
+        }
+
+        // Création DOM sécurisée (éviter les injections XSS)
+        const btn = document.createElement('button');
+        btn.className = 'btn-action';
+        btn.style.display = 'flex';
+        btn.style.justifyContent = 'space-between';
+        btn.style.alignItems = 'center';
+        btn.style.textAlign = 'left';
+        btn.disabled = !affordable;
+
+        const leftDiv = document.createElement('div');
+        leftDiv.innerHTML = `<strong>${b.name} (${owned})</strong><br><span style="font-size:0.8em; font-weight:normal; opacity:0.8;">${b.description}</span>`;
+
+        const rightDiv = document.createElement('div');
+        rightDiv.style.fontSize = '0.75em';
+        rightDiv.style.textAlign = 'right';
+        rightDiv.style.color = affordable ? '#2ecc71' : '#e74c3c';
+        rightDiv.innerHTML = costStr;
+
+        btn.appendChild(leftDiv);
+        btn.appendChild(rightDiv);
+
+        btn.addEventListener('click', () => {
+            if (affordable) {
+                // Déduction des coûts
+                for (const [res, baseValue] of Object.entries(b.baseCost)) {
+                    const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
+                    gameState.resources[res] -= cost;
+                }
+                gameState.buildings[b.id] = owned + 1;
+                updateUI();
+            }
+        });
+
+        container.appendChild(btn);
+    });
+}
+
+function renderCouncil() {
+    const container = document.getElementById('ui-council-container');
+    if (!container) return;
+    
+    // Le code de ton Conseil ira ici. Pour l'instant, on laisse une structure prête.
+    if (Object.values(gameState.council).every(val => !val)) {
+        container.innerHTML = `<p style="font-size: 0.9em; font-style: italic; opacity: 0.7;">Aucun membre du Conseil n'a encore été débloqué. Développez votre Renom.</p>`;
+    } else {
+        // TODO: Implémenter l'affichage des intendants actifs (Sénéchal, Bâtisseur, etc.)
+        container.innerHTML = `<p style="font-size: 0.9em; color: #27ae60;">Le Conseil est actif et siège en secret.</p>`;
     }
+}
+
+// ==========================================
+// 4. NOTIFICATIONS ET MODALES
+// ==========================================
+
+export function updateNotifications() {
+    let canBuyBuilding = false;
+
+    // Vérifie si au moins 1 bâtiment est achetable
+    BUILDINGS.forEach(b => {
+        if (!b.isVisible(gameState)) return;
+        const owned = gameState.buildings[b.id] || 0;
+        let affordable = true;
+        for (const [res, baseValue] of Object.entries(b.baseCost)) {
+            const currentCost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
+            if (gameState.resources[res] < currentCost) affordable = false;
+        }
+        if (affordable) canBuyBuilding = true;
+    });
+
+    // Affiche ou masque la pastille rouge de l'accordéon Bâtiments
+    const notifBuildings = document.getElementById('notif-buildings');
+    if (notifBuildings) {
+        notifBuildings.style.display = canBuyBuilding ? 'inline-block' : 'none';
+    }
+}
+
+export function showEventModal(eventObj) {
+    const modal = document.getElementById('event-modal');
+    if (!modal) return;
+
+    document.getElementById('modal-title').textContent = eventObj.title;
+    document.getElementById('modal-text').textContent = eventObj.description;
+
+    const choicesContainer = document.getElementById('modal-choices');
+    choicesContainer.innerHTML = ''; // Nettoyage de sécurité
+
+    eventObj.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-action';
+        btn.textContent = choice.label;
+        btn.disabled = !choice.canAfford(gameState);
+
+        btn.addEventListener('click', () => {
+            // Applique les effets du choix
+            choice.effect(gameState);
+            
+            // Ajoute la trace dans l'histoire
+            addChronicle(`<em>${choice.log}</em>`);
+
+            // Retire l'événement de la file d'attente
+            gameState.state.pending_events = gameState.state.pending_events.filter(e => e !== eventObj.id);
+
+            // Marque l'événement comme résolu s'il est unique
+            if (!eventObj.repeatable) {
+                gameState.state.resolved_events.push(eventObj.id);
+            }
+
+            modal.close();
+            updateUI();
+        });
+        
+        choicesContainer.appendChild(btn);
+    });
+
+    modal.showModal();
+}
+
+// ==========================================
+// 5. MOTEUR DE CHRONIQUES (Logs)
+// ==========================================
+export function addChronicle(htmlMsg) {
+    const container = document.getElementById('log-container');
+    if (!container) return;
+    
+    const entry = document.createElement('div');
+    entry.style.marginBottom = '12px';
+    entry.style.paddingBottom = '12px';
+    entry.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+    entry.style.lineHeight = '1.4';
+    
+    // Ajout de l'année en préfixe discret
+    const yearSpan = `<span style="font-family: var(--font-title); font-size: 0.8em; color: #7f8c8d; display: block; margin-bottom: 2px;">An ${gameState.state.current_year}</span>`;
+    
+    entry.innerHTML = yearSpan + htmlMsg;
+    container.prepend(entry); // Le log le plus récent apparaît en haut
 }
