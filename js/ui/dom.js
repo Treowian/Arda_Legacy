@@ -81,6 +81,8 @@ export function updateUI() {
     document.getElementById('ui-pop-hommes').textContent = Math.floor(gameState.population.hommes);
     document.getElementById('ui-pop-elfes').textContent = Math.floor(gameState.population.elfes);
 
+    updateRatesDisplay();
+
     // -- Gestion de l'Ombre et du JUICE (Couleur dynamique) --
     const shadowRatio = Math.min(100, Math.max(0, gameState.state.shadow_level));
     const shadowFill = document.getElementById('ui-shadow-fill');
