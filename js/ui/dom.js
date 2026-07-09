@@ -426,6 +426,8 @@ function updateRatesDisplay() {
          rates.renom += 10;  
     }
 
+    gameState.state.current_rates = rates;
+    
     const displayRate = (val, id) => {
         const el = document.getElementById(id);
         if (!el) return;
