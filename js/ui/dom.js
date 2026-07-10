@@ -33,23 +33,11 @@ export function initUI() {
     const btnCloseCouncil = document.getElementById('btn-close-council');
 
     if (btnOpenCouncil && councilModal) {
-        btnOpenCouncil.addEventListener('click', () => {
-            councilModal.showModal();
-        });
+        btnOpenCouncil.addEventListener('click', () => councilModal.showModal());
         btnCloseCouncil.addEventListener('click', () => councilModal.close());
     }
 
-    const btnInbox = document.getElementById('btn-inbox');
-    if (btnInbox) {
-        btnInbox.addEventListener('click', () => {
-            if (gameState.state.pending_events.length > 0) {
-                const eventId = gameState.state.pending_events[0];
-                const eventObj = EVENTS.find(e => e.id === eventId);
-                if (eventObj) showEventModal(eventObj);
-            }
-        });
-    }
-
+    // Note : L'écouteur du bouton Inbox (#btn-inbox) est géré dans modal.js pour éviter les doublons.
     updateUI();
 }
 
@@ -59,14 +47,12 @@ export function initUI() {
 export function updateUI() {
     if (!document.getElementById('ui-year')) return; 
 
-    // -- Ressources de base --
     document.getElementById('ui-year').textContent = `An ${gameState.state.current_year}`;
     document.getElementById('ui-res-savoir').textContent = Math.floor(gameState.resources.savoir);
     document.getElementById('ui-res-richesse').textContent = Math.floor(gameState.resources.richesse);
     document.getElementById('ui-res-renom').textContent = Math.floor(gameState.resources.renom);
     document.getElementById('ui-res-espoir').textContent = Math.floor(gameState.resources.espoir);
     
-    // 🔴 DÉBUT DU NOUVEAU BLOC POPULATION 🔴
     const capHommes = gameState.population_max?.hommes || 30;
     const capElfes = gameState.population_max?.elfes || 0;
     
@@ -75,7 +61,6 @@ export function updateUI() {
 
     if (elHommes) {
         elHommes.textContent = `${Math.floor(gameState.population.hommes)} / ${capHommes}`;
-        // UX : Met en orange si on est au max pour inciter à construire
         elHommes.style.color = (gameState.population.hommes >= capHommes) ? '#e67e22' : 'inherit';
     }
     
@@ -83,11 +68,9 @@ export function updateUI() {
         elElfes.textContent = `${Math.floor(gameState.population.elfes)} / ${capElfes}`;
         elElfes.style.color = (gameState.population.elfes >= capElfes && capElfes > 0) ? '#e67e22' : 'inherit';
     }
-    // 🔴 FIN DU NOUVEAU BLOC POPULATION 🔴
 
     updateRatesDisplay();
 
-    // -- Affichage de l'Héritage (Prestige) --
     const prestigeDisplay = document.getElementById('ui-prestige-display');
     if (prestigeDisplay) {
         if (gameState.meta && gameState.meta.prestige_eclats > 0) {
@@ -100,7 +83,6 @@ export function updateUI() {
         }
     }
 
-    // -- Gestion de l'Ombre et du JUICE (Couleur dynamique) --
     const shadowRatio = Math.min(100, Math.max(0, gameState.state.shadow_level));
     const shadowFill = document.getElementById('ui-shadow-fill');
     if (shadowFill) shadowFill.style.width = `${shadowRatio}%`;
@@ -152,7 +134,6 @@ function renderModifiers() {
 
     if (gameState.state.active_modifiers && gameState.state.active_modifiers.length > 0) {
         container.style.display = 'block';
-        
         container.innerHTML = gameState.state.active_modifiers.map(mod => {
             const penalty = Math.round((1 - mod.power) * 100);
             const targetName = mod.target.charAt(0).toUpperCase() + mod.target.slice(1);
@@ -176,8 +157,6 @@ function renderModifiers() {
 function renderBuildings() {
     const container = document.getElementById('ui-buildings-container');
     if (!container) return;
-
-    // Purge l'affichage existant
     container.innerHTML = '';
 
     BUILDINGS.forEach(b => {
@@ -187,10 +166,8 @@ function renderBuildings() {
         let affordable = true;
         let costStr = '';
 
-        // Ciblage strict : Ressources vs Population
         for (const [res, baseValue] of Object.entries(b.baseCost)) {
             const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-            
             const currentAmount = (res === 'hommes' || res === 'elfes') 
                 ? (gameState.population[res] || 0) 
                 : (gameState.resources[res] || 0);
@@ -206,7 +183,6 @@ function renderBuildings() {
         btn.style.textAlign = 'left';
         btn.disabled = !affordable;
 
-        // Structure HTML interne du bouton en grille flex
         btn.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                 <strong style="font-size: 1.1em; letter-spacing: 0.5px;">${b.name} <span style="opacity: 0.6; font-weight: normal;">(${owned})</span></strong>
@@ -221,21 +197,15 @@ function renderBuildings() {
 
         btn.addEventListener('click', () => {
             if (affordable) {
-                // Déduction stricte
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                    
-                    if (res === 'hommes' || res === 'elfes') {
-                        gameState.population[res] -= cost;
-                    } else {
-                        gameState.resources[res] -= cost;
-                    }
+                    if (res === 'hommes' || res === 'elfes') gameState.population[res] -= cost;
+                    else gameState.resources[res] -= cost;
                 }
                 gameState.buildings[b.id] = owned + 1;
                 updateUI();
             }
         });
-
         container.appendChild(btn);
     });
 }
@@ -245,44 +215,54 @@ function renderCouncil() {
     if (!container) return;
     container.innerHTML = '';
 
+    // Calcul du coût exponentiel basé sur l'Âge
+    const recruitCost = 2000 * Math.pow(10, Math.max(0, gameState.meta.current_age - 1));
+
     const councilors = [
-        { id: 'senechal', name: 'Sénéchal', req: 50, desc: 'Gère automatiquement les focus selon le niveau de l\'Ombre.' },
-        { id: 'batisseur', name: 'Bâtisseur', req: 200, desc: 'Achète automatiquement les infrastructures si les fonds le permettent.' },
-        { id: 'heraut', name: 'Héraut', req: 500, desc: 'Inspire automatiquement le peuple.' }
+        { id: 'senechal', name: 'Le Sénéchal', desc: 'Gère automatiquement les Focus selon la menace.' },
+        { id: 'batisseur', name: 'Le Bâtisseur', desc: 'Construit automatiquement les bâtiments abordables.' },
+        { id: 'heraut', name: 'Le Héraut', desc: 'Booste massivement votre ressource ciblée.' }
     ];
 
-    let unlockedAny = false;
-
     councilors.forEach(c => {
-        if (gameState.resources.renom >= c.req || gameState.council[c.id]) {
-            gameState.council[c.id] = true; 
-            unlockedAny = true;
+        const div = document.createElement('div');
+        div.className = 'council-card';
+        div.style.border = '1px solid #ccc';
+        div.style.padding = '10px';
+        div.style.marginBottom = '10px';
 
+        if (gameState.council[c.id]) {
             const isActive = gameState.state.council_active[c.id];
-            const btn = document.createElement('button');
-            btn.className = 'btn-action';
-            btn.style.backgroundColor = isActive ? '#27ae60' : '#7f8c8d';
-            btn.innerHTML = `${c.name} : ${isActive ? 'ACTIF' : 'EN PAUSE'}<br><span style="font-size:0.8em; font-weight:normal;">${c.desc}</span>`;
-
-            btn.addEventListener('click', () => {
+            div.innerHTML = `
+                <strong>${c.name}</strong>
+                <p style="font-size:0.8rem">${c.desc}</p>
+                <button class="btn-action" style="background-color: ${isActive ? '#27ae60' : '#7f8c8d'}">
+                    ${isActive ? 'Renvoyer aux Quartiers' : 'Assigner à la Tâche'}
+                </button>
+            `;
+            div.querySelector('button').addEventListener('click', () => {
                 gameState.state.council_active[c.id] = !isActive;
                 updateUI();
             });
-            container.appendChild(btn);
         } else {
-            const div = document.createElement('div');
-            div.style.padding = '10px';
-            div.style.color = '#7f8c8d';
-            div.style.border = '1px dashed #ccc';
-            div.style.marginBottom = '10px';
-            div.innerHTML = `🔒 <em>Poste verrouillé (Requis : ${c.req} Renom)</em>`;
-            container.appendChild(div);
+            const canAfford = gameState.resources.richesse >= recruitCost;
+            div.innerHTML = `
+                <strong>${c.name}</strong>
+                <p style="font-size:0.8rem">${c.desc}<br>Recruter : <span style="color:${canAfford ? '#27ae60' : '#c0392b'}">${recruitCost} RICHESSE</span></p>
+                <button class="btn-action" ${!canAfford ? 'disabled' : ''}>Recruter</button>
+            `;
+            div.style.opacity = canAfford ? '1' : '0.6';
+            
+            if (canAfford) {
+                div.querySelector('button').addEventListener('click', () => {
+                    gameState.resources.richesse -= recruitCost;
+                    gameState.council[c.id] = true;
+                    updateUI();
+                });
+            }
         }
+        container.appendChild(div);
     });
-
-    if (!unlockedAny) {
-        container.innerHTML = `<p style="font-size: 0.9em; font-style: italic; opacity: 0.7;">Aucun membre du Conseil n'a encore été débloqué.</p>`;
-    }
 }
 
 function renderProjects() {
@@ -292,56 +272,61 @@ function renderProjects() {
 
     if (typeof PROJECTS === 'undefined') return;
 
-    const currentProject = PROJECTS.find(p => p.age === gameState.meta.current_age && !gameState.state.resolved_events.includes(p.id));
+    // Filtre strict : Croisement de l'Âge et de l'état is_twilight
+    const availableProjects = PROJECTS.filter(p => 
+        p.age === gameState.meta.current_age && 
+        !!p.is_twilight === !!gameState.state.is_twilight && 
+        (!gameState.state.resolved_projects || !gameState.state.resolved_projects.includes(p.id))
+    );
 
-    if (!currentProject) {
+    if (availableProjects.length === 0) {
         container.innerHTML = `<p style="color: #7f8c8d; font-style: italic; font-size: 0.9em;">Aucun grand projet pour le moment.</p>`;
         return;
     }
 
-    let canAfford = true;
-    let reqText = [];
+    availableProjects.forEach(currentProject => {
+        let canAfford = true;
+        let reqText = [];
 
-    // Ciblage strict des coûts du projet
-    for (const [key, value] of Object.entries(currentProject.cost)) {
-        const currentAmount = (key === 'hommes' || key === 'elfes') 
-            ? (gameState.population[key] || 0) 
-            : (gameState.resources[key] || 0);
-        
-        if (currentAmount < value) canAfford = false;
-        reqText.push(`${value} ${key.toUpperCase()}`);
-    }
-
-    const btn = document.createElement('button');
-    btn.className = 'btn-action';
-    btn.style.backgroundColor = canAfford ? '#b89742' : '#7f8c8d';
-    btn.disabled = !canAfford;
-    
-    btn.innerHTML = `
-        <strong>${currentProject.title}</strong><br>
-        <span style="font-size: 0.8em; font-weight: normal;">${currentProject.description}</span><br>
-        <span style="font-size: 0.75em; display: block; margin-top: 5px;">
-            ${canAfford ? '✨ Clic pour achever l\'Ère' : '🔒 Requis : ' + reqText.join(', ')}
-        </span>
-    `;
-
-    btn.addEventListener('click', () => {
-        if (canAfford) {
-            // Déduction stricte
-            for (const [key, value] of Object.entries(currentProject.cost)) {
-                if (key === 'hommes' || key === 'elfes') {
-                    gameState.population[key] -= value;
-                } else {
-                    gameState.resources[key] -= value;
-                }
-            }
-            gameState.state.resolved_events.push(currentProject.id);
-            if (currentProject.effect) currentProject.effect(gameState);
-            updateUI();
+        for (const [key, value] of Object.entries(currentProject.cost)) {
+            const currentAmount = (key === 'hommes' || key === 'elfes') 
+                ? (gameState.population[key] || 0) 
+                : (gameState.resources[key] || 0);
+            
+            if (currentAmount < value) canAfford = false;
+            reqText.push(`${value} ${key.toUpperCase()}`);
         }
-    });
 
-    container.appendChild(btn);
+        const btn = document.createElement('button');
+        btn.className = 'btn-action';
+        btn.style.backgroundColor = canAfford ? '#b89742' : '#7f8c8d';
+        btn.style.width = '100%';
+        btn.style.marginBottom = '10px';
+        btn.disabled = !canAfford;
+        
+        btn.innerHTML = `
+            <strong>${currentProject.title}</strong><br>
+            <span style="font-size: 0.8em; font-weight: normal;">${currentProject.description}</span><br>
+            <span style="font-size: 0.75em; display: block; margin-top: 5px;">
+                ${canAfford ? '✨ Clic pour entreprendre le Projet' : '🔒 Requis : ' + reqText.join(', ')}
+            </span>
+        `;
+
+        btn.addEventListener('click', () => {
+            if (canAfford) {
+                for (const [key, value] of Object.entries(currentProject.cost)) {
+                    if (key === 'hommes' || key === 'elfes') gameState.population[key] -= value;
+                    else gameState.resources[key] -= value;
+                }
+                if (!gameState.state.resolved_projects) gameState.state.resolved_projects = [];
+                gameState.state.resolved_projects.push(currentProject.id);
+                if (currentProject.effect) currentProject.effect(gameState);
+                addChronicle(`🌟 <strong>PROJET ACHEVÉ :</strong> ${currentProject.title}`);
+                updateUI();
+            }
+        });
+        container.appendChild(btn);
+    });
 }
 
 // ==========================================
@@ -368,7 +353,6 @@ export function showEventModal(eventObj) {
             addChronicle(`<em>${choice.log}</em>`);
 
             gameState.state.pending_events = gameState.state.pending_events.filter(e => e !== eventObj.id);
-
             if (!eventObj.repeatable) {
                 gameState.state.resolved_events.push(eventObj.id);
             }
@@ -376,10 +360,8 @@ export function showEventModal(eventObj) {
             modal.close();
             updateUI();
         });
-        
         choicesContainer.appendChild(btn);
     });
-
     modal.showModal();
 }
 
@@ -420,8 +402,6 @@ function updateRatesDisplay() {
     }
 
     let rates = { savoir: 0, richesse: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
-
-    // 🔴 1. On lit la capacité maximale enregistrée par le moteur
     const capHommes = gameState.population_max?.hommes || 30;
     const capElfes = gameState.population_max?.elfes || 0;
 
@@ -430,19 +410,16 @@ function updateRatesDisplay() {
         rates.espoir -= 5;
         rates.hommes -= 1;
     } else {
-        // 🔴 2. L'UI n'affiche la croissance QUE si la population est sous le plafond
         if (gameState.population.hommes < capHommes) {
             if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
             if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
         }
 
-        // L'attraction des Elfes pour l'UI (s'il y a de la place)
         if (gameState.population.elfes < capElfes && gameState.resources.espoir > 100) {
             rates.elfes += 0.2 * multiplier;
         }
 
         let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
-        
         rates.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole * malusRichesse;
         rates.savoir += (gameState.population.elfes * 0.1) * multiplier;
         rates.espoir -= 0.5;
@@ -459,18 +436,22 @@ function updateRatesDisplay() {
             }
         });
 
+        // Alignement strict du Héraut sur le moteur
         if (gameState.council.heraut && gameState.state.council_active.heraut) {
-            if (gameState.state.active_focus === 'agricole') rates.richesse += 20; 
-            else rates.espoir += 20;
+            const popScale = Math.max(1, (gameState.population.hommes + gameState.population.elfes) * 0.02);
+            if (gameState.state.active_focus === 'agricole') rates.richesse += 20 * popScale; 
+            else rates.espoir += 20 * popScale;
         }
     }
     
     if (gameState.state.shadow_level >= 80 && gameState.resources.espoir >= 500) {
         rates.renom += 5 * multiplier;
     }
+    
     if (gameState.council.heraut && gameState.state.council_active.heraut && gameState.state.is_twilight) {
-         rates.espoir += 30; 
-         rates.renom += 10;  
+        const popScale = Math.max(1, (gameState.population.hommes + gameState.population.elfes) * 0.02);
+        rates.espoir += 30 * popScale; 
+        rates.renom += 10 * popScale;  
     }
 
     gameState.state.current_rates = rates;

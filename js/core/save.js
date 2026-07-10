@@ -1,48 +1,42 @@
 // js/core/save.js
-import { gameState } from './state.js';
-
-const SAVE_KEY = 'arda_legacy_save';
+import { gameState, initialState } from './state.js';
 
 export function saveGame() {
-    // 🆕 On enregistre l'heure exacte à la milliseconde près avant de sauvegarder
     gameState.meta.last_save_time = Date.now();
-    const dataToSave = JSON.stringify(gameState);
-    localStorage.setItem(SAVE_KEY, dataToSave);
+    localStorage.setItem('tolkien_incremental_save', JSON.stringify(gameState));
 }
 
 export function loadGame() {
-    const savedData = localStorage.getItem(SAVE_KEY);
-    if (savedData) {
-        try {
-            const parsed = JSON.parse(savedData);
-            Object.assign(gameState.meta, parsed.meta);
-            Object.assign(gameState.state, parsed.state);
-            Object.assign(gameState.resources, parsed.resources);
-            Object.assign(gameState.population, parsed.population);
-            Object.assign(gameState.buildings, parsed.buildings);
-            
-            gameState.state.is_paused = false;
-        } catch (e) {
-            console.error("Erreur de chargement", e);
-        }
+    const saved = localStorage.getItem('tolkien_incremental_save');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        Object.assign(gameState, parsed);
     }
 }
 
-export function triggerPrestige(score) {
-    const eclatsGagnes = Math.floor(score / 1000);
-    const totalEclats = (gameState.meta.prestige_eclats || 0) + eclatsGagnes;
+export function triggerPrestige() {
+    // Calcul strict : 1 éclat pour 1000 points de score
+    const score = (gameState.resources.renom * 2) + (gameState.resources.savoir * 5);
+    const newEclats = Math.floor(score / 1000);
     
-    localStorage.removeItem(SAVE_KEY);
+    const eclatsCumules = (gameState.meta.prestige_eclats || 0) + newEclats;
+    const redemption = gameState.meta.redemption_achieved;
+
+    // Reset profond de l'état pour éviter les fuites de mémoire
+    Object.assign(gameState, JSON.parse(JSON.stringify(initialState)));
     
-    const newGamePlusData = {
-        meta: { 
-            current_age: 1, 
-            legacies: [], 
-            prestige_eclats: totalEclats, 
-            redemption_achieved: false,
-            last_save_time: Date.now()
-        }
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(newGamePlusData));
-    location.reload();
+    // Conservation stricte des métadonnées
+    gameState.meta.prestige_eclats = eclatsCumules;
+    gameState.meta.redemption_achieved = redemption;
+    gameState.meta.current_age += 1;
+    
+    saveGame();
+    window.location.reload();
+}
+
+export function hardReset() {
+    if (confirm("Effacer toute l'histoire de votre domaine ? Cette action est irréversible.")) {
+        localStorage.removeItem('tolkien_incremental_save');
+        window.location.reload();
+    }
 }
