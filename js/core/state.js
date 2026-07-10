@@ -1,12 +1,13 @@
 // js/core/state.js
 
-export const gameState = {
+// 1. On définit l'état de base, vierge, et on l'exporte (Nécessaire pour le Prestige)
+export const initialState = {
     meta: {
         current_age: 1,
         legacies: [],
         prestige_eclats: 0,
         redemption_achieved: false,
-        last_save_time: Date.now()
+        last_save_time: null // Plus propre de démarrer à null
     },
     state: {
         current_year: 1,
@@ -18,6 +19,7 @@ export const gameState = {
         bonus_multiplicateur: 1.0,
         resolved_events: [],
         pending_events: [],
+        resolved_projects: [], // ⚠️ Important pour éviter des bugs avec .includes()
         council_active: {
             senechal: true,
             batisseur: true,
@@ -54,3 +56,6 @@ export const gameState = {
         heraut: false
     }
 };
+
+// 2. On exporte l'état courant (qui est un clone profond de l'état initial au démarrage)
+export const gameState = JSON.parse(JSON.stringify(initialState));
