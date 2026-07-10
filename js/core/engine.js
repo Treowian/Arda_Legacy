@@ -11,6 +11,12 @@ const TICK_RATE = 1000;
 
 export function initEngine() {
     console.log("⚙️ Moteur temporel démarré...");
+    
+    // 🔴 COUPE-CIRCUIT : Détruit l'ancienne boucle si elle existe déjà
+    if (gameLoop) {
+        clearInterval(gameLoop);
+    }
+
     simulateOfflineProgress(); 
     gameLoop = setInterval(gameTick, TICK_RATE);
 }
