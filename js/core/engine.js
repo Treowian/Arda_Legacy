@@ -185,13 +185,29 @@ function processEconomy() {
         gameState.resources.renom += 5 * multiplier;
     }
 
-    if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
+    // --- 🔴 DÉBUT DE L'AJOUT : LA PRESSION DE L'OMBRE ---
+    
+    // 1. La Pression Passive
+    const baseShadowPressure = 0.1;
+    // Le plafond augmente selon l'Âge (Âge 1 = 0.25, Âge 2 = 0.50, Âge 3 = 0.75)
+    const maxPressureForAge = gameState.meta.current_age * 0.25; 
+    // La difficulté monte très lentement, mais se bloque au plafond de l'Âge actuel
+    const timeShadowPressure = Math.min(maxPressureForAge, gameState.state.current_year * 0.0005); 
+    
+    gameState.state.shadow_level += (baseShadowPressure + timeShadowPressure) * multiplier;
+
+    // 2. Les Défenses du Joueur
+    if (gameState.state.active_focus === 'frontalier') {
+        gameState.state.shadow_level -= 0.5;
+    }
     const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
     gameState.state.shadow_level -= auraEspoir * multiplier;
 
+    // --- 🔴 FIN DE L'AJOUT ---
+
     // --- 1. CALCUL DES PLAFONDS DE POPULATION ---
     let capHommes = 30; 
-    let capElfes = 0;   
+    let capElfes = 0; 
 
     BUILDINGS.forEach(b => {
         const owned = gameState.buildings[b.id] || 0;
