@@ -5,7 +5,7 @@ export const BUILDINGS = [
     {
         id: "bld_ferme",
         name: "Fermes Agricoles",
-        description: "Génère de la Richesse. Nécessite de la main d'œuvre et de l'optimisme.",
+        description: "Génère de la Richesse.",
         req_age: 1,
         baseCost: { hommes: 5, espoir: 10 },
         multiplier: 1.15,
@@ -15,7 +15,7 @@ export const BUILDINGS = [
     {
         id: "bld_mine",
         name: "Carrières de Pierre",
-        description: "Génère Richesse et Renom, mais épuise vos travailleurs.",
+        description: "Génère de la Richesse et du Renom.",
         req_age: 1,
         baseCost: { richesse: 200, hommes: 15 },
         multiplier: 1.20,
@@ -25,7 +25,7 @@ export const BUILDINGS = [
     {
         id: "bld_bibliotheque",
         name: "Archives du Savoir",
-        description: "Génère du Savoir. Importer des manuscrits coûte très cher.",
+        description: "Génère du Savoir.",
         req_age: 1,
         baseCost: { richesse: 600, renom: 20 },
         multiplier: 1.25,
@@ -37,7 +37,7 @@ export const BUILDINGS = [
     {
         id: "bld_forge",
         name: "Forges Elfiques",
-        description: "Génère beaucoup de Richesse et de Savoir. Nécessite l'alliance des deux peuples.",
+        description: "Génère de la Richesse et du Savoir.",
         req_age: 2,
         baseCost: { richesse: 2500, hommes: 50, elfes: 10 },
         multiplier: 1.30,
@@ -47,7 +47,7 @@ export const BUILDINGS = [
     {
         id: "bld_caserne",
         name: "Garnisons de Veille",
-        description: "Génère du Renom et maintient l'Espoir. L'armée coûte de l'or.",
+        description: "Génère du Renom et de l'Espoir.",
         req_age: 2,
         baseCost: { richesse: 4000, hommes: 80 },
         multiplier: 1.35,
@@ -57,7 +57,7 @@ export const BUILDINGS = [
     {
         id: "bld_sanctuaire",
         name: "Sanctuaires Guérisseurs",
-        description: "Protège l'Espoir et génère du Savoir antique.",
+        description: "Génère de l'Espoir et du Savoir.",
         req_age: 2,
         baseCost: { richesse: 6000, renom: 250, elfes: 20 },
         multiplier: 1.40,
@@ -69,7 +69,7 @@ export const BUILDINGS = [
     {
         id: "bld_academie",
         name: "Académie des Sages",
-        description: "Production massive de Savoir. Un gouffre financier pour l'État.",
+        description: "Génère massivement du Savoir.",
         req_age: 3,
         baseCost: { richesse: 35000, renom: 1500 },
         multiplier: 1.45,
@@ -79,7 +79,7 @@ export const BUILDINGS = [
     {
         id: "bld_place_armes",
         name: "Citadelles de Guerre",
-        description: "Production massive de Renom face aux Ténèbres.",
+        description: "Génère massivement du Renom.",
         req_age: 3,
         baseCost: { richesse: 45000, hommes: 300, espoir: 500 },
         multiplier: 1.50,

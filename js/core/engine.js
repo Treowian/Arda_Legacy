@@ -6,7 +6,8 @@ import { BUILDINGS } from '../data/buildings.js';
 import { saveGame } from './save.js';
 
 let gameLoop;
-const TICK_RATE = 10000; 
+// 1000ms = 1 seconde = 1 année en jeu (standard pour les jeux incrémentaux)
+const TICK_RATE = 1000; 
 
 export function initEngine() {
     console.log("⚙️ Moteur temporel démarré...");
@@ -22,7 +23,7 @@ function simulateOfflineProgress() {
     const missedTicks = Math.floor(diff / TICK_RATE);
     
     if (missedTicks > 0) {
-        const safeTicks = Math.min(missedTicks, 4320);
+        const safeTicks = Math.min(missedTicks, 4320); // Cap de sécurité (ex: 12h)
         const isCapped = missedTicks > 4320;
         
         const richesBefore = gameState.resources.richesse;
@@ -41,7 +42,7 @@ function simulateOfflineProgress() {
         const savoirGained = Math.floor(gameState.resources.savoir - savoirBefore);
         
         let msg = `Vous êtes de retour !\n\n`;
-        if (isCapped) msg += `⏳ Vos entrepôts ont débordé (Limite de 12h atteinte).\n`;
+        if (isCapped) msg += `⏳ Vos entrepôts ont débordé (Limite de temps atteinte).\n`;
         msg += `Pendant ce temps (${safeTicks} années), votre royaume a généré :\n+ ${richesGained} Richesse\n+ ${savoirGained} Savoir`;
         
         alert(msg);
@@ -82,20 +83,25 @@ function processModifiers() {
 }
 
 function processCouncilLogic() {
+    // Garde-fou de sécurité
     if (!gameState.state.council_active) {
-        gameState.state.council_active = { senechal: true, batisseur: true, heraut: true };
+        gameState.state.council_active = { senechal: false, batisseur: false, heraut: false };
     }
 
+    // --- LOGIQUE DU SÉNÉCHAL ---
     if (gameState.council.senechal && gameState.state.council_active.senechal) {
-        if (gameState.state.shadow_level >= 70 && gameState.state.active_focus !== 'frontalier') {
+        if (gameState.state.shadow_level >= 50 && gameState.state.active_focus !== 'frontalier') {
             gameState.state.active_focus = 'frontalier';
-            addChronicle("📜 <em>Le Sénéchal ordonne le Focus Frontalier pour contrer la menace.</em>");
+            addChronicle("📜 <em>Le Sénéchal décrète un Focus Frontalier face à la menace de l'Ombre.</em>");
+            updateUI(); // Force la mise à jour visuelle des boutons radio
         } else if (gameState.state.shadow_level <= 30 && gameState.state.active_focus !== 'agricole') {
             gameState.state.active_focus = 'agricole';
-            addChronicle("📜 <em>Le Sénéchal ré-alloue les bras vers le Focus Agricole.</em>");
+            addChronicle("🌾 <em>Le Sénéchal relance l'économie via un Focus Agricole.</em>");
+            updateUI(); // Force la mise à jour visuelle des boutons radio
         }
     }
 
+    // --- LOGIQUE DU HÉRAUT ---
     if (gameState.council.heraut && gameState.state.council_active.heraut) {
         for(let i = 0; i < 10; i++) {
             if (gameState.state.is_twilight) {
@@ -108,26 +114,40 @@ function processCouncilLogic() {
         }
     }
 
+    // --- LOGIQUE DU BÂTISSEUR ---
     if (gameState.council.batisseur && gameState.state.council_active.batisseur && !gameState.state.is_twilight) {
-        // 🔵 CORRECTION : Documenté. On reverse l'array pour prioriser les bâtiments haut-tiers (ROI).
+        // On reverse l'array pour prioriser les bâtiments haut-tiers (meilleur retour sur investissement).
         const prioritizedBuildings = [...BUILDINGS].reverse();
         
         prioritizedBuildings.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
             let canAffordSafe = true;
 
+            // 🔴 CIBLAGE STRICT POUR L'ACHAT AUTOMATIQUE
             for (const [res, baseValue] of Object.entries(b.baseCost)) {
                 const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                if (gameState.resources[res] < (cost * 3)) canAffordSafe = false;
+                
+                const currentAmount = (res === 'hommes' || res === 'elfes') 
+                    ? (gameState.population[res] || 0) 
+                    : (gameState.resources[res] || 0);
+
+                // Le Bâtisseur garde une marge de sécurité (achète seulement s'il a 3x le prix)
+                if (currentAmount < (cost * 3)) canAffordSafe = false;
             }
 
-            // 🔴 CORRECTION IA SUICIDAIRE : Ne pas acheter de Nains si l'Ombre est déjà menaçante
+            // Ne pas acheter d'avant-postes nains si l'Ombre est déjà menaçante
             if (b.id === 'nains' && gameState.state.shadow_level > 50) return;
 
             if (canAffordSafe && b.isVisible(gameState)) {
+                // 🔴 DÉDUCTION STRICTE POUR LE PAIEMENT AUTOMATIQUE
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                    gameState.resources[res] -= cost;
+                    
+                    if (res === 'hommes' || res === 'elfes') {
+                        gameState.population[res] -= cost;
+                    } else {
+                        gameState.resources[res] -= cost;
+                    }
                 }
                 gameState.buildings[b.id]++;
             }
@@ -164,12 +184,12 @@ function processEconomy() {
         gameState.resources.renom += 5 * multiplier;
     }
 
-    // 🔴 CORRECTION SOFTLOCK : Ces mécaniques opèrent MAINTENANT indépendamment de is_twilight
+    // Focus et Aura d'Espoir repoussent passivement l'Ombre
     if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
     const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
     gameState.state.shadow_level -= auraEspoir * multiplier;
 
-    // Calcul des effets des bâtiments sur l'Ombre (actifs même en Crépuscule)
+    // Calcul des effets des bâtiments sur l'Ombre
     BUILDINGS.forEach(b => {
         const owned = gameState.buildings[b.id] || 0;
         if (owned > 0) {
@@ -199,14 +219,19 @@ function processEconomy() {
                     if (res === 'richesse') finalAmount *= malusRichesse;
                     if (res === 'espoir') finalAmount *= malusEspoir;
                     
-                    if (gameState.resources[res] !== undefined) gameState.resources[res] += finalAmount;
-                    if (gameState.population[res] !== undefined) gameState.population[res] += finalAmount;
+                    // 🔴 CIBLAGE STRICT DE LA PRODUCTION
+                    if (res === 'hommes' || res === 'elfes') {
+                        gameState.population[res] += finalAmount;
+                    } else {
+                        gameState.resources[res] += finalAmount;
+                    }
                 }
             }
         });
         gameState.resources.espoir -= 0.5; 
     }
     
+    // Bornage des valeurs pour empêcher le négatif
     gameState.resources.richesse = Math.max(0, gameState.resources.richesse);
     gameState.resources.espoir = Math.max(0, gameState.resources.espoir);
     gameState.population.hommes = Math.max(0, gameState.population.hommes);
@@ -214,32 +239,28 @@ function processEconomy() {
     gameState.state.shadow_level = Math.max(0, Math.min(100, gameState.state.shadow_level));
 }
 
-// Variable globale pour garder en mémoire l'heure du dernier clic
+// Variable globale pour traquer le temps du dernier clic
 let lastClickTime = 0;
-
-// Limite stricte : 100 ms entre chaque clic (soit 10 clics maximum par seconde)
+// Limite stricte : 100ms entre chaque clic (Max 10 clics / seconde)
 const CLICK_COOLDOWN = 100; 
 
 export function handleManualClick() {
-    // 🔴 1. Bouclier Anti-Spam (Throttling)
     const now = Date.now();
     if (now - lastClickTime < CLICK_COOLDOWN) {
-        return; // Ignore silencieusement le clic si le joueur va trop vite
+        return; 
     }
     lastClickTime = now;
 
-    // 🔴 2. Ta logique originelle (intacte)
     if (gameState.state.is_paused) return;
     
     const baseValue = 2;
-    const scaling = gameState.population.hommes * 0.05; // Le clic scale avec la population
+    const scaling = gameState.population.hommes * 0.05; 
     const totalGain = baseValue + scaling;
 
     if (gameState.state.active_focus === 'agricole') {
         gameState.resources.richesse += totalGain;
     } else {
         gameState.resources.espoir += totalGain;
-        // On s'assure que l'Ombre ne descend pas sous 0
         gameState.state.shadow_level = Math.max(0, gameState.state.shadow_level - 0.1);
     }
     
@@ -247,7 +268,6 @@ export function handleManualClick() {
 }
 
 export function spawnEvent() {
-    // 🔴 CORRECTION : On bloque la génération si le joueur a déjà 4 événements en attente
     if (gameState.state.pending_events.length >= 4) return;
 
     const validEvents = EVENTS.filter(event => {
@@ -259,11 +279,8 @@ export function spawnEvent() {
         const randomIndex = Math.floor(Math.random() * validEvents.length);
         const eventId = validEvents[randomIndex].id;
         
-        // 🛡️ Petite sécurité bonus : on évite d'avoir deux fois le même événement dans la file
         if (!gameState.state.pending_events.includes(eventId)) {
             gameState.state.pending_events.push(eventId);
-            
-            // J'ai profité pour corriger l'orthographe ici aussi au cas où !
             import('../ui/dom.js').then(module => {
                 module.addChronicle(`📜 <em>Un messager arrive. Un événement requiert votre attention !</em>`);
             });

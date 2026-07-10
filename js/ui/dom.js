@@ -70,6 +70,14 @@ export function updateUI() {
 
     updateRatesDisplay();
 
+// -- Synchro stricte des boutons radio Focus --
+    const radios = document.querySelectorAll('input[name="focus"]');
+    radios.forEach(radio => {
+        if (radio.value === gameState.state.active_focus && !radio.checked) {
+            radio.checked = true; // Force le visuel à correspondre au moteur
+        }
+    });
+
     // -- Affichage de l'Héritage (Prestige) --
     const prestigeDisplay = document.getElementById('ui-prestige-display');
     if (prestigeDisplay) {
