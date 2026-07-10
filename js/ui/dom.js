@@ -52,6 +52,12 @@ export function updateUI() {
     document.getElementById('ui-res-richesse').textContent = Math.floor(gameState.resources.richesse);
     document.getElementById('ui-res-renom').textContent = Math.floor(gameState.resources.renom);
     document.getElementById('ui-res-espoir').textContent = Math.floor(gameState.resources.espoir);
+
+    // --- SYNCHRONISATION DES DÉCRETS (FOCUS) ---
+    const radios = document.querySelectorAll('input[name="focus"]');
+    radios.forEach(radio => {
+        radio.checked = (radio.value === gameState.state.active_focus);
+    });
     
     const capHommes = gameState.population_max?.hommes || 30;
     const capElfes = gameState.population_max?.elfes || 0;
