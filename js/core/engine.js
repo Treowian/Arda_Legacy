@@ -62,7 +62,9 @@ function gameTick() {
     processCouncilLogic(); 
     processEconomy();
 
-    if (Math.random() < 0.15) spawnEvent();
+    // 🔴 CORRECTION : 3% de chances au lieu de 15%. 
+    // Un événement apparaîtra en moyenne tous les 33 ans (33 secondes).
+    if (Math.random() < 0.03) spawnEvent();
 
     updateUI();
     saveGame();
