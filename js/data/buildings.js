@@ -33,6 +33,28 @@ export const BUILDINGS = [
         isVisible: (s) => true
     },
 
+    // --- BÂTIMENTS DE POPULATION (LOGEMENTS) ---
+    {
+        id: "bld_hameau",
+        name: "Hameaux Fortifiés",
+        description: "Augmente la capacité maximale d'Hommes de +20.",
+        req_age: 1,
+        baseCost: { richesse: 150, renom: 10 },
+        multiplier: 1.30, // Coût exponentiel pour éviter le spam
+        capacity: { hommes: 20 },
+        isVisible: (s) => true
+    },
+    {
+        id: "bld_refuge",
+        name: "Refuges Sylvestres",
+        description: "Attire les Elfes errants. Augmente la capacité d'Elfes de +5.",
+        req_age: 1,
+        baseCost: { richesse: 800, renom: 50 },
+        multiplier: 1.45, // Très cher car les Elfes sont puissants
+        capacity: { elfes: 5 },
+        isVisible: (s) => true
+    },
+
     // --- ÂGE 2 ---
     {
         id: "bld_forge",

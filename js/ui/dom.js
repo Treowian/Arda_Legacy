@@ -59,24 +59,33 @@ export function initUI() {
 export function updateUI() {
     if (!document.getElementById('ui-year')) return; 
 
+    // -- Ressources de base --
     document.getElementById('ui-year').textContent = `An ${gameState.state.current_year}`;
     document.getElementById('ui-res-savoir').textContent = Math.floor(gameState.resources.savoir);
     document.getElementById('ui-res-richesse').textContent = Math.floor(gameState.resources.richesse);
     document.getElementById('ui-res-renom').textContent = Math.floor(gameState.resources.renom);
     document.getElementById('ui-res-espoir').textContent = Math.floor(gameState.resources.espoir);
     
-    document.getElementById('ui-pop-hommes').textContent = Math.floor(gameState.population.hommes);
-    document.getElementById('ui-pop-elfes').textContent = Math.floor(gameState.population.elfes);
+    // 🔴 DÉBUT DU NOUVEAU BLOC POPULATION 🔴
+    const capHommes = gameState.population_max?.hommes || 30;
+    const capElfes = gameState.population_max?.elfes || 0;
+    
+    const elHommes = document.getElementById('ui-pop-hommes');
+    const elElfes = document.getElementById('ui-pop-elfes');
+
+    if (elHommes) {
+        elHommes.textContent = `${Math.floor(gameState.population.hommes)} / ${capHommes}`;
+        // UX : Met en orange si on est au max pour inciter à construire
+        elHommes.style.color = (gameState.population.hommes >= capHommes) ? '#e67e22' : 'inherit';
+    }
+    
+    if (elElfes) {
+        elElfes.textContent = `${Math.floor(gameState.population.elfes)} / ${capElfes}`;
+        elElfes.style.color = (gameState.population.elfes >= capElfes && capElfes > 0) ? '#e67e22' : 'inherit';
+    }
+    // 🔴 FIN DU NOUVEAU BLOC POPULATION 🔴
 
     updateRatesDisplay();
-
-// -- Synchro stricte des boutons radio Focus --
-    const radios = document.querySelectorAll('input[name="focus"]');
-    radios.forEach(radio => {
-        if (radio.value === gameState.state.active_focus && !radio.checked) {
-            radio.checked = true; // Force le visuel à correspondre au moteur
-        }
-    });
 
     // -- Affichage de l'Héritage (Prestige) --
     const prestigeDisplay = document.getElementById('ui-prestige-display');
@@ -412,13 +421,25 @@ function updateRatesDisplay() {
 
     let rates = { savoir: 0, richesse: 0, renom: 0, espoir: 0, hommes: 0, elfes: 0 };
 
+    // 🔴 1. On lit la capacité maximale enregistrée par le moteur
+    const capHommes = gameState.population_max?.hommes || 30;
+    const capElfes = gameState.population_max?.elfes || 0;
+
     if (gameState.state.is_twilight) {
         rates.richesse -= 50;
         rates.espoir -= 5;
         rates.hommes -= 1;
     } else {
-        if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
-        if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
+        // 🔴 2. L'UI n'affiche la croissance QUE si la population est sous le plafond
+        if (gameState.population.hommes < capHommes) {
+            if (gameState.resources.espoir > 200) rates.hommes += 0.5 * multiplier;
+            if (gameState.resources.espoir > 1000) rates.hommes += 1.5 * multiplier;
+        }
+
+        // L'attraction des Elfes pour l'UI (s'il y a de la place)
+        if (gameState.population.elfes < capElfes && gameState.resources.espoir > 100) {
+            rates.elfes += 0.2 * multiplier;
+        }
 
         let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
         

@@ -6,7 +6,7 @@ import { BUILDINGS } from '../data/buildings.js';
 import { saveGame } from './save.js';
 
 let gameLoop;
-// 1000ms = 1 seconde = 1 année en jeu (standard pour les jeux incrémentaux)
+// 1000ms = 1 seconde = 1 année en jeu
 const TICK_RATE = 1000; 
 
 export function initEngine() {
@@ -83,7 +83,6 @@ function processModifiers() {
 }
 
 function processCouncilLogic() {
-    // Garde-fou de sécurité
     if (!gameState.state.council_active) {
         gameState.state.council_active = { senechal: false, batisseur: false, heraut: false };
     }
@@ -93,11 +92,11 @@ function processCouncilLogic() {
         if (gameState.state.shadow_level >= 50 && gameState.state.active_focus !== 'frontalier') {
             gameState.state.active_focus = 'frontalier';
             addChronicle("📜 <em>Le Sénéchal décrète un Focus Frontalier face à la menace de l'Ombre.</em>");
-            updateUI(); // Force la mise à jour visuelle des boutons radio
+            updateUI(); 
         } else if (gameState.state.shadow_level <= 30 && gameState.state.active_focus !== 'agricole') {
             gameState.state.active_focus = 'agricole';
             addChronicle("🌾 <em>Le Sénéchal relance l'économie via un Focus Agricole.</em>");
-            updateUI(); // Force la mise à jour visuelle des boutons radio
+            updateUI(); 
         }
     }
 
@@ -116,30 +115,24 @@ function processCouncilLogic() {
 
     // --- LOGIQUE DU BÂTISSEUR ---
     if (gameState.council.batisseur && gameState.state.council_active.batisseur && !gameState.state.is_twilight) {
-        // On reverse l'array pour prioriser les bâtiments haut-tiers (meilleur retour sur investissement).
         const prioritizedBuildings = [...BUILDINGS].reverse();
         
         prioritizedBuildings.forEach(b => {
             const owned = gameState.buildings[b.id] || 0;
             let canAffordSafe = true;
 
-            // 🔴 CIBLAGE STRICT POUR L'ACHAT AUTOMATIQUE
             for (const [res, baseValue] of Object.entries(b.baseCost)) {
                 const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
-                
                 const currentAmount = (res === 'hommes' || res === 'elfes') 
                     ? (gameState.population[res] || 0) 
                     : (gameState.resources[res] || 0);
 
-                // Le Bâtisseur garde une marge de sécurité (achète seulement s'il a 3x le prix)
                 if (currentAmount < (cost * 3)) canAffordSafe = false;
             }
 
-            // Ne pas acheter d'avant-postes nains si l'Ombre est déjà menaçante
             if (b.id === 'nains' && gameState.state.shadow_level > 50) return;
 
             if (canAffordSafe && b.isVisible(gameState)) {
-                // 🔴 DÉDUCTION STRICTE POUR LE PAIEMENT AUTOMATIQUE
                 for (const [res, baseValue] of Object.entries(b.baseCost)) {
                     const cost = Math.floor(baseValue * Math.pow(b.multiplier, owned));
                     
@@ -184,30 +177,55 @@ function processEconomy() {
         gameState.resources.renom += 5 * multiplier;
     }
 
-    // Focus et Aura d'Espoir repoussent passivement l'Ombre
     if (gameState.state.active_focus === 'frontalier') gameState.state.shadow_level -= 0.5;
     const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
     gameState.state.shadow_level -= auraEspoir * multiplier;
 
-    // Calcul des effets des bâtiments sur l'Ombre
+    // --- 1. CALCUL DES PLAFONDS DE POPULATION ---
+    let capHommes = 30; 
+    let capElfes = 0;   
+
     BUILDINGS.forEach(b => {
         const owned = gameState.buildings[b.id] || 0;
         if (owned > 0) {
             if (b.id === 'nains') gameState.state.shadow_level += (0.5 * owned);
             if (b.id === 'ents') gameState.state.shadow_level -= (1.0 * owned);
+            
+            // Calcul de la capacité de logement
+            if (b.capacity) {
+                if (b.capacity.hommes) capHommes += (b.capacity.hommes * owned);
+                if (b.capacity.elfes) capElfes += (b.capacity.elfes * owned);
+            }
         }
     });
 
+    if (!gameState.population_max) gameState.population_max = {};
+    gameState.population_max.hommes = capHommes;
+    gameState.population_max.elfes = capElfes;
+
+    // --- 2. CROISSANCE ET PRODUCTION ---
     if (gameState.state.is_twilight) {
         gameState.resources.richesse -= 50; 
         gameState.resources.espoir -= 5;
         gameState.population.hommes -= 1;
     } else {
-        if (gameState.resources.espoir > 200) gameState.population.hommes += 0.5 * multiplier;
-        if (gameState.resources.espoir > 1000) gameState.population.hommes += 1.5 * multiplier;
-        
-        let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
+        // A. Croissance des Hommes (Bridée par le Soft Cap)
+        if (gameState.population.hommes < capHommes) {
+            let natHommes = 0;
+            if (gameState.resources.espoir > 200) natHommes += 0.5 * multiplier;
+            if (gameState.resources.espoir > 1000) natHommes += 1.5 * multiplier;
+            // On ajoute la croissance sans jamais dépasser le plafond
+            gameState.population.hommes = Math.min(capHommes, gameState.population.hommes + natHommes);
+        }
 
+        // B. Croissance des Elfes (Bridée par le Soft Cap)
+        if (gameState.population.elfes < capElfes && gameState.resources.espoir > 100) {
+            let natElfes = 0.2 * multiplier; 
+            gameState.population.elfes = Math.min(capElfes, gameState.population.elfes + natElfes);
+        }
+
+        // C. Production Classique
+        let bonusAgricole = gameState.state.active_focus === 'agricole' ? 1.2 : 1.0;
         gameState.resources.richesse += (gameState.population.hommes * 0.1) * multiplier * bonusAgricole * malusRichesse;
         gameState.resources.savoir += (gameState.population.elfes * 0.1) * multiplier;
         
@@ -219,10 +237,8 @@ function processEconomy() {
                     if (res === 'richesse') finalAmount *= malusRichesse;
                     if (res === 'espoir') finalAmount *= malusEspoir;
                     
-                    // 🔴 CIBLAGE STRICT DE LA PRODUCTION
-                    if (res === 'hommes' || res === 'elfes') {
-                        gameState.population[res] += finalAmount;
-                    } else {
+                    // Les bâtiments ne produisent plus directement de la population
+                    if (res !== 'hommes' && res !== 'elfes') {
                         gameState.resources[res] += finalAmount;
                     }
                 }
@@ -231,7 +247,8 @@ function processEconomy() {
         gameState.resources.espoir -= 0.5; 
     }
     
-    // Bornage des valeurs pour empêcher le négatif
+    // --- 3. BORNAGE DES VALEURS ---
+    // Empêche le négatif, mais NE TUE PAS la population si un événement dépasse le plafond
     gameState.resources.richesse = Math.max(0, gameState.resources.richesse);
     gameState.resources.espoir = Math.max(0, gameState.resources.espoir);
     gameState.population.hommes = Math.max(0, gameState.population.hommes);
@@ -239,9 +256,7 @@ function processEconomy() {
     gameState.state.shadow_level = Math.max(0, Math.min(100, gameState.state.shadow_level));
 }
 
-// Variable globale pour traquer le temps du dernier clic
 let lastClickTime = 0;
-// Limite stricte : 100ms entre chaque clic (Max 10 clics / seconde)
 const CLICK_COOLDOWN = 100; 
 
 export function handleManualClick() {
