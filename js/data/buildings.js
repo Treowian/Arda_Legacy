@@ -37,21 +37,21 @@ export const BUILDINGS = [
     {
         id: "bld_hameau",
         name: "Hameaux Fortifiés",
-        description: "Augmente la capacité maximale d'Hommes de +20.",
+        description: "Augmente la capacité maximale d'Hommes de +50.",
         req_age: 1,
         baseCost: { richesse: 150, renom: 10 },
-        multiplier: 1.30, // Coût exponentiel pour éviter le spam
-        capacity: { hommes: 20 },
+        multiplier: 1.20, // 🔴 Baisse radicale (était 1.30)
+        capacity: { hommes: 50 }, // 🔴 Augmentation (était 20)
         isVisible: (s) => true
     },
     {
         id: "bld_refuge",
         name: "Refuges Sylvestres",
-        description: "Attire les Elfes errants. Augmente la capacité d'Elfes de +5.",
+        description: "Attire les Elfes errants. Augmente la capacité d'Elfes de +25.",
         req_age: 1,
         baseCost: { richesse: 800, renom: 50 },
-        multiplier: 1.45, // Très cher car les Elfes sont puissants
-        capacity: { elfes: 5 },
+        multiplier: 1.22, // 🔴 Baisse radicale (était 1.45)
+        capacity: { elfes: 25 }, // 🔴 Augmentation (était 5)
         isVisible: (s) => true
     },
 
