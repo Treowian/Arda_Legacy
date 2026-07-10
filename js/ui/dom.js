@@ -48,6 +48,13 @@ export function updateUI() {
     if (!document.getElementById('ui-year')) return; 
 
     document.getElementById('ui-year').textContent = `An ${gameState.state.current_year}`;
+    // --- MISE À JOUR DU TITRE DE L'ÂGE ---
+    const ageTitleEl = document.getElementById('ui-age-title');
+    if (ageTitleEl) {
+        const ageNames = ["", "Âge I : L'Aube", "Âge II : L'Alliance", "Âge III : Le Déclin", "Âge IV : Le Renouveau"];
+        const ageIndex = Math.min(gameState.meta.current_age, ageNames.length - 1);
+        ageTitleEl.textContent = ageNames[ageIndex];
+    }
     document.getElementById('ui-res-savoir').textContent = Math.floor(gameState.resources.savoir);
     document.getElementById('ui-res-richesse').textContent = Math.floor(gameState.resources.richesse);
     document.getElementById('ui-res-renom').textContent = Math.floor(gameState.resources.renom);
