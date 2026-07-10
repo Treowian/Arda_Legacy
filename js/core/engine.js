@@ -187,20 +187,21 @@ function processEconomy() {
 
     // --- 🔴 DÉBUT DE L'AJOUT : LA PRESSION DE L'OMBRE ---
     
-    // 1. La Pression Passive
+    // --- 1. LA PRESSION DE L'OMBRE ---
     const baseShadowPressure = 0.1;
-    // Le plafond augmente selon l'Âge (Âge 1 = 0.25, Âge 2 = 0.50, Âge 3 = 0.75)
     const maxPressureForAge = gameState.meta.current_age * 0.25; 
-    // La difficulté monte très lentement, mais se bloque au plafond de l'Âge actuel
     const timeShadowPressure = Math.min(maxPressureForAge, gameState.state.current_year * 0.0005); 
     
-    gameState.state.shadow_level += (baseShadowPressure + timeShadowPressure) * multiplier;
+    // 🔴 CORRECTION 1 : On retire le "* multiplier". L'Ombre a sa propre force fixe.
+    gameState.state.shadow_level += (baseShadowPressure + timeShadowPressure);
 
-    // 2. Les Défenses du Joueur
+    // --- 2. LES DÉFENSES DU JOUEUR ---
     if (gameState.state.active_focus === 'frontalier') {
         gameState.state.shadow_level -= 0.5;
     }
-    const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 1000) * 0.15);
+    
+    // 🔴 CORRECTION 2 : L'Aura s'active dès 100 d'Espoir au lieu de 1000
+    const auraEspoir = Math.max(0, Math.log10(Math.max(1, gameState.resources.espoir) / 100) * 0.15);
     gameState.state.shadow_level -= auraEspoir * multiplier;
 
     // --- 🔴 FIN DE L'AJOUT ---
