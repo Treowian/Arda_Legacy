@@ -39,7 +39,14 @@ export function triggerPrestige() {
 
 export function hardReset() {
     if (confirm("Effacer toute l'histoire de votre domaine ? Cette action est irréversible.")) {
+        
+        // 🔴 1. On injecte le poison : on écrase la mémoire vive avec le modèle vierge
+        Object.assign(gameState, JSON.parse(JSON.stringify(initialState)));
+        
+        // 🔴 2. On détruit le fichier de sauvegarde
         localStorage.removeItem('tolkien_incremental_save');
+        
+        // 🔴 3. On recharge la page (même si une auto-save se déclenche ici, elle sauvegardera le modèle vierge !)
         window.location.reload();
     }
 }
