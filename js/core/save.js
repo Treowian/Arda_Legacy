@@ -15,23 +15,23 @@ export function loadGame() {
 }
 
 export function triggerPrestige() {
-    // Calcul du score de base
+    // 1. Calcul des éclats avec amortisseur (Racine carrée) pour éviter l'inflation
     const score = (gameState.resources.renom * 2) + (gameState.resources.savoir * 5);
-    
-    // 🔴 CORRECTION : Application d'une racine carrée (Math.sqrt) pour éviter l'inflation infinie
     const baseEclats = score / 1000;
     const newEclats = Math.floor(Math.sqrt(baseEclats));
     
+    // 🔴 2. On sauvegarde TOUTES les métadonnées AVANT d'écraser l'état
     const eclatsCumules = (gameState.meta.prestige_eclats || 0) + newEclats;
     const redemption = gameState.meta.redemption_achieved;
+    const nextAge = gameState.meta.current_age + 1; // On calcule le prochain Âge correctement
 
-    // Reset profond de l'état pour éviter les fuites de mémoire
+    // 3. Reset profond de l'état (tout repasse à 0 / Âge 1)
     Object.assign(gameState, JSON.parse(JSON.stringify(initialState)));
     
-    // Conservation stricte des métadonnées
+    // 🔴 4. On réinjecte les métadonnées sauvegardées
     gameState.meta.prestige_eclats = eclatsCumules;
     gameState.meta.redemption_achieved = redemption;
-    gameState.meta.current_age += 1;
+    gameState.meta.current_age = nextAge; 
     
     saveGame();
     window.location.reload();
@@ -39,14 +39,11 @@ export function triggerPrestige() {
 
 export function hardReset() {
     if (confirm("Effacer toute l'histoire de votre domaine ? Cette action est irréversible.")) {
-        
-        // 🔴 1. On injecte le poison : on écrase la mémoire vive avec le modèle vierge
+        // 🔴 Le Baiser de la Mort : on écrase la mémoire vive avant de détruire le fichier
+        // Ainsi, si l'auto-save se déclenche pendant le rechargement, elle sauvegardera du vide.
         Object.assign(gameState, JSON.parse(JSON.stringify(initialState)));
         
-        // 🔴 2. On détruit le fichier de sauvegarde
         localStorage.removeItem('tolkien_incremental_save');
-        
-        // 🔴 3. On recharge la page (même si une auto-save se déclenche ici, elle sauvegardera le modèle vierge !)
         window.location.reload();
     }
 }
