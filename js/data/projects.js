@@ -67,7 +67,7 @@ export const PROJECTS = [
         is_twilight: false,
         title: "👑 La Voie des Hommes (Le Dominion)",
         description: "Forgez le Quatrième Âge, un empire mortel forgé dans l'acier.",
-        cost: { richesse: 1000000, renom: 100000, hommes: 10000 },
+        cost: { richesse: 1000000, renom: 100000, hommes: 2000 },
         effect: (gs) => triggerVictory(gs, "Voie des Hommes")
     }
 ];
