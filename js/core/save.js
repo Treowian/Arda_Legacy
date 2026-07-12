@@ -15,9 +15,12 @@ export function loadGame() {
 }
 
 export function triggerPrestige() {
-    // Calcul strict : 1 éclat pour 1000 points de score
+    // Calcul du score de base
     const score = (gameState.resources.renom * 2) + (gameState.resources.savoir * 5);
-    const newEclats = Math.floor(score / 1000);
+    
+    // 🔴 CORRECTION : Application d'une racine carrée (Math.sqrt) pour éviter l'inflation infinie
+    const baseEclats = score / 1000;
+    const newEclats = Math.floor(Math.sqrt(baseEclats));
     
     const eclatsCumules = (gameState.meta.prestige_eclats || 0) + newEclats;
     const redemption = gameState.meta.redemption_achieved;
